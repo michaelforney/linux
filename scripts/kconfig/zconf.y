@@ -94,13 +94,6 @@ static struct menu *current_menu, *current_entry;
 %type <menu> if_entry menu_entry choice_entry
 %type <string> symbol_option_arg word_opt
 
-%destructor {
-	fprintf(stderr, "%s:%d: missing end statement for this entry\n",
-		$$->file->name, $$->lineno);
-	if (current_menu == $$)
-		menu_end_menu();
-} if_entry menu_entry choice_entry
-
 %%
 input: nl start | start;
 
