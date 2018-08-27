@@ -24,7 +24,7 @@ for line in io.lines() do
 			bytes[#bytes] = bit32.band(bytes[#bytes], 0x7f)
 		end
 		local hash = #bytes - 1
-		for byte in pairs(bytes) do
+		for _, byte in pairs(bytes) do
 			hash = hash + byte * 33
 		end
 
