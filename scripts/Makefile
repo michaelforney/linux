@@ -22,8 +22,8 @@ hostprogs-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE) += insert-sys-cert
 
 HOSTCFLAGS_sortextable.o = -I$(srctree)/tools/include
 HOSTCFLAGS_asn1_compiler.o = -I$(srctree)/include
-HOSTLOADLIBES_sign-file = -lcrypto
-HOSTLOADLIBES_extract-cert = -lcrypto
+HOSTLOADLIBES_sign-file = -lcrypto -lbsd
+HOSTLOADLIBES_extract-cert = -lcrypto -lbsd
 
 always		:= $(hostprogs-y) $(hostprogs-m)
 
