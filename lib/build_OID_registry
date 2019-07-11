@@ -1,3 +1,7 @@
+-- SPDX-License-Identifier: GPL-2.0-or-later
+--
+-- Build a static ASN.1 Object Identified (OID) registry
+
 io.input(arg[1])
 io.output(arg[2])
 
