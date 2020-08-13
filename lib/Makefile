@@ -284,7 +284,7 @@ obj-$(CONFIG_OID_REGISTRY) += oid_registry.o
 $(obj)/oid_registry.o: $(obj)/oid_registry_data.c
 
 $(obj)/oid_registry_data.c: $(srctree)/include/linux/oid_registry.h \
-			    $(src)/build_OID_registry
+			    $(src)/build_OID_registry.awk
 	$(call cmd,build_OID_registry)
 
 quiet_cmd_build_OID_registry = GEN     $@
