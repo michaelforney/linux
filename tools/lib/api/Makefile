@@ -60,7 +60,7 @@ $(LIBFILE): $(API_IN)
 
 clean:
 	$(call QUIET_CLEAN, libapi) $(RM) $(LIBFILE); \
-	find $(if $(OUTPUT),$(OUTPUT),.) -name \*.o -or -name \*.o.cmd -or -name \*.o.d | xargs $(RM)
+	find $(if $(OUTPUT),$(OUTPUT),.) '(' -name \*.o -o -name \*.o.cmd -o -name \*.o.d ')' -exec $(RM) {} +
 
 FORCE:
 

@@ -42,7 +42,7 @@ $(OUTPUT)pcitest: $(PCITEST_IN)
 clean:
 	rm -f $(ALL_PROGRAMS)
 	rm -rf $(OUTPUT)include/
-	find $(if $(OUTPUT),$(OUTPUT),.) -name '*.o' -delete -o -name '\.*.d' -delete
+	find $(if $(OUTPUT),$(OUTPUT),.) '(' -name '*.o' -o -name '\.*.d' ')' -exec $(RM) {} +
 
 install: $(ALL_PROGRAMS)
 	install -d -m 755 $(DESTDIR)$(bindir);		\

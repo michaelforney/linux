@@ -21,7 +21,7 @@ libex-in.o: fixdep FORCE
 	make $(build)=libex
 
 clean:
-	find . -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete
+	find . '(' -name '*.o' -o -name '\.*.cmd' -o -name '\.*.d' ')' -exec $(RM) {} +
 	rm -f ex ex.i ex.s
 
 .PHONY: FORCE
