@@ -271,6 +271,7 @@ static int read_sections(struct elf *elf)
 			return -1;
 		}
 
+		sec->scn = s;
 		sec->idx = elf_ndxscn(s);
 
 		if (!gelf_getshdr(s, &sec->sh)) {
@@ -666,6 +667,7 @@ struct section *elf_create_section(struct elf *elf, const char *name,
 		return NULL;
 	}
 
+	sec->scn = s;
 	sec->idx = elf_ndxscn(s);
 	sec->len = size;
 	sec->changed = true;
@@ -829,6 +831,11 @@ static int elf_rebuild_rel_reloc_section(struct section *sec, int nr)
 	sec->data->d_type = ELF_T_REL;
 
 	sec->sh.sh_size = size;
+	if (!gelf_update_shdr(sec->scn, &sec->sh)) {
+		WARN_ELF("gelf_update_shdr");
+		return -1;
+	}
+	sec->changed = false;
 
 	idx = 0;
 	list_for_each_entry(reloc, &sec->reloc_list, list) {
@@ -863,6 +870,11 @@ static int elf_rebuild_rela_reloc_section(struct section *sec, int nr)
 	sec->data->d_type = ELF_T_RELA;
 
 	sec->sh.sh_size = size;
+	if (!gelf_update_shdr(sec->scn, &sec->sh)) {
+		WARN_ELF("gelf_update_shdr");
+		return -1;
+	}
+	sec->changed = false;
 
 	idx = 0;
 	list_for_each_entry(reloc, &sec->reloc_list, list) {
@@ -884,7 +896,6 @@ int elf_rebuild_reloc_section(struct elf *elf, struct section *sec)
 	struct reloc *reloc;
 	int nr;
 
-	sec->changed = true;
 	elf->changed = true;
 
 	nr = 0;
@@ -948,17 +959,11 @@ int elf_write_reloc(struct elf *elf, struct reloc *reloc)
 int elf_write(struct elf *elf)
 {
 	struct section *sec;
-	Elf_Scn *s;
 
 	/* Update section headers for changed sections: */
 	list_for_each_entry(sec, &elf->sections, list) {
 		if (sec->changed) {
-			s = elf_getscn(elf->elf, sec->idx);
-			if (!s) {
-				WARN_ELF("elf_getscn");
-				return -1;
-			}
-			if (!gelf_update_shdr(s, &sec->sh)) {
+			if (!gelf_update_shdr(sec->scn, &sec->sh)) {
 				WARN_ELF("gelf_update_shdr");
 				return -1;
 			}
