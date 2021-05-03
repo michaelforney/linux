@@ -18,10 +18,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <err.h>
-#include <openssl/bio.h>
-#include <openssl/pem.h>
-#include <openssl/err.h>
-#include <openssl/engine.h>
+#include <bearssl.h>
 
 #define PKEY_ID_PKCS7 2
 
@@ -33,67 +30,21 @@ void format(void)
 	exit(2);
 }
 
-static void display_openssl_errors(int l)
-{
-	const char *file;
-	char buf[120];
-	int e, line;
-
-	if (ERR_peek_error() == 0)
-		return;
-	fprintf(stderr, "At main.c:%d:\n", l);
-
-	while ((e = ERR_get_error_line(&file, &line))) {
-		ERR_error_string(e, buf);
-		fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
-	}
-}
-
-static void drain_openssl_errors(void)
-{
-	const char *file;
-	int line;
-
-	if (ERR_peek_error() == 0)
-		return;
-	while (ERR_get_error_line(&file, &line)) {}
-}
-
-#define ERR(cond, fmt, ...)				\
-	do {						\
-		bool __cond = (cond);			\
-		display_openssl_errors(__LINE__);	\
-		if (__cond) {				\
-			err(1, fmt, ## __VA_ARGS__);	\
-		}					\
-	} while(0)
-
 static const char *key_pass;
-static BIO *wb;
 static char *cert_dst;
 static int kbuild_verbose;
 
-static void write_cert(X509 *x509)
+static void write_cert(void *dst_ctx, const void *src, size_t len)
 {
-	char buf[200];
+	FILE *dst = dst_ctx;
 
-	if (!wb) {
-		wb = BIO_new_file(cert_dst, "wb");
-		ERR(!wb, "%s", cert_dst);
-	}
-	X509_NAME_oneline(X509_get_subject_name(x509), buf, sizeof(buf));
-	ERR(!i2d_X509_bio(wb, x509), "%s", cert_dst);
-	if (kbuild_verbose)
-		fprintf(stderr, "Extracted cert: %s\n", buf);
+	if (fwrite(src, 1, len, dst) != len)
+		err(1, "write %s", cert_dst);
 }
 
 int main(int argc, char **argv)
 {
 	char *cert_src;
-
-	OpenSSL_add_all_algorithms();
-	ERR_load_crypto_strings();
-	ERR_clear_error();
 
 	kbuild_verbose = atoi(getenv("KBUILD_VERBOSE")?:"0");
 
@@ -108,55 +59,45 @@ int main(int argc, char **argv)
 	if (!cert_src[0]) {
 		/* Invoked with no input; create empty file */
 		FILE *f = fopen(cert_dst, "wb");
-		ERR(!f, "%s", cert_dst);
+		if (!f)
+			err(1, "%s", cert_dst);
 		fclose(f);
 		exit(0);
 	} else if (!strncmp(cert_src, "pkcs11:", 7)) {
-		ENGINE *e;
-		struct {
-			const char *cert_id;
-			X509 *cert;
-		} parms;
-
-		parms.cert_id = cert_src;
-		parms.cert = NULL;
-
-		ENGINE_load_builtin_engines();
-		drain_openssl_errors();
-		e = ENGINE_by_id("pkcs11");
-		ERR(!e, "Load PKCS#11 ENGINE");
-		if (ENGINE_init(e))
-			drain_openssl_errors();
-		else
-			ERR(1, "ENGINE_init");
-		if (key_pass)
-			ERR(!ENGINE_ctrl_cmd_string(e, "PIN", key_pass, 0), "Set PKCS#11 PIN");
-		ENGINE_ctrl_cmd(e, "LOAD_CERT_CTRL", 0, &parms, NULL, 1);
-		ERR(!parms.cert, "Get X.509 from PKCS#11");
-		write_cert(parms.cert);
+		errx(1, "PKCS#11 certificates are not supported");
 	} else {
-		BIO *b;
-		X509 *x509;
+		FILE *src, *dst;
+		br_pem_decoder_context ctx;
+		char buf[8192], *pos;
+		size_t len = 0, n;
 
-		b = BIO_new_file(cert_src, "rb");
-		ERR(!b, "%s", cert_src);
+		src = fopen(cert_src, "rb");
+		if (!src)
+			err(1, "open %s", cert_src);
+		dst = fopen(cert_dst, "wb");
+		if (!dst)
+			err(1, "open %s", cert_dst);
 
-		while (1) {
-			x509 = PEM_read_bio_X509(b, NULL, NULL, NULL);
-			if (wb && !x509) {
-				unsigned long err = ERR_peek_last_error();
-				if (ERR_GET_LIB(err) == ERR_LIB_PEM &&
-				    ERR_GET_REASON(err) == PEM_R_NO_START_LINE) {
-					ERR_clear_error();
+		br_pem_decoder_init(&ctx);
+		br_pem_decoder_setdest(&ctx, write_cert, dst);
+		for (;;) {
+			if (len == 0) {
+				if (feof(src))
 					break;
-				}
+				len = fread(buf, 1, sizeof(buf), src);
+				if (ferror(src))
+					err(1, "read %s", cert_src);
+				pos = buf;
 			}
-			ERR(!x509, "%s", cert_src);
-			write_cert(x509);
+			n = br_pem_decoder_push(&ctx, pos, len);
+			pos += n;
+			len -= n;
+			if (br_pem_decoder_event(&ctx) == BR_PEM_ERROR)
+				errx(1, "PEM decode failure");
 		}
+		if (fflush(dst) != 0)
+			err(1, "flush %s", cert_dst);
 	}
-
-	BIO_free(wb);
 
 	return 0;
 }

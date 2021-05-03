@@ -3,7 +3,7 @@
 # scripts contains sources for various helper programs used throughout
 # the kernel for the build process.
 
-CRYPTO_LIBS = -l crypto -l bsd
+CRYPTO_LIBS = -l bearssl
 CRYPTO_CFLAGS =
 
 hostprogs-always-$(CONFIG_BUILD_BIN2C)			+= bin2c
