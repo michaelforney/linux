@@ -681,37 +681,41 @@ static int elf_add_alternative(struct elf *elf,
 	Elf_Scn *s;
 
 	sec = find_section_by_name(elf, ".altinstructions");
-	if (!sec) {
-		sec = elf_create_section(elf, ".altinstructions",
-					 SHF_WRITE, size, 0);
+	if (sec) {
+		s = elf_getscn(elf->elf, sec->idx);
+		if (!s) {
+			WARN_ELF("elf_getscn");
+			return -1;
+		}
 
+		sec->data = elf_newdata(s);
+		if (!sec->data) {
+			WARN_ELF("elf_newdata");
+			return -1;
+		}
+
+		sec->data->d_size = size;
+		sec->data->d_align = 1;
+
+		sec->data->d_buf = malloc(size);
+		if (!sec->data->d_buf) {
+			perror("malloc");
+			return -1;
+		}
+		memset(sec->data->d_buf, 0, size);
+
+	} else {
+		sec = elf_create_section(elf, ".altinstructions",
+					 SHF_WRITE, size, 1);
 		if (!sec) {
 			WARN_ELF("elf_create_section");
 			return -1;
 		}
+
+		sec->sh.sh_size = 0;
 	}
 
-	s = elf_getscn(elf->elf, sec->idx);
-	if (!s) {
-		WARN_ELF("elf_getscn");
-		return -1;
-	}
-
-	sec->data = elf_newdata(s);
-	if (!sec->data) {
-		WARN_ELF("elf_newdata");
-		return -1;
-	}
-
-	sec->data->d_size = size;
-	sec->data->d_align = 1;
-
-	alt = sec->data->d_buf = malloc(size);
-	if (!sec->data->d_buf) {
-		perror("malloc");
-		return -1;
-	}
-	memset(sec->data->d_buf, 0, size);
+	alt = sec->data->d_buf;
 
 	if (elf_add_reloc_to_insn(elf, sec, sec->sh.sh_size,
 				  R_X86_64_PC32, orig->sec, orig->offset)) {
