@@ -260,7 +260,6 @@ static int read_sections(struct elf *elf)
 			return -1;
 		}
 
-		sec->scn = s;
 		sec->idx = elf_ndxscn(s);
 
 		if (!gelf_getshdr(s, &sec->sh)) {
@@ -855,7 +854,6 @@ struct section *elf_create_section(struct elf *elf, const char *name,
 		return NULL;
 	}
 
-	sec->scn = s;
 	sec->idx = elf_ndxscn(s);
 	sec->changed = true;
 

@@ -29,7 +29,6 @@ struct section {
 	struct list_head list;
 	struct hlist_node hash;
 	struct hlist_node name_hash;
-	Elf_Scn *scn;
 	GElf_Shdr sh;
 	struct rb_root symbol_tree;
 	struct list_head symbol_list;
