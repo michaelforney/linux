@@ -38,7 +38,7 @@ $(OUTPUT)ffs-test: $(FFS_TEST_IN)
 
 clean:
 	rm -f $(ALL_PROGRAMS)
-	find $(if $(OUTPUT),$(OUTPUT),.) '(' -name '*.o' -o -name '\.*.d' -o -name '\.*.o.cmd' ')' -exec $(RM) {} +
+	find $(or $(OUTPUT),.) '(' -name '*.o' -o -name '\.*.d' -o -name '\.*.o.cmd' ')' -exec $(RM) {} +
 
 install: $(ALL_PROGRAMS)
 	install -d -m 755 $(DESTDIR)$(bindir);		\

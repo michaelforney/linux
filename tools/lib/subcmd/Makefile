@@ -63,7 +63,7 @@ $(LIBFILE): $(SUBCMD_IN)
 
 clean:
 	$(call QUIET_CLEAN, libsubcmd) $(RM) $(LIBFILE); \
-	find $(if $(OUTPUT),$(OUTPUT),.) '(' -name \*.o -o -name \*.o.cmd -o -name \*.o.d ')' -exec $(RM) {} +
+	find $(or $(OUTPUT),.) '(' -name \*.o -o -name \*.o.cmd -o -name \*.o.d ')' -exec $(RM) {} +
 
 FORCE:
 

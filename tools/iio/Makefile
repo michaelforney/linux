@@ -58,7 +58,7 @@ $(OUTPUT)iio_generic_buffer: $(IIO_GENERIC_BUFFER_IN)
 clean:
 	rm -f $(ALL_PROGRAMS)
 	rm -rf $(OUTPUT)include/linux/iio
-	find $(if $(OUTPUT),$(OUTPUT),.) '(' -name '*.o' -o -name '\.*.d' ')' -exec $(RM) {} +
+	find $(or $(OUTPUT),.) '(' -name '*.o' -o -name '\.*.d' ')' -exec $(RM) {} +
 
 install: $(ALL_PROGRAMS)
 	install -d -m 755 $(DESTDIR)$(bindir);		\
