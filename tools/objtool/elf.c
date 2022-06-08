@@ -710,8 +710,6 @@ elf_create_section_symbol(struct elf *elf, struct section *sec)
 	shndx = sec->idx;
 	if (shndx >= SHN_UNDEF && shndx < SHN_LORESERVE) {
 		sym->sym.st_shndx = shndx;
-		if (!shndx_data)
-			shndx = 0;
 	} else {
 		sym->sym.st_shndx = SHN_XINDEX;
 		if (!shndx_data) {
@@ -720,9 +718,16 @@ elf_create_section_symbol(struct elf *elf, struct section *sec)
 		}
 	}
 
-	if (!gelf_update_symshndx(symtab->data, shndx_data, sym->idx, &sym->sym, shndx)) {
-		WARN_ELF("gelf_update_symshndx");
-		return NULL;
+	if (shndx_data) {
+		if (!gelf_update_symshndx(symtab->data, shndx_data, sym->idx, &sym->sym, shndx)) {
+			WARN_ELF("gelf_update_symshndx");
+			return NULL;
+		}
+	} else {
+		if (!gelf_update_sym(symtab->data, sym->idx, &sym->sym)) {
+			WARN_ELF("gelf_update_sym");
+			return NULL;
+		}
 	}
 
 	elf_add_symbol(elf, sym);
