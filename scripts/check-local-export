@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 # SPDX-License-Identifier: GPL-2.0-only
 #
 # Copyright (C) 2022 Masahiro Yamada <masahiroy@kernel.org>
@@ -10,16 +10,6 @@ set -e
 
 # catch errors from ${NM}
 set -o pipefail
-
-# Run the last element of a pipeline in the current shell.
-# Without this, the while-loop would be executed in a subshell, and
-# the changes made to 'symbol_types' and 'export_symbols' would be lost.
-shopt -s lastpipe
-
-declare -A symbol_types
-declare -a export_symbols
-
-exit_code=0
 
 # If there is no symbol in the object, ${NM} (both GNU nm and llvm-nm) shows
 # 'no symbols' diagnostic (but exits with 0). It is harmless and hidden by
@@ -33,8 +23,7 @@ exit_code=0
 #   ${NM} --quiet ${1} |
 
 { ${NM} ${1} 2>/dev/null || { echo "${0}: ${NM} failed" >&2; false; } } |
-while read value type name
-do
+awk -v "script=$0" '
 	# Skip the line if the number of fields is less than 3.
 	#
 	# case 1)
@@ -44,28 +33,25 @@ do
 	#   It is unneeded to record undefined symbols.
 	#
 	# case 2)
-	#   For Clang LTO, llvm-nm outputs a line with type 't' but empty name:
+	#   For Clang LTO, llvm-nm outputs a line with type `t` but empty name:
 	#     "---------------- t"
-	if [[ -z ${name} ]]; then
-		continue
-	fi
-
-	# save (name, type) in the associative array
-	symbol_types[${name}]=${type}
-
-	# append the exported symbol to the array
-	if [[ ${name} == __ksymtab_* ]]; then
-		export_symbols+=(${name#__ksymtab_})
-	fi
-done
-
-for name in "${export_symbols[@]}"
-do
-	# nm(3) says "If lowercase, the symbol is usually local"
-	if [[ ${symbol_types[$name]} =~ [a-z] ]]; then
-		echo "$@: error: local symbol '${name}' was exported" >&2
-		exit_code=1
-	fi
-done
-
-exit ${exit_code}
+	$3 {
+		# save (name, type) in the associative array
+		symbol_types[$3] = $2
+	}
+	$3 ~ /^__ksymtab_.*/ {
+		# append the exported symbol to the array
+		export_symbols[num_export_symbols++] = substr($3, 11)
+	}
+	END {
+		for (i = 0; i < num_export_symbols; i++) {
+			name = export_symbols[i]
+			# nm(3) says "If lowercase, the symbol is usually local"
+			if (symbol_types[name] ~ /[a-z]/) {
+				printf "%s: error: local symbol `%s` was exported\n", script, name
+				exit_code = 1
+			}
+		}
+		exit exit_code
+	}
+' >&2
