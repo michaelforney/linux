@@ -162,6 +162,7 @@ static struct errormap errmap[] = {
 	{"cannot remove root", EPERM},
 	{"file too big", EFBIG},
 	{"venti i/o error", EIO},
+	{"does not exist", ENOENT},
 	/* these are not errors */
 	{"u9fs rhostsauth: no authentication required", 0},
 	{"u9fs authnone: no authentication required", 0},
