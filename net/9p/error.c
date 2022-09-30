@@ -206,6 +206,21 @@ int p9_errstr2errno(char *errstr, int len)
 	int errno;
 	struct errormap *c;
 	int bucket;
+	char *p;
+
+	/* strip possible quoted filename */
+	errstr[len] = 0;
+	p = errstr;
+	if (*p == '\'') {
+		while (*++p) {
+			if (*p == '\'' && *++p != '\'')
+				break;
+		}
+		if (*p == ' ')
+			p++;
+	}
+	len -= p - errstr;
+	errstr = p;
 
 	errno = 0;
 	c = NULL;
@@ -219,7 +234,6 @@ int p9_errstr2errno(char *errstr, int len)
 
 	if (errno == 0) {
 		/* TODO: if error isn't found, add it dynamically */
-		errstr[len] = 0;
 		pr_err("%s: server reported unknown error %s\n",
 		       __func__, errstr);
 		errno = ESERVERFAULT;
