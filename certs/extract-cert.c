@@ -39,7 +39,7 @@ void format(void)
 
 static const char *key_pass;
 static char *cert_dst;
-static int kbuild_verbose;
+static bool verbose;
 
 static void write_cert(void *dst_ctx, const void *src, size_t len)
 {
@@ -52,8 +52,11 @@ static void write_cert(void *dst_ctx, const void *src, size_t len)
 int main(int argc, char **argv)
 {
 	char *cert_src;
+	char *verbose_env;
 
-	kbuild_verbose = atoi(getenv("KBUILD_VERBOSE")?:"0");
+	verbose_env = getenv("KBUILD_VERBOSE");
+	if (verbose_env && strchr(verbose_env, '1'))
+		verbose = true;
 
         key_pass = getenv("KBUILD_SIGN_PIN");
 
