@@ -1,6 +1,9 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-2.0
 
-echo cflags=\"-D_GNU_SOURCE\"
-echo libs=\"-lcurses -lterminfo\"
+cflags=$1
+libs=$2
+
+echo -D_GNU_SOURCE > ${cflags}
+echo -lcurses -lterminfo > ${libs}
 exit 0
