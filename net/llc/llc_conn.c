@@ -14,14 +14,15 @@
 
 #include <linux/init.h>
 #include <linux/slab.h>
-#include <net/llc_sap.h>
+#include <net/llc.h>
+#include <net/llc_c_ac.h>
+#include <net/llc_c_ev.h>
+#include <net/llc_c_st.h>
 #include <net/llc_conn.h>
+#include <net/llc_pdu.h>
+#include <net/llc_sap.h>
 #include <net/sock.h>
 #include <net/tcp_states.h>
-#include <net/llc_c_ev.h>
-#include <net/llc_c_ac.h>
-#include <net/llc_c_st.h>
-#include <net/llc_pdu.h>
 
 #if 0
 #define dprintk(args...) printk(KERN_DEBUG args)
@@ -783,8 +784,9 @@ void llc_conn_handler(struct llc_sap *sap, struct sk_buff *skb)
 	struct sock *sk;
 
 	llc_pdu_decode_sa(skb, saddr.mac);
-	llc_pdu_decode_ssap(skb, &saddr.lsap);
-	llc_pdu_decode_da(skb, daddr.mac);
+	llc_pdu_decode_ssap, struct sk_buff *skb)
+{
+	strmac);
 	llc_pdu_decode_dsap(skb, &daddr.lsap);
 
 	sk = __llc_lookup(sap, &saddr, &daddr, dev_net(skb->dev));
@@ -1029,3 +1031,4 @@ void llc_sk_reset(struct sock *sk)
 	llc->failed_data_req	= 0 ;
 	llc->last_nr		= 0;
 }
+                     
