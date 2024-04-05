@@ -289,9 +289,9 @@ obj-$(CONFIG_DRM_XE) += xe.o
 obj-$(CONFIG_DRM_XE_KUNIT_TEST) += tests/
 
 # header test
-hdrtest_find_args := -not -path xe_rtp_helpers.h
+hdrtest_find_args := ! -path xe_rtp_helpers.h
 ifneq ($(CONFIG_DRM_XE_DISPLAY),y)
-	hdrtest_find_args += -not -path display/\* -not -path compat-i915-headers/\* -not -path xe_display.h
+	hdrtest_find_args += ! -path display/\* ! -path compat-i915-headers/\* ! -path xe_display.h
 endif
 
 always-$(CONFIG_DRM_XE_WERROR) += \
