@@ -34,10 +34,10 @@ static int llc_find_offset(int state, int ev_type);
 static void llc_conn_send_pdus(struct sock *sk);
 static int llc_conn_service(struct sock *sk, struct sk_buff *skb);
 static int llc_exec_conn_trans_actions(struct sock *sk,
-				       struct llc_conn_state_trans *trans,
+				       const struct llc_conn_state_trans *trans,
 				       struct sk_buff *ev);
-static struct llc_conn_state_trans *llc_qualify_conn_ev(struct sock *sk,
-							struct sk_buff *skb);
+static const struct llc_conn_state_trans *llc_qualify_conn_ev(struct sock *sk,
+							      struct sk_buff *skb);
 
 /* Offset table on connection states transition diagram */
 static int llc_offset_table[NBR_CONN_STATES][NBR_CONN_EV];
@@ -356,9 +356,9 @@ static void llc_conn_send_pdus(struct sock *sk)
  */
 static int llc_conn_service(struct sock *sk, struct sk_buff *skb)
 {
-	int rc = 1;
+	const struct llc_conn_state_trans *trans;
 	struct llc_sock *llc = llc_sk(sk);
-	struct llc_conn_state_trans *trans;
+	int rc = 1;
 
 	if (llc->state > NBR_CONN_STATES)
 		goto out;
@@ -384,10 +384,10 @@ out:
  *	This function finds transition that matches with happened event.
  *	Returns pointer to found transition on success, %NULL otherwise.
  */
-static struct llc_conn_state_trans *llc_qualify_conn_ev(struct sock *sk,
-							struct sk_buff *skb)
+static const struct llc_conn_state_trans *llc_qualify_conn_ev(struct sock *sk,
+							      struct sk_buff *skb)
 {
-	struct llc_conn_state_trans **next_trans;
+	const struct llc_conn_state_trans **next_trans;
 	const llc_conn_ev_qfyr_t *next_qualifier;
 	struct llc_conn_state_ev *ev = llc_conn_ev(skb);
 	struct llc_sock *llc = llc_sk(sk);
@@ -432,7 +432,7 @@ static struct llc_conn_state_trans *llc_qualify_conn_ev(struct sock *sk,
  *	success, 1 to indicate failure of at least one action.
  */
 static int llc_exec_conn_trans_actions(struct sock *sk,
-				       struct llc_conn_state_trans *trans,
+				       const struct llc_conn_state_trans *trans,
 				       struct sk_buff *skb)
 {
 	int rc = 0;
@@ -635,8 +635,8 @@ u8 llc_data_accept_state(u8 state)
  */
 static u16 __init llc_find_next_offset(struct llc_conn_state *state, u16 offset)
 {
+	const struct llc_conn_state_trans **next_trans;
 	u16 cnt = 0;
-	struct llc_conn_state_trans **next_trans;
 
 	for (next_trans = state->transitions + offset;
 	     (*next_trans)->ev; next_trans++)
@@ -784,219 +784,249 @@ void llc_conn_handler(struct llc_sap *sap, struct sk_buff *skb)
 	struct sock *sk;
 
 	llc_pdu_decode_sa(skb, saddr.mac);
-	llc_pdu_decode_ssap, struct sk_buff *skb)
+	llc_pdu_decode_ssap(skb, &saddr.lsap);
+	llc_pdu_decode_da(skb, daddr.mac);
+	llc_pdu_decode_dsap(skb, &daddr.lsap);
+
+	sk = __llc_lookup(sap, &saddr, &daddr, dev_net(skb->dev));
+	if (!sk)
+		goto drop;
+
+	bh_lock_sock(sk);
+	/*
+	 * This has to be done here and not at the upper layer ->accept
+	 * method because of the way the PROCOM state machine works:
+	 * it needs to set several state variables (see, for instance,
+	 * llc_adm_actions_2 in net/llc/llc_c_st.c) and send a packet to
+	 * the originator of the new connection, and this state has to be
+	 * in the newly created struct sock private area. -acme
+	 */
+	if (unlikely(sk->sk_state == TCP_LISTEN)) {
+		struct sock *newsk = llc_create_incoming_sock(sk, skb->dev,
+							      &saddr, &daddr);
+		if (!newsk)
+			goto drop_unlock;
+		skb_set_owner_r(skb, newsk);
+	} else {
+		/*
+		 * Can't be skb_set_owner_r, this will be done at the
+		 * llc_conn_state_process function, later on, when we will use
+		 * skb_queue_rcv_skb to send it to upper layers, this is
+		 * another trick required to cope with how the PROCOM state
+		 * machine works. -acme
+		 */
+		skb_orphan(skb);
+		sock_hold(sk);
+		skb->sk = sk;
+		skb->destructor = sock_efree;
+	}
+	if (!sock_owned_by_user(sk))
+		llc_conn_rcv(sk, skb);
+	else {
+		dprintk("%s: adding to backlog...\n", __func__);
+		llc_set_backlog_type(skb, LLC_PACKET);
+		if (sk_add_backlog(sk, skb, READ_ONCE(sk->sk_rcvbuf)))
+			goto drop_unlock;
+	}
+out:
+	bh_unlock_sock(sk);
+	sock_put(sk);
+	return;
+drop:
+	kfree_skb(skb);
+	return;
+drop_unlock:
+	kfree_skb(skb);
+	goto out;
+}
+
+#undef LLC_REFCNT_DEBUG
+#ifdef LLC_REFCNT_DEBUG
+static atomic_t llc_sock_nr;
+#endif
+
+/**
+ *	llc_backlog_rcv - Processes rx frames and expired timers.
+ *	@sk: LLC sock (p8022 connection)
+ *	@skb: queued rx frame or event
+ *
+ *	This function processes frames that has received and timers that has
+ *	expired during sending an I pdu (refer to data_req_handler).  frames
+ *	queue by llc_rcv function (llc_mac.c) and timers queue by timer
+ *	callback functions(llc_c_ac.c).
+ */
+static int llc_backlog_rcv(struct sock *sk, struct sk_buff *skb)
 {
-	strllc_conn_action_t llc_normal_actions_4[] = {
-	[0] = llc_conn_ac_rst_sendack_flag,
-	[1] = llc_conn_ac_send_rnr_xxx_x_set_0,
-	[2] = llc_conn_ac_set_data_flag_0,
-	[3] = NULL,
-};
+	int rc = 0;
+	struct llc_sock *llc = llc_sk(sk);
 
-static const struct llc_conn_state_trans llc_normal_state_trans_4 = {
-	.ev	       = llc_conn_ev_local_busy_detected,
-	.next_state    = LLC_CONN_STATE_BUSY,
-	.ev_qualifiers = llc_normal_ev_qfyrs_4,
-	.ev_actions    = llc_normal_actions_4,
-};
+	if (likely(llc_backlog_type(skb) == LLC_PACKET)) {
+		if (likely(llc->state > 1)) /* not closed */
+			rc = llc_conn_rcv(sk, skb);
+		else
+			goto out_kfree_skb;
+	} else if (llc_backlog_type(skb) == LLC_EVENT) {
+		/* timer expiration event */
+		if (likely(llc->state > 1))  /* not closed */
+			rc = llc_conn_state_process(sk, skb);
+		else
+			goto out_kfree_skb;
+	} else {
+		printk(KERN_ERR "%s: invalid skb in backlog\n", __func__);
+		goto out_kfree_skb;
+	}
+out:
+	return rc;
+out_kfree_skb:
+	kfree_skb(skb);
+	goto out;
+}
 
-/* State transitions for LLC_CONN_EV_RX_I_CMD_Pbit_SET_0_UNEXPD_Ns event */
-static const llc_conn_ev_qfyr_t llc_normal_ev_qfyrs_5a[] = {
-	[0] = llc_conn_ev_qlfy_p_flag_eq_0,
-	[1] = NULL,
-};
+/**
+ *     llc_sk_init - Initializes a socket with default llc values.
+ *     @sk: socket to initialize.
+ *
+ *     Initializes a socket with default llc values.
+ */
+static void llc_sk_init(struct sock *sk)
+{
+	struct llc_sock *llc = llc_sk(sk);
 
-static const llc_conn_action_t llc_normal_actions_5a[] = {
-	[0] = llc_conn_ac_rst_sendack_flag,
-	[1] = llc_conn_ac_send_rej_xxx_x_set_0,
-	[2] = llc_conn_ac_upd_nr_received,
-	[3] = llc_conn_ac_upd_p_flag,
-	[4] = llc_conn_ac_start_rej_timer,
-	[5] = llc_conn_ac_clear_remote_busy_if_f_eq_1,
-	[6] = NULL,
-};
+	llc->state    = LLC_CONN_STATE_ADM;
+	llc->inc_cntr = llc->dec_cntr = 2;
+	llc->dec_step = llc->connect_step = 1;
 
-static const struct llc_conn_state_trans llc_normal_state_trans_5a = {
-	.ev	       = llc_conn_ev_rx_i_cmd_pbit_set_0_unexpd_ns,
-	.next_state    = LLC_CONN_STATE_REJ,
-	.ev_qualifiers = llc_normal_ev_qfyrs_5a,
-	.ev_actions    = llc_normal_actions_5a,
-};
+	timer_setup(&llc->ack_timer.timer, llc_conn_ack_tmr_cb, 0);
+	llc->ack_timer.expire	      = sysctl_llc2_ack_timeout;
 
-/* State transitions for LLC_CONN_EV_RX_I_RSP_Fbit_SET_0_UNEXPD_Ns event */
-static const llc_conn_ev_qfyr_t llc_normal_ev_qfyrs_5b[] = {
-	[0] = llc_conn_ev_qlfy_p_flag_eq_0,
-	[1] = NULL,
-};
+	timer_setup(&llc->pf_cycle_timer.timer, llc_conn_pf_cycle_tmr_cb, 0);
+	llc->pf_cycle_timer.expire	   = sysctl_llc2_p_timeout;
 
-static const llc_conn_action_t llc_normal_actions_5b[] = {
-	[0] = llc_conn_ac_rst_sendack_flag,
-	[1] = llc_conn_ac_send_rej_xxx_x_set_0,
-	[2] = llc_conn_ac_upd_nr_received,
-	[3] = llc_conn_ac_upd_p_flag,
-	[4] = llc_conn_ac_start_rej_timer,
-	[5] = llc_conn_ac_clear_remote_busy_if_f_eq_1,
-	[6] = NULL,
-};
+	timer_setup(&llc->rej_sent_timer.timer, llc_conn_rej_tmr_cb, 0);
+	llc->rej_sent_timer.expire	   = sysctl_llc2_rej_timeout;
 
-static const struct llc_conn_state_trans llc_normal_state_trans_5b = {
-	.ev	       = llc_conn_ev_rx_i_rsp_fbit_set_0_unexpd_ns,
-	.next_state    = LLC_CONN_STATE_REJ,
-	.ev_qualifiers = llc_normal_ev_qfyrs_5b,
-	.ev_actions    = llc_normal_actions_5b,
-};
+	timer_setup(&llc->busy_state_timer.timer, llc_conn_busy_tmr_cb, 0);
+	llc->busy_state_timer.expire	     = sysctl_llc2_busy_timeout;
 
-/* State transitions for LLC_CONN_EV_RX_I_RSP_Fbit_SET_1_UNEXPD_Ns event */
-static const llc_conn_ev_qfyr_t llc_normal_ev_qfyrs_5c[] = {
-	[0] = llc_conn_ev_qlfy_p_flag_eq_1,
-	[1] = NULL,
-};
+	llc->n2 = 2;   /* max retransmit */
+	llc->k  = 2;   /* tx win size, will adjust dynam */
+	llc->rw = 128; /* rx win size (opt and equal to
+			* tx_win of remote LLC) */
+	skb_queue_head_init(&llc->pdu_unack_q);
+	sk->sk_backlog_rcv = llc_backlog_rcv;
+}
 
-static const llc_conn_action_t llc_normal_actions_5c[] = {
-	[0] = llc_conn_ac_rst_sendack_flag,
-	[1] = llc_conn_ac_send_rej_xxx_x_set_0,
-	[2] = llc_conn_ac_upd_nr_received,
-	[3] = llc_conn_ac_upd_p_flag,
-	[4] = llc_conn_ac_start_rej_timer,
-	[5] = llc_conn_ac_clear_remote_busy_if_f_eq_1,
-	[6] = NULL,
-};
+/**
+ *	llc_sk_alloc - Allocates LLC sock
+ *	@net: network namespace
+ *	@family: upper layer protocol family
+ *	@priority: for allocation (%GFP_KERNEL, %GFP_ATOMIC, etc)
+ *	@prot: struct proto associated with this new sock instance
+ *	@kern: is this to be a kernel socket?
+ *
+ *	Allocates a LLC sock and initializes it. Returns the new LLC sock
+ *	or %NULL if there's no memory available for one
+ */
+struct sock *llc_sk_alloc(struct net *net, int family, gfp_t priority, struct proto *prot, int kern)
+{
+	struct sock *sk = sk_alloc(net, family, priority, prot, kern);
 
-static const struct llc_conn_state_trans llc_normal_state_trans_5c = {
-	.ev	       = llc_conn_ev_rx_i_rsp_fbit_set_1_unexpd_ns,
-	.next_state    = LLC_CONN_STATE_REJ,
-	.ev_qualifiers = llc_normal_ev_qfyrs_5c,
-	.ev_actions    = llc_normal_actions_5c,
-};
+	if (!sk)
+		goto out;
+	llc_sk_init(sk);
+	sock_init_data(NULL, sk);
+#ifdef LLC_REFCNT_DEBUG
+	atomic_inc(&llc_sock_nr);
+	printk(KERN_DEBUG "LLC socket %p created in %s, now we have %d alive\n", sk,
+		__func__, atomic_read(&llc_sock_nr));
+#endif
+out:
+	return sk;
+}
 
-/* State transitions for LLC_CONN_EV_RX_I_CMD_Pbit_SET_0_UNEXPD_Ns event */
-static const llc_conn_ev_qfyr_t llc_normal_ev_qfyrs_6a[] = {
-	[0] = llc_conn_ev_qlfy_p_flag_eq_1,
-	[1] = NULL,
-};
+void llc_sk_stop_all_timers(struct sock *sk, bool sync)
+{
+	struct llc_sock *llc = llc_sk(sk);
 
-static const llc_conn_action_t llc_normal_actions_6a[] = {
-	[0] = llc_conn_ac_rst_sendack_flag,
-	[1] = llc_conn_ac_send_rej_xxx_x_set_0,
-	[2] = llc_conn_ac_upd_nr_received,
-	[3] = llc_conn_ac_start_rej_timer,
-	[4] = NULL,
-};
+	if (sync) {
+		del_timer_sync(&llc->pf_cycle_timer.timer);
+		del_timer_sync(&llc->ack_timer.timer);
+		del_timer_sync(&llc->rej_sent_timer.timer);
+		del_timer_sync(&llc->busy_state_timer.timer);
+	} else {
+		del_timer(&llc->pf_cycle_timer.timer);
+		del_timer(&llc->ack_timer.timer);
+		del_timer(&llc->rej_sent_timer.timer);
+		del_timer(&llc->busy_state_timer.timer);
+	}
 
-static const struct llc_conn_state_trans llc_normal_state_trans_6a = {
-	.ev	       = llc_conn_ev_rx_i_cmd_pbit_set_0_unexpd_ns,
-	.next_state    = LLC_CONN_STATE_REJ,
-	.ev_qualifiers = llc_normal_ev_qfyrs_6a,
-	.ev_actions    = llc_normal_actions_6a,
-};
+	llc->ack_must_be_send = 0;
+	llc->ack_pf = 0;
+}
 
-/* State transitions for LLC_CONN_EV_RX_I_RSP_Fbit_SET_0_UNEXPD_Ns event */
-static const llc_conn_ev_qfyr_t llc_normal_ev_qfyrs_6b[] = {
-	[0] = llc_conn_ev_qlfy_p_flag_eq_1,
-	[1] = NULL,
-};
+/**
+ *	llc_sk_free - Frees a LLC socket
+ *	@sk: - socket to free
+ *
+ *	Frees a LLC socket
+ */
+void llc_sk_free(struct sock *sk)
+{
+	struct llc_sock *llc = llc_sk(sk);
 
-static const llc_conn_action_t llc_normal_actions_6b[] = {
-	[0] = llc_conn_ac_rst_sendack_flag,
-	[1] = llc_conn_ac_send_rej_xxx_x_set_0,
-	[2] = llc_conn_ac_upd_nr_received,
-	[3] = llc_conn_ac_start_rej_timer,
-	[4] = NULL,
-};
+	llc->state = LLC_CONN_OUT_OF_SVC;
+	/* Stop all (possibly) running timers */
+	llc_sk_stop_all_timers(sk, true);
+#ifdef DEBUG_LLC_CONN_ALLOC
+	printk(KERN_INFO "%s: unackq=%d, txq=%d\n", __func__,
+		skb_queue_len(&llc->pdu_unack_q),
+		skb_queue_len(&sk->sk_write_queue));
+#endif
+	skb_queue_purge(&sk->sk_receive_queue);
+	skb_queue_purge(&sk->sk_write_queue);
+	skb_queue_purge(&llc->pdu_unack_q);
+#ifdef LLC_REFCNT_DEBUG
+	if (refcount_read(&sk->sk_refcnt) != 1) {
+		printk(KERN_DEBUG "Destruction of LLC sock %p delayed in %s, cnt=%d\n",
+			sk, __func__, refcount_read(&sk->sk_refcnt));
+		printk(KERN_DEBUG "%d LLC sockets are still alive\n",
+			atomic_read(&llc_sock_nr));
+	} else {
+		atomic_dec(&llc_sock_nr);
+		printk(KERN_DEBUG "LLC socket %p released in %s, %d are still alive\n", sk,
+			__func__, atomic_read(&llc_sock_nr));
+	}
+#endif
+	sock_put(sk);
+}
 
-static const struct llc_conn_state_trans llc_normal_state_trans_6b = {
-	.ev	       = llc_conn_ev_rx_i_rsp_fbit_set_0_unexpd_ns,
-	.next_state    = LLC_CONN_STATE_REJ,
-	.ev_qualifiers = llc_normal_ev_qfyrs_6b,
-	.ev_actions    = llc_normal_actions_6b,
-};
+/**
+ *	llc_sk_reset - resets a connection
+ *	@sk: LLC socket to reset
+ *
+ *	Resets a connection to the out of service state. Stops its timers
+ *	and frees any frames in the queues of the connection.
+ */
+void llc_sk_reset(struct sock *sk)
+{
+	struct llc_sock *llc = llc_sk(sk);
 
-/* State transitions for LLC_CONN_EV_RX_I_CMD_Pbit_SET_1_UNEXPD_Ns event */
-static const llc_conn_action_t llc_normal_actions_7[] = {
-	[0] = llc_conn_ac_rst_sendack_flag,
-	[1] = llc_conn_ac_send_rej_rsp_f_set_1,
-	[2] = llc_conn_ac_upd_nr_received,
-	[3] = llc_conn_ac_start_rej_timer,
-	[4] = NULL,
-};
-
-static const struct llc_conn_state_trans llc_normal_state_trans_7 = {
-	.ev	       = llc_conn_ev_rx_i_cmd_pbit_set_1_unexpd_ns,
-	.next_state    = LLC_CONN_STATE_REJ,
-	.ev_qualifiers = NONE,
-	.ev_actions    = llc_normal_actions_7,
-};
-
-/* State transitions for LLC_CONN_EV_RX_I_RSP_Fbit_SET_X event */
-static const llc_conn_ev_qfyr_t llc_normal_ev_qfyrs_8a[] = {
-	[0] = llc_conn_ev_qlfy_p_flag_eq_f,
-	[1] = NULL,
-};
-
-static const llc_conn_action_t llc_normal_actions_8[] = {
-	[0] = llc_conn_ac_inc_vr_by_1,
-	[1] = llc_conn_ac_data_ind,
-	[2] = llc_conn_ac_upd_p_flag,
-	[3] = llc_conn_ac_upd_nr_received,
-	[4] = llc_conn_ac_clear_remote_busy_if_f_eq_1,
-	[5] = llc_conn_ac_send_ack_if_needed,
-	[6] = NULL,
-};
-
-static const struct llc_conn_state_trans llc_normal_state_trans_8a = {
-	.ev	       = llc_conn_ev_rx_i_rsp_fbit_set_x,
-	.next_state    = LLC_CONN_STATE_NORMAL,
-	.ev_qualifiers = llc_normal_ev_qfyrs_8a,
-	.ev_actions    = llc_normal_actions_8,
-};
-
-/* State transitions for LLC_CONN_EV_RX_I_CMD_Pbit_SET_0 event */
-static const llc_conn_ev_qfyr_t llc_normal_ev_qfyrs_8b[] = {
-	[0] = llc_conn_ev_qlfy_p_flag_eq_0,
-	[1] = NULL,
-};
-
-static const struct llc_conn_state_trans llc_normal_state_trans_8b = {
-	.ev	       = llc_conn_ev_rx_i_cmd_pbit_set_0,
-	.next_state    = LLC_CONN_STATE_NORMAL,
-	.ev_qualifiers = llc_normal_ev_qfyrs_8b,
-	.ev_actions    = llc_normal_actions_8,
-};
-
-/* State transitions for LLC_CONN_EV_RX_I_RSP_Fbit_SET_0 event */
-static const llc_conn_ev_qfyr_t llc_normal_ev_qfyrs_9a[] = {
-	[0] = llc_conn_ev_qlfy_p_flag_eq_1,
-	[1] = NULL,
-};
-
-static const llc_conn_action_t llc_normal_actions_9a[] = {
-	[0] = llc_conn_ac_inc_vr_by_1,
-	[1] = llc_conn_ac_upd_nr_received,
-	[2] = llc_conn_ac_data_ind,
-	[3] = llc_conn_ac_send_ack_if_needed,
-	[4] = NULL,
-};
-
-static const struct llc_conn_state_trans llc_normal_state_trans_9a = {
-	.ev	       = llc_conn_ev_rx_i_rsp_fbit_set_0,
-	.next_state    = LLC_CONN_STATE_NORMAL,
-	.ev_qualifiers = llc_normal_ev_qfyrs_9a,
-	.ev_actions    = llc_normal_actions_9a,
-};
-
-/* State transitions for LLC_CONN_EV_RX_I_CMD_Pbit_SET_0 event */
-static const llc_conn_ev_qfyr_t llc_normal_ev_qfyrs_9b[] = {
-	[0] = llc_conn_ev_qlfy_p_flag_eq_1,
-	[1] = NULL,
-};
-
-static const llc_conn_action_t llc_normal_actions_9b[] = {
-	[0] = llc_conn_ac_inc_vr_by_1,
-	[1] = llc_conn_ac_upd_nr_received,
-	[2] = llc_conn_ac_data_ind,
-	[3] = llc_conn_ac_send_ack_if_needed,
-	[4] = NULL,
-};
-
-static const struct llc_conn_state_trans llc_normal_state_trans_9b = {
-	.ev	       = llc_conn_ev_rx_i_cmd_pbit_se
+	llc_conn_ac_stop_all_timers(sk, NULL);
+	skb_queue_purge(&sk->sk_write_queue);
+	skb_queue_purge(&llc->pdu_unack_q);
+	llc->remote_busy_flag	= 0;
+	llc->cause_flag		= 0;
+	llc->retry_count	= 0;
+	llc_conn_set_p_flag(sk, 0);
+	llc->f_flag		= 0;
+	llc->s_flag		= 0;
+	llc->ack_pf		= 0;
+	llc->first_pdu_Ns	= 0;
+	llc->ack_must_be_send	= 0;
+	llc->dec_step		= 1;
+	llc->inc_cntr		= 2;
+	llc->dec_cntr		= 2;
+	llc->X			= 0;
+	llc->failed_data_req	= 0 ;
+	llc->last_nr		= 0;
+}

@@ -52,7 +52,7 @@ $(OUTPUT)hv_fcopy_uio_daemon: $(HV_FCOPY_UIO_DAEMON_IN)
 
 clean:
 	rm -f $(ALL_PROGRAMS)
-	find $(or $(OUTPUT),.) '(' -name '*.o' -o -name '\.*.d' ')' -exec $(RM) {} +
+	find $(or $(OUTPUT),.) '(' -name '*.o' -o -name '\.*.d' -o -name '\.*.cmd' ')' -exec $(RM) {} +
 
 install: $(ALL_PROGRAMS)
 	install -d -m 755 $(DESTDIR)$(sbindir); \
