@@ -147,13 +147,13 @@ enum skl_module_param_type {
 	SKL_PARAM_BIND
 };
 
-struct skl_dfw_algo_data {
+struct __packed skl_dfw_algo_data {
 	__u32 set_params:2;
 	__u32 rsvd:30;
 	__u32 param_id;
 	__u32 max;
 	char params[];
-} __packed;
+};
 
 enum skl_tkn_dir {
 	SKL_DIR_IN,

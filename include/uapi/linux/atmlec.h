@@ -56,7 +56,7 @@ struct atmlec_config_msg {
 	int is_proxy;
 };
 
-struct atmlec_msg {
+struct __ATM_API_ALIGN atmlec_msg {
 	atmlec_msg_type type;
 	int sizeoftlvs;		/* LANE2: if != 0, tlvs follow */
 	union {
@@ -82,7 +82,7 @@ struct atmlec_msg {
 				 * zeppelin, returned by kernel. Used only when proxying
 				 */
 	} content;
-} __ATM_API_ALIGN;
+};
 
 struct atmlec_ioc {
 	int dev_num;

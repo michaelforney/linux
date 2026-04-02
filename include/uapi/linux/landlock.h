@@ -147,7 +147,7 @@ enum landlock_rule_type {
  *
  * Argument of sys_landlock_add_rule().
  */
-struct landlock_path_beneath_attr {
+struct __attribute__((packed)) landlock_path_beneath_attr {
 	/**
 	 * @allowed_access: Bitmask of allowed actions for this file hierarchy
 	 * (cf. `Filesystem flags`_).
@@ -163,7 +163,7 @@ struct landlock_path_beneath_attr {
 	 * This struct is packed to avoid trailing reserved members.
 	 * Cf. security/landlock/syscalls.c:build_check_abi()
 	 */
-} __attribute__((packed));
+};
 
 /**
  * struct landlock_net_port_attr - Network port definition

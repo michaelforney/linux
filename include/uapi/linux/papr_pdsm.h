@@ -144,11 +144,11 @@ enum papr_pdsm {
 };
 
 /* Maximal union that can hold all possible payload types */
-union nd_pdsm_payload {
+union __packed nd_pdsm_payload {
 	struct nd_papr_pdsm_health health;
 	struct nd_papr_pdsm_smart_inject smart_inject;
 	__u8 buf[ND_PDSM_PAYLOAD_MAX_SIZE];
-} __packed;
+};
 
 /*
  * PDSM-header + payload expected with ND_CMD_CALL ioctl from libnvdimm
@@ -156,10 +156,10 @@ union nd_pdsm_payload {
  * that should always precede this struct when sent to papr_scm via CMD_CALL
  * interface.
  */
-struct nd_pkg_pdsm {
+struct __packed nd_pkg_pdsm {
 	__s32 cmd_status;	/* Out: Sub-cmd status returned back */
 	__u16 reserved[2];	/* Ignored and to be set as '0' */
 	union nd_pdsm_payload payload;
-} __packed;
+};
 
 #endif /* _UAPI_ASM_POWERPC_PAPR_PDSM_H_ */

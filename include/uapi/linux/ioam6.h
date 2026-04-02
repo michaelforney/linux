@@ -24,18 +24,18 @@
 /*
  * IPv6 IOAM Option Header
  */
-struct ioam6_hdr {
+struct __attribute__((packed)) ioam6_hdr {
 	__u8 opt_type;
 	__u8 opt_len;
 	__u8 :8;				/* reserved */
 #define IOAM6_TYPE_PREALLOC 0
 	__u8 type;
-} __attribute__((packed));
+};
 
 /*
  * IOAM Trace Header
  */
-struct ioam6_trace_hdr {
+struct __attribute__((packed)) ioam6_trace_hdr {
 	__be16	namespace_id;
 
 #if defined(__LITTLE_ENDIAN_BITFIELD)
@@ -128,6 +128,6 @@ struct ioam6_trace_hdr {
 
 #define IOAM6_TRACE_DATA_SIZE_MAX 244
 	__u8	data[];
-} __attribute__((packed));
+};
 
 #endif /* _UAPI_LINUX_IOAM6_H */

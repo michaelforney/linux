@@ -46,11 +46,11 @@ enum snd_sof_fw_blk_type {
 	SOF_FW_BLK_TYPE_NUM
 };
 
-struct snd_sof_blk_hdr {
+struct __packed snd_sof_blk_hdr {
 	enum snd_sof_fw_blk_type type;
 	__u32 size;		/* bytes minus this header */
 	__u32 offset;		/* offset from base */
-} __packed;
+};
 
 /*
  * Firmware file is made up of 1 .. N different modules types. The module
@@ -61,20 +61,20 @@ enum snd_sof_fw_mod_type {
 	SOF_FW_MODULE	= 1,	/* firmware module */
 };
 
-struct snd_sof_mod_hdr {
+struct __packed snd_sof_mod_hdr {
 	enum snd_sof_fw_mod_type type;
 	__u32 size;		/* bytes minus this header */
 	__u32 num_blocks;	/* number of blocks */
-} __packed;
+};
 
 /*
  * Firmware file header.
  */
-struct snd_sof_fw_header {
+struct __packed snd_sof_fw_header {
 	unsigned char sig[SND_SOF_FW_SIG_SIZE]; /* "Reef" */
 	__u32 file_size;	/* size of file minus this header */
 	__u32 num_modules;	/* number of modules */
 	__u32 abi;		/* version of header format */
-} __packed;
+};
 
 #endif

@@ -207,10 +207,10 @@ struct snd_seq_ev_raw32 {
 };
 
 	/* external stored data */
-struct snd_seq_ev_ext {
+struct __packed snd_seq_ev_ext {
 	unsigned int len;	/* length of data */
 	void *ptr;		/* pointer to data (note: maybe 64-bit) */
-} __packed;
+};
 
 struct snd_seq_result {
 	int event;		/* processed event type */
@@ -250,11 +250,11 @@ struct snd_seq_ev_queue_control {
 };
 
 	/* quoted event - inside the kernel only */
-struct snd_seq_ev_quote {
+struct __packed snd_seq_ev_quote {
 	struct snd_seq_addr origin;		/* original sender */
 	unsigned short value;		/* optional data */
 	struct snd_seq_event *event;		/* quoted event */
-} __packed;
+};
 
 	/* UMP info change notify */
 struct snd_seq_ev_ump_notify {
@@ -609,11 +609,11 @@ struct snd_seq_query_subs {
 #define SNDRV_SEQ_CLIENT_UMP_INFO_ENDPOINT	0
 #define SNDRV_SEQ_CLIENT_UMP_INFO_BLOCK		1
 
-struct snd_seq_client_ump_info {
+struct __packed snd_seq_client_ump_info {
 	int client;			/* client number to inquire/set */
 	int type;			/* type to inquire/set */
 	unsigned char info[512];	/* info (either UMP ep or block info) */
-} __packed;
+};
 
 /*
  *  IOCTL commands

@@ -22,11 +22,11 @@ enum virtio_bt_config_vendor {
 	VIRTIO_BT_CONFIG_VENDOR_REALTEK	= 3,
 };
 
-struct virtio_bt_config {
+struct __attribute__((packed)) virtio_bt_config {
 	__u8  type;
 	__u16 vendor;
 	__u16 msft_opcode;
-} __attribute__((packed));
+};
 
 struct virtio_bt_config_v2 {
 	__u8  type;

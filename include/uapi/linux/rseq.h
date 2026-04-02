@@ -42,7 +42,7 @@ enum rseq_cs_flags {
  * contained within a single cache-line. It is usually declared as
  * link-time constant data.
  */
-struct rseq_cs {
+struct __attribute__((aligned(4 * sizeof(__u64)))) rseq_cs {
 	/* Version of this structure. */
 	__u32 version;
 	/* enum rseq_cs_flags */
@@ -51,7 +51,7 @@ struct rseq_cs {
 	/* Offset from start_ip. */
 	__u64 post_commit_offset;
 	__u64 abort_ip;
-} __attribute__((aligned(4 * sizeof(__u64))));
+};
 
 /*
  * struct rseq is aligned on 4 * 8 bytes to ensure it is always
@@ -59,7 +59,7 @@ struct rseq_cs {
  *
  * A single struct rseq per thread is allowed.
  */
-struct rseq {
+struct __attribute__((aligned(4 * sizeof(__u64)))) rseq {
 	/*
 	 * Restartable sequences cpu_id_start field. Updated by the
 	 * kernel. Read by user-space with single-copy atomicity
@@ -145,6 +145,6 @@ struct rseq {
 	 * Flexible array member at end of structure, after last feature field.
 	 */
 	char end[];
-} __attribute__((aligned(4 * sizeof(__u64))));
+};
 
 #endif /* _UAPI_LINUX_RSEQ_H */

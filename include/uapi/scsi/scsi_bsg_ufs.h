@@ -80,10 +80,10 @@ struct utp_upiu_header {
 #else
 #error
 #endif
-			union {
+			union __attribute__((packed)) {
 				__u8 tm_function;
 				__u8 query_function;
-			} __attribute__((packed));
+			};
 			__u8 response;
 			__u8 status;
 			__u8 ehs_length;
@@ -169,22 +169,22 @@ struct utp_upiu_req {
 	};
 };
 
-struct ufs_arpmb_meta {
+struct __attribute__((__packed__)) ufs_arpmb_meta {
 	__be16	req_resp_type;
 	__u8	nonce[16];
 	__be32	write_counter;
 	__be16	addr_lun;
 	__be16	block_count;
 	__be16	result;
-} __attribute__((__packed__));
+};
 
-struct ufs_ehs {
+struct __attribute__((__packed__)) ufs_ehs {
 	__u8	length;
 	__u8	ehs_type;
 	__be16	ehssub_type;
 	struct ufs_arpmb_meta meta;
 	__u8	mac_key[32];
-} __attribute__((__packed__));
+};
 
 /* request (CDB) structure of the sg_io_v4 */
 struct ufs_bsg_request {

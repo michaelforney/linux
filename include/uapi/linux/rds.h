@@ -139,10 +139,10 @@ typedef __u8	rds_tos_t;
 
 #define RDS_INFO_LAST			10017
 
-struct rds_info_counter {
+struct __attribute__((packed)) rds_info_counter {
 	__u8	name[32];
 	__u64	value;
-} __attribute__((packed));
+};
 
 #define RDS_INFO_CONNECTION_FLAG_SENDING	0x01
 #define RDS_INFO_CONNECTION_FLAG_CONNECTING	0x02
@@ -150,7 +150,7 @@ struct rds_info_counter {
 
 #define TRANSNAMSIZ	16
 
-struct rds_info_connection {
+struct __attribute__((packed)) rds_info_connection {
 	__u64		next_tx_seq;
 	__u64		next_rx_seq;
 	__be32		laddr;
@@ -158,21 +158,21 @@ struct rds_info_connection {
 	__u8		transport[TRANSNAMSIZ];		/* null term ascii */
 	__u8		flags;
 	__u8		tos;
-} __attribute__((packed));
+};
 
-struct rds6_info_connection {
+struct __attribute__((packed)) rds6_info_connection {
 	__u64		next_tx_seq;
 	__u64		next_rx_seq;
 	struct in6_addr	laddr;
 	struct in6_addr	faddr;
 	__u8		transport[TRANSNAMSIZ];		/* null term ascii */
 	__u8		flags;
-} __attribute__((packed));
+};
 
 #define RDS_INFO_MESSAGE_FLAG_ACK               0x01
 #define RDS_INFO_MESSAGE_FLAG_FAST_ACK          0x02
 
-struct rds_info_message {
+struct __attribute__((packed)) rds_info_message {
 	__u64		seq;
 	__u32		len;
 	__be32		laddr;
@@ -181,9 +181,9 @@ struct rds_info_message {
 	__be16		fport;
 	__u8		flags;
 	__u8		tos;
-} __attribute__((packed));
+};
 
-struct rds6_info_message {
+struct __attribute__((packed)) rds6_info_message {
 	__u64	seq;
 	__u32	len;
 	struct in6_addr	laddr;
@@ -192,9 +192,9 @@ struct rds6_info_message {
 	__be16		fport;
 	__u8		flags;
 	__u8		tos;
-} __attribute__((packed));
+};
 
-struct rds_info_socket {
+struct __attribute__((packed)) rds_info_socket {
 	__u32		sndbuf;
 	__be32		bound_addr;
 	__be32		connected_addr;
@@ -202,9 +202,9 @@ struct rds_info_socket {
 	__be16		connected_port;
 	__u32		rcvbuf;
 	__u64		inum;
-} __attribute__((packed));
+};
 
-struct rds6_info_socket {
+struct __attribute__((packed)) rds6_info_socket {
 	__u32		sndbuf;
 	struct in6_addr	bound_addr;
 	struct in6_addr	connected_addr;
@@ -212,9 +212,9 @@ struct rds6_info_socket {
 	__be16		connected_port;
 	__u32		rcvbuf;
 	__u64		inum;
-} __attribute__((packed));
+};
 
-struct rds_info_tcp_socket {
+struct __attribute__((packed)) rds_info_tcp_socket {
 	__be32          local_addr;
 	__be16          local_port;
 	__be32          peer_addr;
@@ -225,9 +225,9 @@ struct rds_info_tcp_socket {
 	__u32           last_expected_una;
 	__u32           last_seen_una;
 	__u8		tos;
-} __attribute__((packed));
+};
 
-struct rds6_info_tcp_socket {
+struct __attribute__((packed)) rds6_info_tcp_socket {
 	struct in6_addr	local_addr;
 	__be16		local_port;
 	struct in6_addr	peer_addr;
@@ -237,7 +237,7 @@ struct rds6_info_tcp_socket {
 	__u32		last_sent_nxt;
 	__u32		last_expected_una;
 	__u32		last_seen_una;
-} __attribute__((packed));
+};
 
 #define RDS_IB_GID_LEN	16
 struct rds_info_rdma_connection {

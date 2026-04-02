@@ -131,12 +131,12 @@ struct {				\
 }
 #endif /* __ARCH_HAS_SWAPPED_SIGINFO */
 
-typedef struct siginfo {
+typedef struct __ARCH_SI_ATTRIBUTES siginfo {
 	union {
 		__SIGINFO;
 		int _si_pad[SI_MAX_SIZE/sizeof(int)];
 	};
-} __ARCH_SI_ATTRIBUTES siginfo_t;
+} siginfo_t;
 
 /*
  * How these fields are to be accessed.

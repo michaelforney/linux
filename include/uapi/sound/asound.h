@@ -330,11 +330,11 @@ enum {
 #endif
 };
 
-union snd_pcm_sync_id {
+union __attribute__((deprecated)) snd_pcm_sync_id {
 	unsigned char id[16];
 	unsigned short id16[8];
 	unsigned int id32[4];
-} __attribute__((deprecated));
+};
 
 struct snd_pcm_info {
 	unsigned int device;		/* RO/WR (control): device number */
@@ -760,7 +760,7 @@ struct snd_rawmidi_info {
 
 #define SNDRV_RAWMIDI_FRAMING_DATA_LENGTH 16
 
-struct snd_rawmidi_framing_tstamp {
+struct __packed snd_rawmidi_framing_tstamp {
 	/* For now, frame_type is always 0. Midi 2.0 is expected to add new
 	 * types here. Applications are expected to skip unknown frame types.
 	 */
@@ -770,7 +770,7 @@ struct snd_rawmidi_framing_tstamp {
 	__u32 tv_nsec;		/* nanoseconds */
 	__u64 tv_sec;		/* seconds */
 	__u8 data[SNDRV_RAWMIDI_FRAMING_DATA_LENGTH];
-} __packed;
+};
 
 struct snd_rawmidi_params {
 	int stream;
@@ -804,7 +804,7 @@ struct snd_rawmidi_status {
 #define SNDRV_UMP_EP_INFO_PROTO_JRTS_RX		0x0002 /* JRTS Receive */
 
 /* UMP Endpoint information */
-struct snd_ump_endpoint_info {
+struct __packed snd_ump_endpoint_info {
 	int card;			/* card number */
 	int device;			/* device number */
 	unsigned int flags;		/* additional info */
@@ -820,7 +820,7 @@ struct snd_ump_endpoint_info {
 	unsigned char name[128];	/* endpoint name string */
 	unsigned char product_id[128];	/* unique product id string */
 	unsigned char reserved[32];
-} __packed;
+};
 
 /* UMP direction */
 #define SNDRV_UMP_DIR_INPUT		0x01
@@ -842,7 +842,7 @@ struct snd_ump_endpoint_info {
 #define SNDRV_UMP_MAX_BLOCKS		32
 
 /* UMP Block information */
-struct snd_ump_block_info {
+struct __packed snd_ump_block_info {
 	int card;			/* card number */
 	int device;			/* device number */
 	unsigned char block_id;		/* block ID (R/W) */
@@ -856,7 +856,7 @@ struct snd_ump_block_info {
 	unsigned int flags;		/* various info flags */
 	unsigned char name[128];	/* block name string */
 	unsigned char reserved[32];
-} __packed;
+};
 
 #define SNDRV_RAWMIDI_IOCTL_PVERSION	_IOR('W', 0x00, int)
 #define SNDRV_RAWMIDI_IOCTL_INFO	_IOR('W', 0x01, struct snd_rawmidi_info)

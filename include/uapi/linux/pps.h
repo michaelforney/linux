@@ -57,11 +57,11 @@ struct pps_ktime {
 	__u32 flags;
 };
 
-struct pps_ktime_compat {
+struct __attribute__((packed, aligned(4))) pps_ktime_compat {
 	__s64 sec;
 	__s32 nsec;
 	__u32 flags;
-} __attribute__((packed, aligned(4)));
+};
 #define PPS_TIME_INVALID	(1<<0)	/* used to specify timeout==NULL */
 
 struct pps_kinfo {

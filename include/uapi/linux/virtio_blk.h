@@ -57,7 +57,7 @@
 
 #define VIRTIO_BLK_ID_BYTES	20	/* ID string length */
 
-struct virtio_blk_config {
+struct __attribute__((packed)) virtio_blk_config {
 	/* The capacity (in 512-byte sectors). */
 	__virtio64 capacity;
 	/* The maximum segment size (if VIRTIO_BLK_F_SIZE_MAX) */
@@ -148,7 +148,7 @@ struct virtio_blk_config {
 		__u8 model;
 		__u8 unused2[3];
 	} zoned;
-} __attribute__((packed));
+};
 
 /*
  * Command types

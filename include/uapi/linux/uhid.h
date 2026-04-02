@@ -42,7 +42,7 @@ enum uhid_event_type {
 	UHID_SET_REPORT_REPLY,
 };
 
-struct uhid_create2_req {
+struct __attribute__((__packed__)) uhid_create2_req {
 	__u8 name[128];
 	__u8 phys[64];
 	__u8 uniq[64];
@@ -53,7 +53,7 @@ struct uhid_create2_req {
 	__u32 version;
 	__u32 country;
 	__u8 rd_data[HID_MAX_DESCRIPTOR_SIZE];
-} __attribute__((__packed__));
+};
 
 enum uhid_dev_flag {
 	UHID_DEV_NUMBERED_FEATURE_REPORTS			= (1ULL << 0),
@@ -73,42 +73,42 @@ enum uhid_report_type {
 	UHID_INPUT_REPORT,
 };
 
-struct uhid_input2_req {
+struct __attribute__((__packed__)) uhid_input2_req {
 	__u16 size;
 	__u8 data[UHID_DATA_MAX];
-} __attribute__((__packed__));
+};
 
-struct uhid_output_req {
+struct __attribute__((__packed__)) uhid_output_req {
 	__u8 data[UHID_DATA_MAX];
 	__u16 size;
 	__u8 rtype;
-} __attribute__((__packed__));
+};
 
-struct uhid_get_report_req {
+struct __attribute__((__packed__)) uhid_get_report_req {
 	__u32 id;
 	__u8 rnum;
 	__u8 rtype;
-} __attribute__((__packed__));
+};
 
-struct uhid_get_report_reply_req {
+struct __attribute__((__packed__)) uhid_get_report_reply_req {
 	__u32 id;
 	__u16 err;
 	__u16 size;
 	__u8 data[UHID_DATA_MAX];
-} __attribute__((__packed__));
+};
 
-struct uhid_set_report_req {
+struct __attribute__((__packed__)) uhid_set_report_req {
 	__u32 id;
 	__u8 rnum;
 	__u8 rtype;
 	__u16 size;
 	__u8 data[UHID_DATA_MAX];
-} __attribute__((__packed__));
+};
 
-struct uhid_set_report_reply_req {
+struct __attribute__((__packed__)) uhid_set_report_reply_req {
 	__u32 id;
 	__u16 err;
-} __attribute__((__packed__));
+};
 
 /*
  * Compat Layer
@@ -126,7 +126,7 @@ enum uhid_legacy_event_type {
 };
 
 /* Obsolete! Use UHID_CREATE2. */
-struct uhid_create_req {
+struct __attribute__((__packed__)) uhid_create_req {
 	__u8 name[128];
 	__u8 phys[64];
 	__u8 uniq[64];
@@ -138,35 +138,35 @@ struct uhid_create_req {
 	__u32 product;
 	__u32 version;
 	__u32 country;
-} __attribute__((__packed__));
+};
 
 /* Obsolete! Use UHID_INPUT2. */
-struct uhid_input_req {
+struct __attribute__((__packed__)) uhid_input_req {
 	__u8 data[UHID_DATA_MAX];
 	__u16 size;
-} __attribute__((__packed__));
+};
 
 /* Obsolete! Kernel uses UHID_OUTPUT exclusively now. */
-struct uhid_output_ev_req {
+struct __attribute__((__packed__)) uhid_output_ev_req {
 	__u16 type;
 	__u16 code;
 	__s32 value;
-} __attribute__((__packed__));
+};
 
 /* Obsolete! Kernel uses ABI compatible UHID_GET_REPORT. */
-struct uhid_feature_req {
+struct __attribute__((__packed__)) uhid_feature_req {
 	__u32 id;
 	__u8 rnum;
 	__u8 rtype;
-} __attribute__((__packed__));
+};
 
 /* Obsolete! Use ABI compatible UHID_GET_REPORT_REPLY. */
-struct uhid_feature_answer_req {
+struct __attribute__((__packed__)) uhid_feature_answer_req {
 	__u32 id;
 	__u16 err;
 	__u16 size;
 	__u8 data[UHID_DATA_MAX];
-} __attribute__((__packed__));
+};
 
 /*
  * UHID Events
@@ -177,7 +177,7 @@ struct uhid_feature_answer_req {
  * the kernel writes short events, user-space shall extend them with 0s.
  */
 
-struct uhid_event {
+struct __attribute__((__packed__)) uhid_event {
 	__u32 type;
 
 	union {
@@ -195,6 +195,6 @@ struct uhid_event {
 		struct uhid_set_report_reply_req set_report_reply;
 		struct uhid_start_req start;
 	} u;
-} __attribute__((__packed__));
+};
 
 #endif /* __UHID_H_ */

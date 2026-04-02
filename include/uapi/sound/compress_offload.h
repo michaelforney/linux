@@ -19,10 +19,10 @@
  * @fragment_size: size of buffer fragment in bytes
  * @fragments: number of such fragments
  */
-struct snd_compressed_buffer {
+struct __attribute__((packed, aligned(4))) snd_compressed_buffer {
 	__u32 fragment_size;
 	__u32 fragments;
-} __attribute__((packed, aligned(4)));
+};
 
 /**
  * struct snd_compr_params - compressed stream params
@@ -30,11 +30,11 @@ struct snd_compressed_buffer {
  * @codec: codec parameters
  * @no_wake_mode: dont wake on fragment elapsed
  */
-struct snd_compr_params {
+struct __attribute__((packed, aligned(4))) snd_compr_params {
 	struct snd_compressed_buffer buffer;
 	struct snd_codec codec;
 	__u8 no_wake_mode;
-} __attribute__((packed, aligned(4)));
+};
 
 /**
  * struct snd_compr_tstamp - timestamp descriptor
@@ -47,13 +47,13 @@ struct snd_compr_params {
  * output/input. This field should be used for A/V sync or time estimates.
  * @sampling_rate: sampling rate of audio
  */
-struct snd_compr_tstamp {
+struct __attribute__((packed, aligned(4))) snd_compr_tstamp {
 	__u32 byte_offset;
 	__u32 copied_total;
 	__u32 pcm_frames;
 	__u32 pcm_io_frames;
 	__u32 sampling_rate;
-} __attribute__((packed, aligned(4)));
+};
 
 /**
  * struct snd_compr_tstamp64 - timestamp descriptor with fields in 64 bit
@@ -66,33 +66,33 @@ struct snd_compr_tstamp {
  * output/input. This field should be used for A/V sync or time estimates.
  * @sampling_rate: sampling rate of audio
  */
-struct snd_compr_tstamp64 {
+struct __attribute__((packed, aligned(4))) snd_compr_tstamp64 {
 	__u32 byte_offset;
 	__u64 copied_total;
 	__u64 pcm_frames;
 	__u64 pcm_io_frames;
 	__u32 sampling_rate;
-} __attribute__((packed, aligned(4)));
+};
 
 /**
  * struct snd_compr_avail - avail descriptor
  * @avail: Number of bytes available in ring buffer for writing/reading
  * @tstamp: timestamp information
  */
-struct snd_compr_avail {
+struct __attribute__((packed, aligned(4))) snd_compr_avail {
 	__u64 avail;
 	struct snd_compr_tstamp tstamp;
-} __attribute__((packed, aligned(4)));
+};
 
 /**
  * struct snd_compr_avail64 - avail descriptor with tstamp in 64 bit format
  * @avail: Number of bytes available in ring buffer for writing/reading
  * @tstamp: timestamp information
  */
-struct snd_compr_avail64 {
+struct __attribute__((packed, aligned(4))) snd_compr_avail64 {
 	__u64 avail;
 	struct snd_compr_tstamp64 tstamp;
-} __attribute__((packed, aligned(4)));
+};
 
 enum snd_compr_direction {
 	SND_COMPRESS_PLAYBACK = 0,
@@ -111,7 +111,7 @@ enum snd_compr_direction {
  * @num_codecs: number of codecs supported
  * @reserved: reserved field
  */
-struct snd_compr_caps {
+struct __attribute__((packed, aligned(4))) snd_compr_caps {
 	__u32 num_codecs;
 	__u32 direction;
 	__u32 min_fragment_size;
@@ -120,7 +120,7 @@ struct snd_compr_caps {
 	__u32 max_fragments;
 	__u32 codecs[MAX_NUM_CODECS];
 	__u32 reserved[11];
-} __attribute__((packed, aligned(4)));
+};
 
 /**
  * struct snd_compr_codec_caps - query capability of codec
@@ -128,11 +128,11 @@ struct snd_compr_caps {
  * @num_descriptors: number of codec descriptors
  * @descriptor: array of codec capability descriptor
  */
-struct snd_compr_codec_caps {
+struct __attribute__((packed, aligned(4))) snd_compr_codec_caps {
 	__u32 codec;
 	__u32 num_descriptors;
 	struct snd_codec_desc descriptor[MAX_NUM_CODEC_DESCRIPTORS];
-} __attribute__((packed, aligned(4)));
+};
 
 /**
  * enum sndrv_compress_encoder - encoder metadata key
@@ -151,10 +151,10 @@ enum sndrv_compress_encoder {
  * @key: key id
  * @value: key value
  */
-struct snd_compr_metadata {
+struct __attribute__((packed, aligned(4))) snd_compr_metadata {
 	 __u32 key;
 	 __u32 value[8];
-} __attribute__((packed, aligned(4)));
+};
 
 /* flags for struct snd_compr_task */
 #define SND_COMPRESS_TFLG_NEW_STREAM		(1<<0)	/* mark for the new stream data */
@@ -169,7 +169,7 @@ struct snd_compr_metadata {
  * @flags: see SND_COMPRESS_TFLG_* defines
  * @reserved: reserved for future extension
  */
-struct snd_compr_task {
+struct __attribute__((packed, aligned(4))) snd_compr_task {
 	__u64 seqno;
 	__u64 origin_seqno;
 	int input_fd;
@@ -177,7 +177,7 @@ struct snd_compr_task {
 	__u64 input_size;
 	__u32 flags;
 	__u8 reserved[16];
-} __attribute__((packed, aligned(4)));
+};
 
 /**
  * enum snd_compr_state - task state
@@ -200,14 +200,14 @@ enum snd_compr_state {
  * @state: actual task state (SND_COMPRESS_TASK_STATE_*)
  * @reserved: reserved for future extension
  */
-struct snd_compr_task_status {
+struct __attribute__((packed, aligned(4))) snd_compr_task_status {
 	__u64 seqno;
 	__u64 input_size;
 	__u64 output_size;
 	__u32 output_flags;
 	__u8 state;
 	__u8 reserved[15];
-} __attribute__((packed, aligned(4)));
+};
 
 /*
  * compress path ioctl definitions

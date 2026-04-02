@@ -20,7 +20,7 @@ enum atmsvc_msg_type { as_catch_null, as_bind, as_connect, as_accept, as_reject,
 		       as_itf_notify, as_modify, as_identify, as_terminate,
 		       as_addparty, as_dropparty };
 
-struct atmsvc_msg {
+struct __ATM_API_ALIGN atmsvc_msg {
 	enum atmsvc_msg_type type;
 	atm_kptr_t vcc;
 	atm_kptr_t listen_vcc;		/* indicate */
@@ -36,7 +36,7 @@ struct atmsvc_msg {
 	struct atm_sap sap;		/* SAP */
 	unsigned int session;		/* for p2pm */
 	struct sockaddr_atmsvc svc;	/* SVC address */
-} __ATM_API_ALIGN;
+};
 
 /*
  * Message contents: see ftp://icaftp.epfl.ch/pub/linux/atm/docs/isp-*.tar.gz

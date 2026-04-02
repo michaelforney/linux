@@ -77,12 +77,12 @@ struct io_uring_sqe {
 	};
 	__u64	user_data;	/* data to be passed back at completion time */
 	/* pack this to avoid bogus arm OABI complaints */
-	union {
+	union __attribute__((packed)) {
 		/* index into fixed buffers, if used */
 		__u16	buf_index;
 		/* for grouped buffer selection */
 		__u16	buf_group;
-	} __attribute__((packed));
+	};
 	/* personality to use, if used */
 	__u16	personality;
 	union {

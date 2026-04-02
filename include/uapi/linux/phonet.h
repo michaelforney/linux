@@ -56,14 +56,14 @@
 #define SIOCPNDELRESOURCE	(SIOCPROTOPRIVATE + 15)
 
 /* Phonet protocol header */
-struct phonethdr {
+struct __attribute__((packed)) phonethdr {
 	__u8	pn_rdev;
 	__u8	pn_sdev;
 	__u8	pn_res;
 	__be16	pn_length;
 	__u8	pn_robj;
 	__u8	pn_sobj;
-} __attribute__((packed));
+};
 
 /* Common Phonet payload header */
 struct phonetmsg {
@@ -99,13 +99,13 @@ struct phonetmsg {
 #define pn_e_status		pn_e_data[1]
 
 /* Phonet socket address structure */
-struct sockaddr_pn {
+struct __attribute__((packed)) sockaddr_pn {
 	__kernel_sa_family_t spn_family;
 	__u8 spn_obj;
 	__u8 spn_dev;
 	__u8 spn_resource;
 	__u8 spn_zero[sizeof(struct sockaddr) - sizeof(__kernel_sa_family_t) - 3];
-} __attribute__((packed));
+};
 
 /* Well known address */
 #define PN_DEV_PC	0x10

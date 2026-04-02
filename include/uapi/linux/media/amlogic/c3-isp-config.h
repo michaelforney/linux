@@ -49,9 +49,9 @@ struct c3_isp_awb_zone_stats {
  *
  * @stats: array of auto white balance statistics
  */
-struct c3_isp_awb_stats {
+struct __attribute__((aligned(16))) c3_isp_awb_stats {
 	struct c3_isp_awb_zone_stats stats[C3_ISP_AWB_MAX_ZONES];
-} __attribute__((aligned(16)));
+};
 
 /**
  * struct c3_isp_ae_zone_stats - AE statistics of a zone
@@ -82,11 +82,11 @@ struct c3_isp_ae_zone_stats {
  * @reserved: undefined buffer space
  * @hist: a 1024-bin histogram for the entire image
  */
-struct c3_isp_ae_stats {
+struct __attribute__((aligned(16))) c3_isp_ae_stats {
 	struct c3_isp_ae_zone_stats stats[C3_ISP_AE_MAX_ZONES];
 	__u32 reserved[2];
 	__u32 hist[1024];
-} __attribute__((aligned(16)));
+};
 
 /**
  * struct c3_isp_af_zone_stats - AF statistics of a zone
@@ -120,10 +120,10 @@ struct c3_isp_af_zone_stats {
  * @stats: array of auto focus block statistics
  * @reserved: undefined buffer space
  */
-struct c3_isp_af_stats {
+struct __attribute__((aligned(16))) c3_isp_af_stats {
 	struct c3_isp_af_zone_stats stats[C3_ISP_AF_MAX_ZONES];
 	__u32 reserved[2];
-} __attribute__((aligned(16)));
+};
 
 /**
  * struct c3_isp_stats_info - V4L2_META_FMT_C3ISP_STATS
@@ -215,13 +215,13 @@ enum c3_isp_params_block_type {
  * @b_gain: Multiplier for B channel (Q4.8 format)
  * @gb_gain: Multiplier for Gb channel (Q4.8 format)
  */
-struct c3_isp_params_awb_gains {
+struct __attribute__((aligned(8))) c3_isp_params_awb_gains {
 	struct c3_isp_params_block_header header;
 	__u16 gr_gain;
 	__u16 r_gain;
 	__u16 b_gain;
 	__u16 gb_gain;
-} __attribute__((aligned(8)));
+};
 
 /**
  * enum c3_isp_params_awb_tap_points - Tap points for the AWB statistics
@@ -264,7 +264,7 @@ enum c3_isp_params_awb_tap_points {
  * @horiz_coord: the horizontal coordinate of points on the diagonal [0..2888]
  * @vert_coord: the vertical coordinate of points on the diagonal [0..2240]
  */
-struct c3_isp_params_awb_config {
+struct __attribute__((aligned(8))) c3_isp_params_awb_config {
 	struct c3_isp_params_block_header header;
 	__u8 tap_point;
 	__u8 satur_vald;
@@ -281,7 +281,7 @@ struct c3_isp_params_awb_config {
 	__u8 zone_weight[C3_ISP_AWB_MAX_ZONES];
 	__u16 horiz_coord[C3_ISP_AWB_MAX_PT_NUM];
 	__u16 vert_coord[C3_ISP_AWB_MAX_PT_NUM];
-} __attribute__((aligned(8)));
+};
 
 /**
  * enum c3_isp_params_ae_tap_points - Tap points for the AE statistics
@@ -311,7 +311,7 @@ enum c3_isp_params_ae_tap_points {
  * @vert_coord: the vertical coordinate of points on the diagonal [0..2240]
  * @reserved: applications must zero this array
  */
-struct c3_isp_params_ae_config {
+struct __attribute__((aligned(8))) c3_isp_params_ae_config {
 	struct c3_isp_params_block_header header;
 	__u8 tap_point;
 	__u8 horiz_zones_num;
@@ -320,7 +320,7 @@ struct c3_isp_params_ae_config {
 	__u16 horiz_coord[C3_ISP_AE_MAX_PT_NUM];
 	__u16 vert_coord[C3_ISP_AE_MAX_PT_NUM];
 	__u16 reserved[3];
-} __attribute__((aligned(8)));
+};
 
 /**
  * enum c3_isp_params_af_tap_points - Tap points for the AF statistics
@@ -349,7 +349,7 @@ enum c3_isp_params_af_tap_points {
  * @horiz_coord: the horizontal coordinate of points on the diagonal [0..2888]
  * @vert_coord: the vertical coordinate of points on the diagonal [0..2240]
  */
-struct c3_isp_params_af_config {
+struct __attribute__((aligned(8))) c3_isp_params_af_config {
 	struct c3_isp_params_block_header header;
 	__u8 tap_point;
 	__u8 horiz_zones_num;
@@ -357,7 +357,7 @@ struct c3_isp_params_af_config {
 	__u8 reserved[5];
 	__u16 horiz_coord[C3_ISP_AF_MAX_PT_NUM];
 	__u16 vert_coord[C3_ISP_AF_MAX_PT_NUM];
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct c3_isp_params_pst_gamma - Post gamma configuration
@@ -373,11 +373,11 @@ struct c3_isp_params_af_config {
  * @lut: lookup table for P-Stitch gamma [0..1023]
  * @reserved: applications must zero this array
  */
-struct c3_isp_params_pst_gamma {
+struct __attribute__((aligned(8))) c3_isp_params_pst_gamma {
 	struct c3_isp_params_block_header header;
 	__u16 lut[129];
 	__u16 reserved[3];
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct c3_isp_params_ccm - ISP CCM configuration
@@ -394,11 +394,11 @@ struct c3_isp_params_pst_gamma {
  *          the value of matrix[x][y] is orig_value x 256. [-4096..4095]
  * @reserved: applications must zero this array
  */
-struct c3_isp_params_ccm {
+struct __attribute__((aligned(8))) c3_isp_params_ccm {
 	struct c3_isp_params_block_header header;
 	__s16 matrix[3][3];
 	__u16 reserved[3];
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct c3_isp_params_csc - ISP Color Space Conversion configuration
@@ -414,11 +414,11 @@ struct c3_isp_params_ccm {
  *          the value of matrix[x][y] is orig_value x 256. [-4096..4095]
  * @reserved: applications must zero this array
  */
-struct c3_isp_params_csc {
+struct __attribute__((aligned(8))) c3_isp_params_csc {
 	struct c3_isp_params_block_header header;
 	__s16 matrix[3][3];
 	__u16 reserved[3];
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct c3_isp_params_blc - ISP Black Level Correction configuration

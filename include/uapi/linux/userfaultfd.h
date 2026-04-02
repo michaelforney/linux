@@ -105,7 +105,7 @@
 				      struct uffdio_poison)
 
 /* read() structure */
-struct uffd_msg {
+struct __packed uffd_msg {
 	__u8	event;
 
 	__u8	reserved1;
@@ -143,7 +143,7 @@ struct uffd_msg {
 			__u64	reserved3;
 		} reserved;
 	} arg;
-} __packed;
+};
 
 /*
  * Start at 0x12 and not at 0 to be more strict against bugs.

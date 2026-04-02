@@ -37,9 +37,9 @@ enum userio_cmd_type {
  * is being sent to userio. The data field should contain the accompanying
  * argument for the command, if there is one.
  */
-struct userio_cmd {
+struct __attribute__((__packed__)) userio_cmd {
 	__u8 type;
 	__u8 data;
-} __attribute__((__packed__));
+};
 
 #endif /* !_USERIO_H */

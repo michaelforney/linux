@@ -78,15 +78,15 @@ enum nfulnl_msg_config_cmds {
 	NFULNL_CFG_CMD_PF_UNBIND,
 };
 
-struct nfulnl_msg_config_cmd {
+struct __attribute__((packed)) nfulnl_msg_config_cmd {
 	__u8	command;	/* nfulnl_msg_config_cmds */
-} __attribute__ ((packed));
+};
 
-struct nfulnl_msg_config_mode {
+struct __attribute__((packed)) nfulnl_msg_config_mode {
 	__be32		copy_range;
 	__u8	copy_mode;
 	__u8	_pad;
-} __attribute__ ((packed));
+};
 
 enum nfulnl_attr_config {
 	NFULA_CFG_UNSPEC,

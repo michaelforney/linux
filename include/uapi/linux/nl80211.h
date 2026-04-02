@@ -3726,10 +3726,10 @@ enum nl80211_sta_p2p_ps_status {
  *
  * Both mask and set contain bits as per &enum nl80211_sta_flags.
  */
-struct nl80211_sta_flag_update {
+struct __attribute__((packed)) nl80211_sta_flag_update {
 	__u32 mask;
 	__u32 set;
-} __attribute__((packed));
+};
 
 /**
  * enum nl80211_he_gi - HE guard interval
@@ -5857,12 +5857,12 @@ enum nl80211_packet_pattern_attr {
  * %NL80211_ATTR_COALESCE_RULE in the capability information given
  * by the kernel to userspace.
  */
-struct nl80211_pattern_support {
+struct __attribute__((packed)) nl80211_pattern_support {
 	__u32 max_patterns;
 	__u32 min_pattern_len;
 	__u32 max_pattern_len;
 	__u32 max_pkt_offset;
-} __attribute__((packed));
+};
 
 /* only for backward compatibility */
 #define __NL80211_WOWLAN_PKTPAT_INVALID __NL80211_PKTPAT_INVALID
@@ -6111,11 +6111,11 @@ enum nl80211_wowlan_tcp_attrs {
  * This struct is carried in %NL80211_ATTR_COALESCE_RULE in the
  * capability information given by the kernel to userspace.
  */
-struct nl80211_coalesce_rule_support {
+struct __attribute__((packed)) nl80211_coalesce_rule_support {
 	__u32 max_rules;
 	struct nl80211_pattern_support pat;
 	__u32 max_delay;
-} __attribute__((packed));
+};
 
 /**
  * enum nl80211_attr_coalesce_rule - coalesce rule attribute
@@ -7168,10 +7168,10 @@ enum nl80211_sched_scan_plan {
  *	of this field is according to &enum nl80211_band.
  * @delta: value used to adjust the RSSI value of matching BSS in dB.
  */
-struct nl80211_bss_select_rssi_adjust {
+struct __attribute__((packed)) nl80211_bss_select_rssi_adjust {
 	__u8 band;
 	__s8 delta;
-} __attribute__((packed));
+};
 
 /**
  * enum nl80211_bss_select_attr - attributes for bss selection.

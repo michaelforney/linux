@@ -43,7 +43,7 @@
 
 #define VIRTIO_CONSOLE_BAD_ID		(~(__u32)0)
 
-struct virtio_console_config {
+struct __attribute__((packed)) virtio_console_config {
 	/* colums of the screens */
 	__virtio16 cols;
 	/* rows of the screens */
@@ -52,7 +52,7 @@ struct virtio_console_config {
 	__virtio32 max_nr_ports;
 	/* emergency write register */
 	__virtio32 emerg_wr;
-} __attribute__((packed));
+};
 
 /*
  * A message that's passed between the Host and the Guest for a

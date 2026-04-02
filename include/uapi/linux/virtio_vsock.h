@@ -41,19 +41,19 @@
 /* The feature bitmap for virtio vsock */
 #define VIRTIO_VSOCK_F_SEQPACKET	1	/* SOCK_SEQPACKET supported */
 
-struct virtio_vsock_config {
+struct __attribute__((packed)) virtio_vsock_config {
 	__le64 guest_cid;
-} __attribute__((packed));
+};
 
 enum virtio_vsock_event_id {
 	VIRTIO_VSOCK_EVENT_TRANSPORT_RESET = 0,
 };
 
-struct virtio_vsock_event {
+struct __attribute__((packed)) virtio_vsock_event {
 	__le32 id;
-} __attribute__((packed));
+};
 
-struct virtio_vsock_hdr {
+struct __attribute__((packed)) virtio_vsock_hdr {
 	__le64	src_cid;
 	__le64	dst_cid;
 	__le32	src_port;
@@ -64,7 +64,7 @@ struct virtio_vsock_hdr {
 	__le32	flags;
 	__le32	buf_alloc;
 	__le32	fwd_cnt;
-} __attribute__((packed));
+};
 
 enum virtio_vsock_type {
 	VIRTIO_VSOCK_TYPE_STREAM = 1,

@@ -295,21 +295,21 @@ struct media_links_enum {
 #define MEDIA_V2_ENTITY_HAS_FLAGS(media_version) \
 	((media_version) >= ((4U << 16) | (19U << 8) | 0U))
 
-struct media_v2_entity {
+struct __attribute__((packed)) media_v2_entity {
 	__u32 id;
 	char name[64];
 	__u32 function;		/* Main function of the entity */
 	__u32 flags;
 	__u32 reserved[5];
-} __attribute__ ((packed));
+};
 
 /* Should match the specific fields at media_intf_devnode */
-struct media_v2_intf_devnode {
+struct __attribute__((packed)) media_v2_intf_devnode {
 	__u32 major;
 	__u32 minor;
-} __attribute__ ((packed));
+};
 
-struct media_v2_interface {
+struct __attribute__((packed)) media_v2_interface {
 	__u32 id;
 	__u32 intf_type;
 	__u32 flags;
@@ -319,7 +319,7 @@ struct media_v2_interface {
 		struct media_v2_intf_devnode devnode;
 		__u32 raw[16];
 	};
-} __attribute__ ((packed));
+};
 
 /*
  * Appeared in 4.19.0.
@@ -330,23 +330,23 @@ struct media_v2_interface {
 #define MEDIA_V2_PAD_HAS_INDEX(media_version) \
 	((media_version) >= ((4U << 16) | (19U << 8) | 0U))
 
-struct media_v2_pad {
+struct __attribute__((packed)) media_v2_pad {
 	__u32 id;
 	__u32 entity_id;
 	__u32 flags;
 	__u32 index;
 	__u32 reserved[4];
-} __attribute__ ((packed));
+};
 
-struct media_v2_link {
+struct __attribute__((packed)) media_v2_link {
 	__u32 id;
 	__u32 source_id;
 	__u32 sink_id;
 	__u32 flags;
 	__u32 reserved[6];
-} __attribute__ ((packed));
+};
 
-struct media_v2_topology {
+struct __attribute__((packed)) media_v2_topology {
 	__u64 topology_version;
 
 	__u32 num_entities;
@@ -364,7 +364,7 @@ struct media_v2_topology {
 	__u32 num_links;
 	__u32 reserved4;
 	__u64 ptr_links;
-} __attribute__ ((packed));
+};
 
 /* ioctls */
 

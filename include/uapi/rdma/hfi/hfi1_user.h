@@ -195,7 +195,7 @@ enum sdma_req_opcode {
 #define HFI1_SDMA_REQ_IOVCNT_MASK 0xFF
 #define HFI1_SDMA_REQ_IOVCNT_SHIFT 0x8
 
-struct sdma_req_info {
+struct __attribute__((__packed__)) sdma_req_info {
 	/*
 	 * bits 0-3 - version (currently unused)
 	 * bits 4-7 - opcode (enum sdma_req_opcode)
@@ -220,29 +220,29 @@ struct sdma_req_info {
 	 * in charge of managing its own ring.
 	 */
 	__u16 comp_idx;
-} __attribute__((__packed__));
+};
 
 /*
  * SW KDETH header.
  * swdata is SW defined portion.
  */
-struct hfi1_kdeth_header {
+struct __attribute__((__packed__)) hfi1_kdeth_header {
 	__le32 ver_tid_offset;
 	__le16 jkey;
 	__le16 hcrc;
 	__le32 swdata[7];
-}  __attribute__((__packed__));
+};
 
 /*
  * Structure describing the headers that User space uses. The
  * structure above is a subset of this one.
  */
-struct hfi1_pkt_header {
+struct __attribute__((__packed__)) hfi1_pkt_header {
 	__le16 pbc[4];
 	__be16 lrh[4];
 	__be32 bth[3];
 	struct hfi1_kdeth_header kdeth;
-}  __attribute__((__packed__));
+};
 
 
 /*

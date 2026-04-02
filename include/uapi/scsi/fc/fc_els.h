@@ -413,7 +413,7 @@ struct fc_els_cssp {
  * NFC_ELS_FLOGI: Fabric login request.
  * NFC_ELS_PLOGI: Port login request (same format).
  */
-struct fc_els_flogi {
+struct __attribute__((__packed__)) fc_els_flogi {
 	__u8		fl_cmd;		/* command */
 	__u8		_fl_resvd[3];	/* must be zero */
 	struct fc_els_csp fl_csp;	/* common service parameters */
@@ -421,7 +421,7 @@ struct fc_els_flogi {
 	__be64		fl_wwnn;	/* node name */
 	struct fc_els_cssp fl_cssp[4];	/* class 1-4 service parameters */
 	__u8		fl_vend[16];	/* vendor version level */
-} __attribute__((__packed__));
+};
 
 /*
  * Process login service parameter page.
@@ -520,7 +520,7 @@ struct fc_els_prlo {
 /*
  * ELS_ADISC payload
  */
-struct fc_els_adisc {
+struct __attribute__((__packed__)) fc_els_adisc {
 	__u8		adisc_cmd;
 	__u8		adisc_resv[3];
 	__u8            adisc_resv1;
@@ -529,7 +529,7 @@ struct fc_els_adisc {
 	__be64          adisc_wwnn;
 	__u8            adisc_resv2;
 	__u8            adisc_port_id[3];
-} __attribute__((__packed__));
+};
 
 /*
  * ELS_LOGO - process or fabric logout.

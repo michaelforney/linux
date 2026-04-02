@@ -62,46 +62,46 @@ struct pptp_addr {
 #define PX_PROTO_PPTP  2
 #define PX_MAX_PROTO   3
 
-struct sockaddr_pppox {
+struct __packed sockaddr_pppox {
 	__kernel_sa_family_t sa_family;       /* address family, AF_PPPOX */
 	unsigned int    sa_protocol;          /* protocol identifier */
 	union {
 		struct pppoe_addr  pppoe;
 		struct pptp_addr   pptp;
 	} sa_addr;
-} __packed;
+};
 
 /* The use of the above union isn't viable because the size of this
  * struct must stay fixed over time -- applications use sizeof(struct
  * sockaddr_pppox) to fill it. We use a protocol specific sockaddr
  * type instead.
  */
-struct sockaddr_pppol2tp {
+struct __packed sockaddr_pppol2tp {
 	__kernel_sa_family_t sa_family; /* address family, AF_PPPOX */
 	unsigned int    sa_protocol;    /* protocol identifier */
 	struct pppol2tp_addr pppol2tp;
-} __packed;
+};
 
-struct sockaddr_pppol2tpin6 {
+struct __packed sockaddr_pppol2tpin6 {
 	__kernel_sa_family_t sa_family; /* address family, AF_PPPOX */
 	unsigned int    sa_protocol;    /* protocol identifier */
 	struct pppol2tpin6_addr pppol2tp;
-} __packed;
+};
 
 /* The L2TPv3 protocol changes tunnel and session ids from 16 to 32
  * bits. So we need a different sockaddr structure.
  */
-struct sockaddr_pppol2tpv3 {
+struct __packed sockaddr_pppol2tpv3 {
 	__kernel_sa_family_t sa_family; /* address family, AF_PPPOX */
 	unsigned int    sa_protocol;    /* protocol identifier */
 	struct pppol2tpv3_addr pppol2tp;
-} __packed;
+};
 
-struct sockaddr_pppol2tpv3in6 {
+struct __packed sockaddr_pppol2tpv3in6 {
 	__kernel_sa_family_t sa_family; /* address family, AF_PPPOX */
 	unsigned int    sa_protocol;    /* protocol identifier */
 	struct pppol2tpv3in6_addr pppol2tp;
-} __packed;
+};
 
 /*********************************************************************
  *
@@ -119,11 +119,11 @@ struct sockaddr_pppol2tpv3in6 {
 #define PADR_CODE	0x19
 #define PADS_CODE	0x65
 #define PADT_CODE	0xa7
-struct pppoe_tag {
+struct __attribute__((packed)) pppoe_tag {
 	__be16 tag_type;
 	__be16 tag_len;
 	char tag_data[];
-} __attribute__ ((packed));
+};
 
 /* Tag identifiers */
 #define PTT_EOL		__cpu_to_be16(0x0000)
@@ -137,7 +137,7 @@ struct pppoe_tag {
 #define PTT_SYS_ERR  	__cpu_to_be16(0x0202)
 #define PTT_GEN_ERR  	__cpu_to_be16(0x0203)
 
-struct pppoe_hdr {
+struct __packed pppoe_hdr {
 #if defined(__LITTLE_ENDIAN_BITFIELD)
 	__u8 type : 4;
 	__u8 ver : 4;
@@ -151,7 +151,7 @@ struct pppoe_hdr {
 	__be16 sid;
 	__be16 length;
 	struct pppoe_tag tag[];
-} __packed;
+};
 
 /* Length of entire PPPoE + PPP header */
 #define PPPOE_SES_HLEN	8

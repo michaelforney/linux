@@ -218,7 +218,7 @@ enum vmmdev_hgcm_function_parameter_type {
 };
 
 /** HGCM function parameter, 32-bit client. */
-struct vmmdev_hgcm_function_parameter32 {
+struct __packed vmmdev_hgcm_function_parameter32 {
 	enum vmmdev_hgcm_function_parameter_type type;
 	union {
 		__u32 value32;
@@ -237,30 +237,30 @@ struct vmmdev_hgcm_function_parameter32 {
 			__u32 offset;
 		} page_list;
 	} u;
-} __packed;
+};
 VMMDEV_ASSERT_SIZE(vmmdev_hgcm_function_parameter32, 4 + 8);
 
 /** HGCM function parameter, 64-bit client. */
-struct vmmdev_hgcm_function_parameter64 {
+struct __packed vmmdev_hgcm_function_parameter64 {
 	enum vmmdev_hgcm_function_parameter_type type;
-	union {
+	union __packed {
 		__u32 value32;
 		__u64 value64;
-		struct {
+		struct __packed {
 			__u32 size;
 			union {
 				__u64 phys_addr;
 				__u64 linear_addr;
 			} u;
-		} __packed pointer;
+		} pointer;
 		struct {
 			/** Size of the buffer described by the page list. */
 			__u32 size;
 			/** Relative to the request header. */
 			__u32 offset;
 		} page_list;
-	} __packed u;
-} __packed;
+	} u;
+};
 VMMDEV_ASSERT_SIZE(vmmdev_hgcm_function_parameter64, 4 + 12);
 
 #if __BITS_PER_LONG == 64

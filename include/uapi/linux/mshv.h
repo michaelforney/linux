@@ -72,7 +72,7 @@ struct mshv_create_partition {
  *
  * Returns : same as above original mshv_create_partition
  */
-struct mshv_create_partition_v2 {
+struct __packed mshv_create_partition_v2 {
 	__u64 pt_flags;
 	__u64 pt_isolation;
 	__u16 pt_num_cpu_fbanks;
@@ -84,7 +84,7 @@ struct mshv_create_partition_v2 {
 #else
 	__u64 pt_rsvd2;			/* MBZ */
 #endif
-} __packed;
+};
 
 /* /dev/mshv */
 #define MSHV_CREATE_PARTITION	_IOW(MSHV_IOCTL, 0x00, struct mshv_create_partition)

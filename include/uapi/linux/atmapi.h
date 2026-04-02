@@ -25,6 +25,6 @@
  * Convention: NULL pointers are passed as a field of all zeroes.
  */
  
-typedef struct { unsigned char _[8]; } __ATM_API_ALIGN atm_kptr_t;
+typedef struct __ATM_API_ALIGN { unsigned char _[8]; } atm_kptr_t;
 
 #endif

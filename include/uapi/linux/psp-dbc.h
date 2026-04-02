@@ -29,21 +29,21 @@
  * @signature:   Optional 32 byte signature created by software using a
  *               previous nonce (input).
  */
-struct dbc_user_nonce {
+struct __packed dbc_user_nonce {
 	__u32	auth_needed;
 	__u8	nonce[DBC_NONCE_SIZE];
 	__u8	signature[DBC_SIG_SIZE];
-} __packed;
+};
 
 /**
  * struct dbc_user_setuid - UID exchange structure (input).
  * @uid:       16 byte value representing software identity
  * @signature: 32 byte signature created by software using a previous nonce
  */
-struct dbc_user_setuid {
+struct __packed dbc_user_setuid {
 	__u8	uid[DBC_UID_SIZE];
 	__u8	signature[DBC_SIG_SIZE];
-} __packed;
+};
 
 /**
  * struct dbc_user_param - Parameter exchange structure (input/output).
@@ -56,11 +56,11 @@ struct dbc_user_setuid {
  *               PSP to allow software to validate the authenticity of the
  *               results.
  */
-struct dbc_user_param {
+struct __packed dbc_user_param {
 	__u32	msg_index;
 	__u32	param;
 	__u8	signature[DBC_SIG_SIZE];
-} __packed;
+};
 
 /**
  * Dynamic Boost Control (DBC) IOC

@@ -103,12 +103,12 @@ struct uvc_xu_control_query {
  * Only complete objects with complete buffers are included. Therefore it's
  * always sizeof(meta->ns) + sizeof(meta->sof) + meta->length bytes large.
  */
-struct uvc_meta_buf {
+struct __packed uvc_meta_buf {
 	__u64 ns;
 	__u16 sof;
 	__u8 length;
 	__u8 flags;
 	__u8 buf[];
-} __packed;
+};
 
 #endif

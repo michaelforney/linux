@@ -849,13 +849,13 @@ enum fecap_scale_params {
  *	u.st.stat.scale[3] = FE_SCALE_DECIBEL;
  *	u.st.len = 4;
  */
-struct dtv_stats {
+struct __attribute__((packed)) dtv_stats {
 	__u8 scale;	/* enum fecap_scale_params type */
-	union {
+	union __attribute__((packed)) {
 		__u64 uvalue;	/* for counters and relative scales */
 		__s64 svalue;	/* for 0.001 dB measures */
-	}  __attribute__ ((packed));
-} __attribute__ ((packed));
+	};
+};
 
 
 #define MAX_DTV_STATS   4
@@ -871,10 +871,10 @@ struct dtv_stats {
  * of statistics. If so, stat[0] carries on a global value for the property.
  * Indexes 1 to 3 means layer A to B.
  */
-struct dtv_fe_stats {
+struct __attribute__((packed)) dtv_fe_stats {
 	__u8 len;
 	struct dtv_stats stat[MAX_DTV_STATS];
-} __attribute__ ((packed));
+};
 
 /**
  * struct dtv_property - store one of frontend command and its value
@@ -893,7 +893,7 @@ struct dtv_fe_stats {
  * @result:		Currently unused.
  *
  */
-struct dtv_property {
+struct __attribute__((packed)) dtv_property {
 	__u32 cmd;
 	__u32 reserved[3];
 	union {
@@ -907,7 +907,7 @@ struct dtv_property {
 		} buffer;
 	} u;
 	int result;
-} __attribute__ ((packed));
+};
 
 /* num of properties cannot exceed DTV_IOCTL_MAX_MSGS per ioctl */
 #define DTV_IOCTL_MAX_MSGS 64

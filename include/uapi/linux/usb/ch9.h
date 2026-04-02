@@ -207,13 +207,13 @@
  * For most devices, interfaces don't coordinate with each other, so
  * such requests may be made at any time.
  */
-struct usb_ctrlrequest {
+struct __attribute__ ((packed)) usb_ctrlrequest {
 	__u8 bRequestType;
 	__u8 bRequest;
 	__le16 wValue;
 	__le16 wIndex;
 	__le16 wLength;
-} __attribute__ ((packed));
+};
 
 /*-------------------------------------------------------------------------*/
 
@@ -280,16 +280,16 @@ struct usb_ctrlrequest {
 #define USB_DT_CS_ENDPOINT		(USB_TYPE_CLASS | USB_DT_ENDPOINT)
 
 /* All standard descriptors have these 2 fields at the beginning */
-struct usb_descriptor_header {
+struct __attribute__ ((packed)) usb_descriptor_header {
 	__u8  bLength;
 	__u8  bDescriptorType;
-} __attribute__ ((packed));
+};
 
 
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_DEVICE: Device descriptor */
-struct usb_device_descriptor {
+struct __attribute__ ((packed)) usb_device_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -305,7 +305,7 @@ struct usb_device_descriptor {
 	__u8  iProduct;
 	__u8  iSerialNumber;
 	__u8  bNumConfigurations;
-} __attribute__ ((packed));
+};
 
 #define USB_DT_DEVICE_SIZE		18
 
@@ -351,7 +351,7 @@ struct usb_device_descriptor {
  * devices with a USB_DT_DEVICE_QUALIFIER have any OTHER_SPEED_CONFIG
  * descriptors.
  */
-struct usb_config_descriptor {
+struct __attribute__ ((packed)) usb_config_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -361,7 +361,7 @@ struct usb_config_descriptor {
 	__u8  iConfiguration;
 	__u8  bmAttributes;
 	__u8  bMaxPower;
-} __attribute__ ((packed));
+};
 
 #define USB_DT_CONFIG_SIZE		9
 
@@ -377,7 +377,7 @@ struct usb_config_descriptor {
 #define USB_MAX_STRING_LEN	126
 
 /* USB_DT_STRING: String descriptor */
-struct usb_string_descriptor {
+struct __attribute__ ((packed)) usb_string_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -385,7 +385,7 @@ struct usb_string_descriptor {
 		__le16 legacy_padding;
 		__DECLARE_FLEX_ARRAY(__le16, wData);	/* UTF-16LE encoded */
 	};
-} __attribute__ ((packed));
+};
 
 /* note that "string" zero is special, it holds language codes that
  * the device supports, not Unicode characters.
@@ -394,7 +394,7 @@ struct usb_string_descriptor {
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_INTERFACE: Interface descriptor */
-struct usb_interface_descriptor {
+struct __attribute__ ((packed)) usb_interface_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -405,14 +405,14 @@ struct usb_interface_descriptor {
 	__u8  bInterfaceSubClass;
 	__u8  bInterfaceProtocol;
 	__u8  iInterface;
-} __attribute__ ((packed));
+};
 
 #define USB_DT_INTERFACE_SIZE		9
 
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_ENDPOINT: Endpoint descriptor */
-struct usb_endpoint_descriptor {
+struct __attribute__ ((packed)) usb_endpoint_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -425,7 +425,7 @@ struct usb_endpoint_descriptor {
 	/* use USB_DT_ENDPOINT*_SIZE in bLength, not sizeof. */
 	__u8  bRefresh;
 	__u8  bSynchAddress;
-} __attribute__ ((packed));
+};
 
 #define USB_DT_ENDPOINT_SIZE		7
 #define USB_DT_ENDPOINT_AUDIO_SIZE	9	/* Audio extension */
@@ -680,12 +680,12 @@ static inline int usb_endpoint_interrupt_type(
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_EUSB2_ISOC_ENDPOINT_COMP: eUSB2 Isoch Endpoint Companion descriptor */
-struct usb_eusb2_isoc_ep_comp_descriptor {
+struct __attribute__ ((packed)) usb_eusb2_isoc_ep_comp_descriptor {
 	__u8	bLength;
 	__u8	bDescriptorType;
 	__le16	wMaxPacketSize;
 	__le32	dwBytesPerInterval;
-} __attribute__ ((packed));
+};
 
 #define USB_DT_EUSB2_ISOC_EP_COMP_SIZE	8
 
@@ -694,26 +694,26 @@ struct usb_eusb2_isoc_ep_comp_descriptor {
 /* USB_DT_SSP_ISOC_ENDPOINT_COMP: SuperSpeedPlus Isochronous Endpoint Companion
  * descriptor
  */
-struct usb_ssp_isoc_ep_comp_descriptor {
+struct __attribute__ ((packed)) usb_ssp_isoc_ep_comp_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__le16 wReseved;
 	__le32 dwBytesPerInterval;
-} __attribute__ ((packed));
+};
 
 #define USB_DT_SSP_ISOC_EP_COMP_SIZE		8
 
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_SS_ENDPOINT_COMP: SuperSpeed Endpoint Companion descriptor */
-struct usb_ss_ep_comp_descriptor {
+struct __attribute__ ((packed)) usb_ss_ep_comp_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
 	__u8  bMaxBurst;
 	__u8  bmAttributes;
 	__le16 wBytesPerInterval;
-} __attribute__ ((packed));
+};
 
 #define USB_DT_SS_EP_COMP_SIZE		6
 
@@ -744,7 +744,7 @@ usb_ss_max_streams(const struct usb_ss_ep_comp_descriptor *comp)
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_DEVICE_QUALIFIER: Device Qualifier descriptor */
-struct usb_qualifier_descriptor {
+struct __attribute__ ((packed)) usb_qualifier_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -755,21 +755,21 @@ struct usb_qualifier_descriptor {
 	__u8  bMaxPacketSize0;
 	__u8  bNumConfigurations;
 	__u8  bRESERVED;
-} __attribute__ ((packed));
+};
 
 
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_OTG (from OTG 1.0a supplement) */
-struct usb_otg_descriptor {
+struct __attribute__ ((packed)) usb_otg_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
 	__u8  bmAttributes;	/* support for HNP, SRP, etc */
-} __attribute__ ((packed));
+};
 
 /* USB_DT_OTG (from OTG 2.0 supplement) */
-struct usb_otg20_descriptor {
+struct __attribute__ ((packed)) usb_otg20_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -777,7 +777,7 @@ struct usb_otg20_descriptor {
 	__le16 bcdOTG;		/* OTG and EH supplement release number
 				 * in binary-coded decimal(i.e. 2.0 is 0200H)
 				 */
-} __attribute__ ((packed));
+};
 
 /* from usb_otg_descriptor.bmAttributes */
 #define USB_OTG_SRP		(1 << 0)
@@ -790,19 +790,19 @@ struct usb_otg20_descriptor {
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_DEBUG:  for special highspeed devices, replacing serial console */
-struct usb_debug_descriptor {
+struct __attribute__((packed)) usb_debug_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
 	/* bulk endpoints with 8 byte maxpacket */
 	__u8  bDebugInEndpoint;
 	__u8  bDebugOutEndpoint;
-} __attribute__((packed));
+};
 
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_INTERFACE_ASSOCIATION: groups interfaces */
-struct usb_interface_assoc_descriptor {
+struct __attribute__ ((packed)) usb_interface_assoc_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -812,7 +812,7 @@ struct usb_interface_assoc_descriptor {
 	__u8  bFunctionSubClass;
 	__u8  bFunctionProtocol;
 	__u8  iFunction;
-} __attribute__ ((packed));
+};
 
 #define USB_DT_INTERFACE_ASSOCIATION_SIZE	8
 
@@ -821,32 +821,32 @@ struct usb_interface_assoc_descriptor {
 /* USB_DT_SECURITY:  group of wireless security descriptors, including
  * encryption types available for setting up a CC/association.
  */
-struct usb_security_descriptor {
+struct __attribute__((packed)) usb_security_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
 	__le16 wTotalLength;
 	__u8  bNumEncryptionTypes;
-} __attribute__((packed));
+};
 
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_KEY:  used with {GET,SET}_SECURITY_DATA; only public keys
  * may be retrieved.
  */
-struct usb_key_descriptor {
+struct __attribute__((packed)) usb_key_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
 	__u8  tTKID[3];
 	__u8  bReserved;
 	__u8  bKeyData[];
-} __attribute__((packed));
+};
 
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_ENCRYPTION_TYPE:  bundled in DT_SECURITY groups */
-struct usb_encryption_descriptor {
+struct __attribute__((packed)) usb_encryption_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -857,33 +857,33 @@ struct usb_encryption_descriptor {
 #define	USB_ENC_TYPE_RSA_1		3	/* rsa3072/sha1 auth */
 	__u8  bEncryptionValue;		/* use in SET_ENCRYPTION */
 	__u8  bAuthKeyIndex;
-} __attribute__((packed));
+};
 
 
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_BOS:  group of device-level capabilities */
-struct usb_bos_descriptor {
+struct __attribute__((packed)) usb_bos_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
 	__le16 wTotalLength;
 	__u8  bNumDeviceCaps;
-} __attribute__((packed));
+};
 
 #define USB_DT_BOS_SIZE		5
 /*-------------------------------------------------------------------------*/
 
 /* USB_DT_DEVICE_CAPABILITY:  grouped with BOS */
-struct usb_dev_cap_header {
+struct __attribute__((packed)) usb_dev_cap_header {
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__u8  bDevCapabilityType;
-} __attribute__((packed));
+};
 
 #define	USB_CAP_TYPE_WIRELESS_USB	1
 
-struct usb_wireless_cap_descriptor {	/* Ultra Wide Band */
+struct __attribute__((packed)) usb_wireless_cap_descriptor {	/* Ultra Wide Band */
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__u8  bDevCapabilityType;
@@ -907,14 +907,14 @@ struct usb_wireless_cap_descriptor {	/* Ultra Wide Band */
 	__u8  bmFFITXPowerInfo;	/* FFI power levels */
 	__le16 bmBandGroup;
 	__u8  bReserved;
-} __attribute__((packed));
+};
 
 #define USB_DT_USB_WIRELESS_CAP_SIZE	11
 
 /* USB 2.0 Extension descriptor */
 #define	USB_CAP_TYPE_EXT		2
 
-struct usb_ext_cap_descriptor {		/* Link Power Management */
+struct __attribute__((packed)) usb_ext_cap_descriptor {		/* Link Power Management */
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__u8  bDevCapabilityType;
@@ -927,7 +927,7 @@ struct usb_ext_cap_descriptor {		/* Link Power Management */
 #define USB_SET_BESL_DEEP(p)		(((p) & 0xf) << 12)
 #define USB_GET_BESL_BASELINE(p)	(((p) & (0xf << 8)) >> 8)
 #define USB_GET_BESL_DEEP(p)		(((p) & (0xf << 12)) >> 12)
-} __attribute__((packed));
+};
 
 #define USB_DT_USB_EXT_CAP_SIZE	7
 
@@ -936,7 +936,7 @@ struct usb_ext_cap_descriptor {		/* Link Power Management */
  * specific device level capabilities
  */
 #define		USB_SS_CAP_TYPE		3
-struct usb_ss_cap_descriptor {		/* Link Power Management */
+struct __attribute__((packed)) usb_ss_cap_descriptor {		/* Link Power Management */
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__u8  bDevCapabilityType;
@@ -950,7 +950,7 @@ struct usb_ss_cap_descriptor {		/* Link Power Management */
 	__u8  bFunctionalitySupport;
 	__u8  bU1devExitLat;
 	__le16 bU2DevExitLat;
-} __attribute__((packed));
+};
 
 #define USB_DT_USB_SS_CAP_SIZE	10
 
@@ -959,13 +959,13 @@ struct usb_ss_cap_descriptor {		/* Link Power Management */
  * identify the instance across all operating modes
  */
 #define	CONTAINER_ID_TYPE	4
-struct usb_ss_container_id_descriptor {
+struct __attribute__((packed)) usb_ss_container_id_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__u8  bDevCapabilityType;
 	__u8  bReserved;
 	__u8  ContainerID[16]; /* 128-bit number */
-} __attribute__((packed));
+};
 
 #define USB_DT_USB_SS_CONTN_ID_SIZE	20
 
@@ -974,14 +974,14 @@ struct usb_ss_container_id_descriptor {
  * capabilities
  */
 #define	USB_PLAT_DEV_CAP_TYPE	5
-struct usb_plat_dev_cap_descriptor {
+struct __attribute__((packed)) usb_plat_dev_cap_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__u8  bDevCapabilityType;
 	__u8  bReserved;
 	__u8  UUID[16];
 	__u8  CapabilityData[];
-} __attribute__((packed));
+};
 
 #define USB_DT_USB_PLAT_DEV_CAP_SIZE(capability_data_size)	(20 + capability_data_size)
 
@@ -990,7 +990,7 @@ struct usb_plat_dev_cap_descriptor {
  * SuperSpeed Plus USB specific device level capabilities
  */
 #define	USB_SSP_CAP_TYPE	0xa
-struct usb_ssp_cap_descriptor {
+struct __attribute__((packed)) usb_ssp_cap_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__u8  bDevCapabilityType;
@@ -1027,7 +1027,7 @@ struct usb_ssp_cap_descriptor {
 #define USB_SSP_SUBLINK_SPEED_LP_SSP		1
 
 #define USB_SSP_SUBLINK_SPEED_LSM	(0xff << 16)	/* Lanespeed mantissa */
-} __attribute__((packed));
+};
 
 /*
  * USB Power Delivery Capability Descriptor:
@@ -1042,7 +1042,7 @@ struct usb_ssp_cap_descriptor {
 /* The provider characteristics of a Port on the device */
 #define USB_PD_PD_PROVIDER_PORT_CAPABILITY	0x09
 
-struct usb_pd_cap_descriptor {
+struct __attribute__((packed)) usb_pd_cap_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__u8  bDevCapabilityType; /* set to USB_PD_POWER_DELIVERY_CAPABILITY */
@@ -1064,9 +1064,9 @@ struct usb_pd_cap_descriptor {
 	__le16 bcdBCVersion;
 	__le16 bcdPDVersion;
 	__le16 bcdUSBTypeCVersion;
-} __attribute__((packed));
+};
 
-struct usb_pd_cap_battery_info_descriptor {
+struct __attribute__((packed)) usb_pd_cap_battery_info_descriptor {
 	__u8 bLength;
 	__u8 bDescriptorType;
 	__u8 bDevCapabilityType;
@@ -1091,9 +1091,9 @@ struct usb_pd_cap_battery_info_descriptor {
 	__le32 dwWeakThreshold; /* in mWh */
 	__le32 dwBatteryDesignCapacity; /* in mWh */
 	__le32 dwBatteryLastFullchargeCapacity; /* in mWh */
-} __attribute__((packed));
+};
 
-struct usb_pd_cap_consumer_port_descriptor {
+struct __attribute__((packed)) usb_pd_cap_consumer_port_descriptor {
 	__u8 bLength;
 	__u8 bDescriptorType;
 	__u8 bDevCapabilityType;
@@ -1110,9 +1110,9 @@ struct usb_pd_cap_consumer_port_descriptor {
 	__le32 dwMaxPeakPower; /* in 10mW units - operating at peak power */
 	__le32 dwMaxPeakPowerTime; /* in 100ms units - duration of peak */
 #define USB_PD_CAP_CONSUMER_UNKNOWN_PEAK_POWER_TIME 0xffff
-} __attribute__((packed));
+};
 
-struct usb_pd_cap_provider_port_descriptor {
+struct __attribute__((packed)) usb_pd_cap_provider_port_descriptor {
 	__u8 bLength;
 	__u8 bDescriptorType;
 	__u8 bDevCapabilityType;
@@ -1125,18 +1125,18 @@ struct usb_pd_cap_provider_port_descriptor {
 	__u8 bNumOfPDObjects;
 	__u8 bReserved2;
 	__le32 wPowerDataObject[];
-} __attribute__((packed));
+};
 
 /*
  * Precision time measurement capability descriptor: advertised by devices and
  * hubs that support PTM
  */
 #define	USB_PTM_CAP_TYPE	0xb
-struct usb_ptm_cap_descriptor {
+struct __attribute__((packed)) usb_ptm_cap_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__u8  bDevCapabilityType;
-} __attribute__((packed));
+};
 
 #define USB_DT_USB_PTM_ID_SIZE		3
 /*
@@ -1150,7 +1150,7 @@ struct usb_ptm_cap_descriptor {
 /* USB_DT_WIRELESS_ENDPOINT_COMP:  companion descriptor associated with
  * each endpoint descriptor for a wireless device
  */
-struct usb_wireless_ep_comp_descriptor {
+struct __attribute__((packed)) usb_wireless_ep_comp_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -1164,7 +1164,7 @@ struct usb_wireless_ep_comp_descriptor {
 #define USB_ENDPOINT_SWITCH_NO		0
 #define USB_ENDPOINT_SWITCH_SWITCH	1
 #define USB_ENDPOINT_SWITCH_SCALE	2
-} __attribute__((packed));
+};
 
 /*-------------------------------------------------------------------------*/
 
@@ -1172,7 +1172,7 @@ struct usb_wireless_ep_comp_descriptor {
  * host and a device for connection set up, mutual authentication, and
  * exchanging short lived session keys.  The handshake depends on a CC.
  */
-struct usb_handshake {
+struct __attribute__((packed)) usb_handshake {
 	__u8 bMessageNumber;
 	__u8 bStatus;
 	__u8 tTKID[3];
@@ -1180,7 +1180,7 @@ struct usb_handshake {
 	__u8 CDID[16];
 	__u8 nonce[16];
 	__u8 MIC[8];
-} __attribute__((packed));
+};
 
 /*-------------------------------------------------------------------------*/
 
@@ -1188,11 +1188,11 @@ struct usb_handshake {
  * A CC may also be set up using non-wireless secure channels (including
  * wired USB!), and some devices may support CCs with multiple hosts.
  */
-struct usb_connection_context {
+struct __attribute__((packed)) usb_connection_context {
 	__u8 CHID[16];		/* persistent host id */
 	__u8 CDID[16];		/* device id (unique w/in host context) */
 	__u8 CK[16];		/* connection key */
-} __attribute__((packed));
+};
 
 /*-------------------------------------------------------------------------*/
 
@@ -1263,12 +1263,12 @@ enum usb3_link_state {
 #define USB3_LPM_U2_MAX_TIMEOUT		0xFE
 #define USB3_LPM_DEVICE_INITIATED	0xFF
 
-struct usb_set_sel_req {
+struct __attribute__ ((packed)) usb_set_sel_req {
 	__u8	u1_sel;
 	__u8	u1_pel;
 	__le16	u2_sel;
 	__le16	u2_pel;
-} __attribute__ ((packed));
+};
 
 /*
  * The Set System Exit Latency control transfer provides one byte each for

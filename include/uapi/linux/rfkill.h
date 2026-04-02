@@ -90,13 +90,13 @@ enum rfkill_hard_block_reasons {
  * Structure used for userspace communication on /dev/rfkill,
  * used for events from the kernel and control to the kernel.
  */
-struct rfkill_event {
+struct __attribute__((packed)) rfkill_event {
 	__u32 idx;
 	__u8  type;
 	__u8  op;
 	__u8  soft;
 	__u8  hard;
-} __attribute__((packed));
+};
 
 /**
  * struct rfkill_event_ext - events for userspace on /dev/rfkill
@@ -113,7 +113,7 @@ struct rfkill_event {
  *
  * See the extensibility docs below.
  */
-struct rfkill_event_ext {
+struct __attribute__((packed)) rfkill_event_ext {
 	__u32 idx;
 	__u8  type;
 	__u8  op;
@@ -126,7 +126,7 @@ struct rfkill_event_ext {
 	 */
 
 	__u8  hard_block_reasons;
-} __attribute__((packed));
+};
 
 /**
  * DOC: Extensibility

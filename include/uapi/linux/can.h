@@ -119,14 +119,14 @@ typedef __u32 can_err_mask_t;
  */
 struct can_frame {
 	canid_t can_id;  /* 32 bit CAN_ID + EFF/RTR/ERR flags */
-	union {
+	union __attribute__((packed)) {
 		/* CAN frame payload length in byte (0 .. CAN_MAX_DLEN)
 		 * was previously named can_dlc so we need to carry that
 		 * name for legacy support
 		 */
 		__u8 len;
 		__u8 can_dlc; /* deprecated */
-	} __attribute__((packed)); /* disable padding added in some ABIs */
+	}; /* disable padding added in some ABIs */
 	__u8 __pad; /* padding */
 	__u8 __res0; /* reserved / padding */
 	__u8 len8_dlc; /* optional DLC for 8 byte payload length (9 .. 15) */

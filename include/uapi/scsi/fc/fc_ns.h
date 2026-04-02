@@ -160,37 +160,37 @@ struct fc_ns_rft_id {
  * RPN_ID request - register port name for ID.
  * RNN_ID request - register node name for ID.
  */
-struct fc_ns_rn_id {
+struct __attribute__((__packed__)) fc_ns_rn_id {
 	struct fc_ns_fid fr_fid;	/* port ID object */
 	__be64		fr_wwn;		/* node name or port name */
-} __attribute__((__packed__));
+};
 
 /*
  * RSNN_NN request - register symbolic node name
  */
-struct fc_ns_rsnn {
+struct __attribute__((__packed__)) fc_ns_rsnn {
 	__be64		fr_wwn;		/* node name */
 	__u8		fr_name_len;
 	char		fr_name[];
-} __attribute__((__packed__));
+};
 
 /*
  * RSPN_ID request - register symbolic port name
  */
-struct fc_ns_rspn {
+struct __attribute__((__packed__)) fc_ns_rspn {
 	struct fc_ns_fid fr_fid;	/* port ID object */
 	__u8		fr_name_len;
 	char		fr_name[];
-} __attribute__((__packed__));
+};
 
 /*
  * RFF_ID request - register FC-4 Features for ID.
  */
-struct fc_ns_rff_id {
+struct __attribute__((__packed__)) fc_ns_rff_id {
 	struct fc_ns_fid fr_fid;	/* port ID object */
 	__u8		fr_resvd[2];
 	__u8		fr_feat;	/* FC-4 Feature bits */
 	__u8		fr_type;	/* FC-4 type */
-} __attribute__((__packed__));
+};
 
 #endif /* _FC_NS_H_ */

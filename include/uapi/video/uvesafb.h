@@ -42,7 +42,7 @@ struct uvesafb_task {
 #define VBE_CAP_VGACOMPAT	0x02
 
 /* The VBE Info Block */
-struct vbe_ib {
+struct __attribute__ ((packed)) vbe_ib {
 	char  vbe_signature[4];
 	__u16 vbe_version;
 	__u32 oem_string_ptr;
@@ -56,6 +56,6 @@ struct vbe_ib {
 	__u8  reserved[222];
 	char  oem_data[256];
 	char  misc_data[512];
-} __attribute__ ((packed));
+};
 
 #endif /* _UAPI_UVESAFB_H */

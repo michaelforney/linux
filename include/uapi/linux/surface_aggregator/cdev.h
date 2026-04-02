@@ -52,7 +52,7 @@ enum ssam_cdev_request_flags {
  *                   On output: Length of request response (number of bytes
  *                   in the buffer that are actually used).
  */
-struct ssam_cdev_request {
+struct __attribute__((__packed__)) ssam_cdev_request {
 	__u8 target_category;
 	__u8 target_id;
 	__u8 command_id;
@@ -71,7 +71,7 @@ struct ssam_cdev_request {
 		__u16 length;
 		__u8 __pad[6];
 	} response;
-} __attribute__((__packed__));
+};
 
 /**
  * struct ssam_cdev_notifier_desc - Notifier descriptor.
@@ -85,10 +85,10 @@ struct ssam_cdev_request {
  * Specifies the notifier that should be registered or unregistered,
  * specifically with which priority and for which target category of events.
  */
-struct ssam_cdev_notifier_desc {
+struct __attribute__((__packed__)) ssam_cdev_notifier_desc {
 	__s32 priority;
 	__u8 target_category;
-} __attribute__((__packed__));
+};
 
 /**
  * struct ssam_cdev_event_desc - Event descriptor.
@@ -104,7 +104,7 @@ struct ssam_cdev_notifier_desc {
  *
  * Specifies which event should be enabled/disabled and how to do that.
  */
-struct ssam_cdev_event_desc {
+struct __attribute__((__packed__)) ssam_cdev_event_desc {
 	struct {
 		__u8 target_category;
 		__u8 target_id;
@@ -118,7 +118,7 @@ struct ssam_cdev_event_desc {
 	} id;
 
 	__u8 flags;
-} __attribute__((__packed__));
+};
 
 /**
  * struct ssam_cdev_event - SSAM event sent by the EC.
@@ -129,14 +129,14 @@ struct ssam_cdev_event_desc {
  * @length:          Length of the event payload in bytes.
  * @data:            Event payload data.
  */
-struct ssam_cdev_event {
+struct __attribute__((__packed__)) ssam_cdev_event {
 	__u8 target_category;
 	__u8 target_id;
 	__u8 command_id;
 	__u8 instance_id;
 	__u16 length;
 	__u8 data[];
-} __attribute__((__packed__));
+};
 
 #define SSAM_CDEV_REQUEST		_IOWR(0xA5, 1, struct ssam_cdev_request)
 #define SSAM_CDEV_NOTIF_REGISTER	_IOW(0xA5, 2, struct ssam_cdev_notifier_desc)

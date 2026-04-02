@@ -85,11 +85,11 @@ enum sdtx_device_mode {
  *
  * See &enum sdtx_event_code for currently valid event codes.
  */
-struct sdtx_event {
+struct __attribute__((__packed__)) sdtx_event {
 	__u16 length;
 	__u16 code;
 	__u8 data[];
-} __attribute__((__packed__));
+};
 
 /**
  * enum sdtx_event_code - Code describing the type of an event.
@@ -122,10 +122,10 @@ enum sdtx_event_code {
  *           values are currently reserved.
  * @base_id: The type of base connected. Zero if no base is connected.
  */
-struct sdtx_base_info {
+struct __attribute__((__packed__)) sdtx_base_info {
 	__u16 state;
 	__u16 base_id;
-} __attribute__((__packed__));
+};
 
 /* IOCTLs */
 #define SDTX_IOCTL_EVENTS_ENABLE	_IO(0xa5, 0x21)

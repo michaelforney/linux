@@ -32,14 +32,14 @@ struct atmtcp_hdr {
 #define ATMTCP_CTRL_OPEN	1	/* request/reply */
 #define ATMTCP_CTRL_CLOSE	2	/* request/reply */
 
-struct atmtcp_control {
+struct __ATM_API_ALIGN atmtcp_control {
 	struct atmtcp_hdr hdr;	/* must be first */
 	int type;		/* message type; both directions */
 	atm_kptr_t vcc;		/* both directions */
 	struct sockaddr_atmpvc addr; /* suggested value from kernel */
 	struct atm_qos	qos;	/* both directions */
 	int result;		/* to kernel only */
-} __ATM_API_ALIGN;
+};
 
 /*
  * Field usage:

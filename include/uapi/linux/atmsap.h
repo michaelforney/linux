@@ -101,7 +101,7 @@
 #define ATM_MAX_HLI	8	/* maximum high-layer information length */
 
 
-struct atm_blli {
+struct __ATM_API_ALIGN atm_blli {
     unsigned char l2_proto;	/* layer 2 protocol */
     union {
 	struct {
@@ -134,7 +134,7 @@ struct atm_blli {
 				  /* (only if ipi == NLPID_IEEE802_1_SNAP) */
 	} tr9577;
     } l3;
-} __ATM_API_ALIGN;
+};
 
 
 struct atm_bhli {

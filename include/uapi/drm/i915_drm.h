@@ -2316,7 +2316,7 @@ struct drm_i915_gem_context_param_sseu {
  * the backing engines (bypassing the load balancing proxy), the context must
  * be defined to use a single timeline for all engines.
  */
-struct i915_context_engines_load_balance {
+struct __attribute__((packed)) i915_context_engines_load_balance {
 	struct i915_user_extension base;
 
 	__u16 engine_index;
@@ -2326,16 +2326,16 @@ struct i915_context_engines_load_balance {
 	__u64 mbz64; /* reserved for future use; must be zero */
 
 	struct i915_engine_class_instance engines[];
-} __attribute__((packed));
+};
 
-#define I915_DEFINE_CONTEXT_ENGINES_LOAD_BALANCE(name__, N__) struct { \
+#define I915_DEFINE_CONTEXT_ENGINES_LOAD_BALANCE(name__, N__) struct __attribute__((packed)) { \
 	struct i915_user_extension base; \
 	__u16 engine_index; \
 	__u16 num_siblings; \
 	__u32 flags; \
 	__u64 mbz64; \
 	struct i915_engine_class_instance engines[N__]; \
-} __attribute__((packed)) name__
+} name__
 
 /*
  * i915_context_engines_bond:
@@ -2352,7 +2352,7 @@ struct i915_context_engines_load_balance {
  * To execute a request in parallel on the master engine and a sibling requires
  * coordination with a I915_EXEC_FENCE_SUBMIT.
  */
-struct i915_context_engines_bond {
+struct __attribute__((packed)) i915_context_engines_bond {
 	struct i915_user_extension base;
 
 	struct i915_engine_class_instance master;
@@ -2364,9 +2364,9 @@ struct i915_context_engines_bond {
 	__u64 mbz64[4]; /* reserved for future use; must be zero */
 
 	struct i915_engine_class_instance engines[];
-} __attribute__((packed));
+};
 
-#define I915_DEFINE_CONTEXT_ENGINES_BOND(name__, N__) struct { \
+#define I915_DEFINE_CONTEXT_ENGINES_BOND(name__, N__) struct __attribute__((packed)) { \
 	struct i915_user_extension base; \
 	struct i915_engine_class_instance master; \
 	__u16 virtual_index; \
@@ -2374,7 +2374,7 @@ struct i915_context_engines_bond {
 	__u64 flags; \
 	__u64 mbz64[4]; \
 	struct i915_engine_class_instance engines[N__]; \
-} __attribute__((packed)) name__
+} name__
 
 /**
  * struct i915_context_engines_parallel_submit - Configure engine for
@@ -2446,7 +2446,7 @@ struct i915_context_engines_bond {
  *	CS[0], CS[1]
  *	CS[1], CS[3] - Not logically contiguous, return -EINVAL
  */
-struct i915_context_engines_parallel_submit {
+struct __packed i915_context_engines_parallel_submit {
 	/**
 	 * @base: base user extension.
 	 */
@@ -2492,9 +2492,9 @@ struct i915_context_engines_parallel_submit {
 	 */
 	struct i915_engine_class_instance engines[];
 
-} __packed;
+};
 
-#define I915_DEFINE_CONTEXT_ENGINES_PARALLEL_SUBMIT(name__, N__) struct { \
+#define I915_DEFINE_CONTEXT_ENGINES_PARALLEL_SUBMIT(name__, N__) struct __attribute__((packed)) { \
 	struct i915_user_extension base; \
 	__u16 engine_index; \
 	__u16 width; \
@@ -2503,7 +2503,7 @@ struct i915_context_engines_parallel_submit {
 	__u64 flags; \
 	__u64 mbz64[3]; \
 	struct i915_engine_class_instance engines[N__]; \
-} __attribute__((packed)) name__
+} name__
 
 /**
  * DOC: Context Engine Map uAPI
@@ -2560,20 +2560,20 @@ struct i915_context_engines_parallel_submit {
  * 	gem_execbuf(drm_fd, &execbuf);
  */
 
-struct i915_context_param_engines {
+struct __attribute__((packed)) i915_context_param_engines {
 	__u64 extensions; /* linked chain of extension blocks, 0 terminates */
 #define I915_CONTEXT_ENGINES_EXT_LOAD_BALANCE 0 /* see i915_context_engines_load_balance */
 #define I915_CONTEXT_ENGINES_EXT_BOND 1 /* see i915_context_engines_bond */
 #define I915_CONTEXT_ENGINES_EXT_PARALLEL_SUBMIT 2 /* see i915_context_engines_parallel_submit */
 	struct i915_engine_class_instance engines[];
-} __attribute__((packed));
+};
 
-#define I915_DEFINE_CONTEXT_PARAM_ENGINES(name__, N__) struct { \
+#define I915_DEFINE_CONTEXT_PARAM_ENGINES(name__, N__) struct __attribute__((packed)) { \
 	__u64 extensions; \
 	struct i915_engine_class_instance engines[N__]; \
-} __attribute__((packed)) name__
+} name__
 
-struct i915_gem_context_param_context_image {
+struct __attribute__((packed)) i915_gem_context_param_context_image {
 	/** @engine: Engine class & instance to be configured. */
 	struct i915_engine_class_instance engine;
 
@@ -2589,7 +2589,7 @@ struct i915_gem_context_param_context_image {
 
 	/** @image: Userspace memory containing the context image. */
 	__u64 image;
-} __attribute__((packed));
+};
 
 /**
  * struct drm_i915_gem_context_create_ext_setparam - Context parameter

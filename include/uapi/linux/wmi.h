@@ -24,24 +24,24 @@ struct wmi_ioctl_buffer {
 /* This structure may be modified by the firmware when we enter
  * system management mode through SMM, hence the volatiles
  */
-struct calling_interface_buffer {
+struct __packed calling_interface_buffer {
 	__u16 cmd_class;
 	__u16 cmd_select;
 	volatile __u32 input[4];
 	volatile __u32 output[4];
-} __packed;
+};
 
-struct dell_wmi_extensions {
+struct __packed dell_wmi_extensions {
 	__u32 argattrib;
 	__u32 blength;
 	__u8 data[];
-} __packed;
+};
 
-struct dell_wmi_smbios_buffer {
+struct __packed dell_wmi_smbios_buffer {
 	__u64 length;
 	struct calling_interface_buffer std;
 	struct dell_wmi_extensions	ext;
-} __packed;
+};
 
 /* Whitelisted smbios class/select commands */
 #define CLASS_TOKEN_READ	0

@@ -28,7 +28,7 @@ enum qrtr_pkt_type {
 	QRTR_TYPE_DEL_LOOKUP	= 11,
 };
 
-struct qrtr_ctrl_pkt {
+struct __packed qrtr_ctrl_pkt {
 	__le32 cmd;
 
 	union {
@@ -44,6 +44,6 @@ struct qrtr_ctrl_pkt {
 			__le32 port;
 		} client;
 	};
-} __packed;
+};
 
 #endif /* _LINUX_QRTR_H */

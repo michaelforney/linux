@@ -48,7 +48,7 @@
 #define TCMU_MAILBOX_FLAG_CAP_TMR (1 << 2) /* TMR notifications */
 #define TCMU_MAILBOX_FLAG_CAP_KEEP_BUF (1<<3) /* Keep buf after cmd completion */
 
-struct tcmu_mailbox {
+struct __packed tcmu_mailbox {
 	__u16 version;
 	__u16 flags;
 	__u32 cmdr_off;
@@ -59,7 +59,7 @@ struct tcmu_mailbox {
 	/* Updated by user. On its own cacheline */
 	__u32 cmd_tail __attribute__((__aligned__(ALIGN_SIZE)));
 
-} __packed;
+};
 
 enum tcmu_opcode {
 	TCMU_OP_PAD = 0,
@@ -70,7 +70,7 @@ enum tcmu_opcode {
 /*
  * Only a few opcodes, and length is 8-byte aligned, so use low bits for opcode.
  */
-struct tcmu_cmd_entry_hdr {
+struct __packed tcmu_cmd_entry_hdr {
 	__u32 len_op;
 	__u16 cmd_id;
 	__u8 kflags;
@@ -79,7 +79,7 @@ struct tcmu_cmd_entry_hdr {
 #define TCMU_UFLAG_KEEP_BUF   0x4
 	__u8 uflags;
 
-} __packed;
+};
 
 #define TCMU_OP_MASK 0x7
 
@@ -108,7 +108,7 @@ static inline void tcmu_hdr_set_len(__u32 *len_op, __u32 len)
 /* Currently the same as SCSI_SENSE_BUFFERSIZE */
 #define TCMU_SENSE_BUFFERSIZE 96
 
-struct tcmu_cmd_entry {
+struct __packed tcmu_cmd_entry {
 	struct tcmu_cmd_entry_hdr hdr;
 
 	union {
@@ -130,9 +130,9 @@ struct tcmu_cmd_entry {
 		} rsp;
 	};
 
-} __packed;
+};
 
-struct tcmu_tmr_entry {
+struct __packed tcmu_tmr_entry {
 	struct tcmu_cmd_entry_hdr hdr;
 
 #define TCMU_TMR_UNKNOWN		0
@@ -153,7 +153,7 @@ struct tcmu_tmr_entry {
 	__u64 __pad3;
 	__u64 __pad4;
 	__u16 cmd_ids[];
-} __packed;
+};
 
 #define TCMU_OP_ALIGN_SIZE sizeof(__u64)
 

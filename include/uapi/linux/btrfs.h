@@ -351,7 +351,7 @@ struct btrfs_ioctl_feature_flags {
  * this is packed, because it should be exactly the same as its disk
  * byte order counterpart (struct btrfs_disk_balance_args)
  */
-struct btrfs_balance_args {
+struct __attribute__((__packed__)) btrfs_balance_args {
 	__u64 profiles;
 
 	/*
@@ -397,7 +397,7 @@ struct btrfs_balance_args {
 	__u32 stripes_max;
 
 	__u64 unused[6];
-} __attribute__ ((__packed__));
+};
 
 /* report balance progress to userspace */
 struct btrfs_balance_progress {
@@ -569,13 +569,13 @@ struct btrfs_ioctl_search_key {
 	__u64 unused4;
 };
 
-struct btrfs_ioctl_search_header {
+struct __attribute__((__may_alias__)) btrfs_ioctl_search_header {
 	__u64 transid;
 	__u64 objectid;
 	__u64 offset;
 	__u32 type;
 	__u32 len;
-} __attribute__ ((__may_alias__));
+};
 
 #define BTRFS_SEARCH_ARGS_BUFSIZE (4096 - sizeof(struct btrfs_ioctl_search_key))
 /*

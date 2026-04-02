@@ -25,11 +25,11 @@
  * @sfs_status:            32-bit SFS status value (output).
  * @sfs_extended_status:   32-bit SFS extended status value (output).
  */
-struct sfs_user_get_fw_versions {
+struct __packed sfs_user_get_fw_versions {
 	__u8	blob[TEE_EXT_CMD_BUFFER_SIZE];
 	__u32	sfs_status;
 	__u32	sfs_extended_status;
-} __packed;
+};
 
 /**
  * struct sfs_user_update_package - update SFS package (input).
@@ -37,11 +37,11 @@ struct sfs_user_get_fw_versions {
  * @sfs_status:            32-bit SFS status value (output).
  * @sfs_extended_status:   32-bit SFS extended status value (output).
  */
-struct sfs_user_update_package {
+struct __packed sfs_user_update_package {
 	char	payload_name[PAYLOAD_NAME_SIZE];
 	__u32	sfs_status;
 	__u32	sfs_extended_status;
-} __packed;
+};
 
 /**
  * Seamless Firmware Support (SFS) IOC

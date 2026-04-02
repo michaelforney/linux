@@ -116,14 +116,14 @@ typedef enum {
  * @build: firmware build id for API version
  * @guest_count: number of active guests
  */
-struct sev_user_data_status {
+struct __packed sev_user_data_status {
 	__u8 api_major;				/* Out */
 	__u8 api_minor;				/* Out */
 	__u8 state;				/* Out */
 	__u32 flags;				/* Out */
 	__u8 build;				/* Out */
 	__u32 guest_count;			/* Out */
-} __packed;
+};
 
 #define SEV_STATUS_FLAGS_CONFIG_ES	0x0100
 
@@ -133,10 +133,10 @@ struct sev_user_data_status {
  * @address: PEK certificate chain
  * @length: length of certificate
  */
-struct sev_user_data_pek_csr {
+struct __packed sev_user_data_pek_csr {
 	__u64 address;				/* In */
 	__u32 length;				/* In/Out */
-} __packed;
+};
 
 /**
  * struct sev_user_data_cert_import - PEK_CERT_IMPORT command parameters
@@ -146,12 +146,12 @@ struct sev_user_data_pek_csr {
  * @oca_address: OCA certificate chain
  * @oca_len: length of OCA certificate
  */
-struct sev_user_data_pek_cert_import {
+struct __packed sev_user_data_pek_cert_import {
 	__u64 pek_cert_address;			/* In */
 	__u32 pek_cert_len;			/* In */
 	__u64 oca_cert_address;			/* In */
 	__u32 oca_cert_len;			/* In */
-} __packed;
+};
 
 /**
  * struct sev_user_data_pdh_cert_export - PDH_CERT_EXPORT command parameters
@@ -161,12 +161,12 @@ struct sev_user_data_pek_cert_import {
  * @cert_chain_address: PDH certificate chain
  * @cert_chain_len: length of PDH certificate chain
  */
-struct sev_user_data_pdh_cert_export {
+struct __packed sev_user_data_pdh_cert_export {
 	__u64 pdh_cert_address;			/* In */
 	__u32 pdh_cert_len;			/* In/Out */
 	__u64 cert_chain_address;		/* In */
 	__u32 cert_chain_len;			/* In/Out */
-} __packed;
+};
 
 /**
  * struct sev_user_data_get_id - GET_ID command parameters (deprecated)
@@ -174,20 +174,20 @@ struct sev_user_data_pdh_cert_export {
  * @socket1: Buffer to pass unique ID of first socket
  * @socket2: Buffer to pass unique ID of second socket
  */
-struct sev_user_data_get_id {
+struct __packed sev_user_data_get_id {
 	__u8 socket1[64];			/* Out */
 	__u8 socket2[64];			/* Out */
-} __packed;
+};
 
 /**
  * struct sev_user_data_get_id2 - GET_ID command parameters
  * @address: Buffer to store unique ID
  * @length: length of the unique ID
  */
-struct sev_user_data_get_id2 {
+struct __packed sev_user_data_get_id2 {
 	__u64 address;				/* In */
 	__u32 length;				/* In/Out */
-} __packed;
+};
 
 /**
  * struct sev_user_data_snp_status - SNP status
@@ -210,7 +210,7 @@ struct sev_user_data_get_id2 {
  * @current_tcb_version: current TCB version
  * @reported_tcb_version: reported TCB version
  */
-struct sev_user_data_snp_status {
+struct __packed sev_user_data_snp_status {
 	__u8 api_major;			/* Out */
 	__u8 api_minor;			/* Out */
 	__u8 state;			/* Out */
@@ -228,7 +228,7 @@ struct sev_user_data_snp_status {
 	__u32 guest_count;		/* Out */
 	__u64 current_tcb_version;	/* Out */
 	__u64 reported_tcb_version;	/* Out */
-} __packed;
+};
 
 /**
  * struct sev_user_data_snp_config - system wide configuration value for SNP.
@@ -239,13 +239,13 @@ struct sev_user_data_snp_status {
  * @rsvd: reserved
  * @rsvd1: reserved
  */
-struct sev_user_data_snp_config {
+struct __packed sev_user_data_snp_config {
 	__u64 reported_tcb  ;   /* In */
 	__u32 mask_chip_id:1;   /* In */
 	__u32 mask_chip_key:1;  /* In */
 	__u32 rsvd:30;          /* In */
 	__u8 rsvd1[52];
-} __packed;
+};
 
 /**
  * struct sev_data_snp_vlek_load - SNP_VLEK_LOAD structure
@@ -256,12 +256,12 @@ struct sev_user_data_snp_config {
  * @vlek_wrapped_address: address of a wrapped VLEK hashstick
  *                        (struct sev_user_data_snp_wrapped_vlek_hashstick)
  */
-struct sev_user_data_snp_vlek_load {
+struct __packed sev_user_data_snp_vlek_load {
 	__u32 len;				/* In */
 	__u8 vlek_wrapped_version;		/* In */
 	__u8 rsvd[3];				/* In */
 	__u64 vlek_wrapped_address;		/* In */
-} __packed;
+};
 
 /**
  * struct sev_user_data_snp_vlek_wrapped_vlek_hashstick - Wrapped VLEK data
@@ -269,9 +269,9 @@ struct sev_user_data_snp_vlek_load {
  * @data: Opaque data provided by AMD KDS (as described in SEV-SNP Firmware ABI
  *        1.54, SNP_VLEK_LOAD)
  */
-struct sev_user_data_snp_wrapped_vlek_hashstick {
+struct __packed sev_user_data_snp_wrapped_vlek_hashstick {
 	__u8 data[432];				/* In */
-} __packed;
+};
 
 /**
  * struct sev_issue_cmd - SEV ioctl parameters
@@ -280,11 +280,11 @@ struct sev_user_data_snp_wrapped_vlek_hashstick {
  * @opaque: pointer to the command structure
  * @error: SEV FW return code on failure
  */
-struct sev_issue_cmd {
+struct __packed sev_issue_cmd {
 	__u32 cmd;				/* In */
 	__u64 data;				/* In */
 	__u32 error;				/* Out */
-} __packed;
+};
 
 #define SEV_IOC_TYPE		'S'
 #define SEV_ISSUE_CMD	_IOWR(SEV_IOC_TYPE, 0x0, struct sev_issue_cmd)

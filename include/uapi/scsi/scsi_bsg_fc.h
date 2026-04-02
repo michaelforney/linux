@@ -266,7 +266,7 @@ struct fc_bsg_rport_ct {
 
 
 /* request (CDB) structure of the sg_io_v4 */
-struct fc_bsg_request {
+struct __attribute__((packed)) fc_bsg_request {
 	__u32 msgcode;
 	union {
 		struct fc_bsg_host_add_rport	h_addrport;
@@ -278,7 +278,7 @@ struct fc_bsg_request {
 		struct fc_bsg_rport_els		r_els;
 		struct fc_bsg_rport_ct		r_ct;
 	} rqst_data;
-} __attribute__((packed));
+};
 
 
 /* response (request sense data) structure of the sg_io_v4 */

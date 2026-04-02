@@ -28,14 +28,14 @@
  * Identifies data type, size and ABI.
  * Used by any bespoke component data structures or binary blobs.
  */
-struct sof_abi_hdr {
+struct __packed sof_abi_hdr {
 	__u32 magic;
 	__u32 type;
 	__u32 size;
 	__u32 abi;
 	__u32 reserved[4];
 	__u32 data[];
-}  __packed;
+};
 
 #define SOF_MANIFEST_DATA_TYPE_NHLT 1
 

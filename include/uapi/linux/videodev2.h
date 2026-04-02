@@ -1587,7 +1587,7 @@ struct v4l2_standard {
  *
  * The active height of each field is height / 2.
  */
-struct v4l2_bt_timings {
+struct __attribute__ ((packed)) v4l2_bt_timings {
 	__u32	width;
 	__u32	height;
 	__u32	interlaced;
@@ -1608,7 +1608,7 @@ struct v4l2_bt_timings {
 	__u8	cea861_vic;
 	__u8	hdmi_vic;
 	__u8	reserved[46];
-} __attribute__ ((packed));
+};
 
 /* Interlaced or progressive format */
 #define V4L2_DV_PROGRESSIVE	0
@@ -1711,13 +1711,13 @@ struct v4l2_bt_timings {
  * @type:	the type of the timings
  * @bt:	BT656/1120 timings
  */
-struct v4l2_dv_timings {
+struct __attribute__((packed)) v4l2_dv_timings {
 	__u32 type;
 	union {
 		struct v4l2_bt_timings	bt;
 		__u32	reserved[32];
 	};
-} __attribute__ ((packed));
+};
 
 /* Values for the type field */
 #define V4L2_DV_BT_656_1120	0	/* BT.656/1120 timing type */
@@ -1748,7 +1748,7 @@ struct v4l2_enum_dv_timings {
  * @capabilities:	Supported capabilities
  * @reserved:		Must be zeroed
  */
-struct v4l2_bt_timings_cap {
+struct __attribute__ ((packed)) v4l2_bt_timings_cap {
 	__u32	min_width;
 	__u32	max_width;
 	__u32	min_height;
@@ -1758,7 +1758,7 @@ struct v4l2_bt_timings_cap {
 	__u32	standards;
 	__u32	capabilities;
 	__u32	reserved[16];
-} __attribute__ ((packed));
+};
 
 /* Supports interlaced formats */
 #define V4L2_DV_BT_CAP_INTERLACED	(1 << 0)
@@ -1870,11 +1870,11 @@ struct v4l2_control {
 	__s32		     value;
 };
 
-struct v4l2_ext_control {
+struct __attribute__((packed)) v4l2_ext_control {
 	__u32 id;
 	__u32 size;
 	__u32 reserved2[1];
-	union {
+	union __attribute__((packed)) {
 		__s32 value;
 		__s64 value64;
 		char __user *string;
@@ -1910,8 +1910,8 @@ struct v4l2_ext_control {
 		struct v4l2_ctrl_hdr10_cll_info __user *p_hdr10_cll_info;
 		struct v4l2_ctrl_hdr10_mastering_display __user *p_hdr10_mastering_display;
 		void __user *ptr;
-	} __attribute__ ((packed));
-} __attribute__ ((packed));
+	};
+};
 
 struct v4l2_ext_controls {
 	union {
@@ -2023,7 +2023,7 @@ struct v4l2_query_ext_ctrl {
 };
 
 /*  Used in the VIDIOC_QUERYMENU ioctl for querying menu items */
-struct v4l2_querymenu {
+struct __attribute__((packed)) v4l2_querymenu {
 	__u32		id;
 	__u32		index;
 	union {
@@ -2031,7 +2031,7 @@ struct v4l2_querymenu {
 		__s64	value;
 	};
 	__u32		reserved;
-} __attribute__ ((packed));
+};
 
 /*  Control flags  */
 #define V4L2_CTRL_FLAG_DISABLED		0x0001
@@ -2155,11 +2155,11 @@ struct v4l2_hw_freq_seek {
  *	R D S
  */
 
-struct v4l2_rds_data {
+struct __attribute__((packed)) v4l2_rds_data {
 	__u8	lsb;
 	__u8	msb;
 	__u8	block;
-} __attribute__ ((packed));
+};
 
 #define V4L2_RDS_BLOCK_MSK	 0x7
 #define V4L2_RDS_BLOCK_A	 0
@@ -2394,30 +2394,30 @@ struct v4l2_sliced_vbi_data {
 #define V4L2_MPEG_VBI_IVTV_WSS_625        (5)
 #define V4L2_MPEG_VBI_IVTV_VPS            (7)
 
-struct v4l2_mpeg_vbi_itv0_line {
+struct __attribute__((packed)) v4l2_mpeg_vbi_itv0_line {
 	__u8 id;	/* One of V4L2_MPEG_VBI_IVTV_* above */
 	__u8 data[42];	/* Sliced VBI data for the line */
-} __attribute__ ((packed));
+};
 
-struct v4l2_mpeg_vbi_itv0 {
+struct __attribute__((packed)) v4l2_mpeg_vbi_itv0 {
 	__le32 linemask[2]; /* Bitmasks of VBI service lines present */
 	struct v4l2_mpeg_vbi_itv0_line line[35];
-} __attribute__ ((packed));
+};
 
-struct v4l2_mpeg_vbi_ITV0 {
+struct __attribute__((packed)) v4l2_mpeg_vbi_ITV0 {
 	struct v4l2_mpeg_vbi_itv0_line line[36];
-} __attribute__ ((packed));
+};
 
 #define V4L2_MPEG_VBI_IVTV_MAGIC0	"itv0"
 #define V4L2_MPEG_VBI_IVTV_MAGIC1	"ITV0"
 
-struct v4l2_mpeg_vbi_fmt_ivtv {
+struct __attribute__((packed)) v4l2_mpeg_vbi_fmt_ivtv {
 	__u8 magic[4];
 	union {
 		struct v4l2_mpeg_vbi_itv0 itv0;
 		struct v4l2_mpeg_vbi_ITV0 ITV0;
 	};
-} __attribute__ ((packed));
+};
 
 /*
  *	A G G R E G A T E   S T R U C T U R E S
@@ -2431,11 +2431,11 @@ struct v4l2_mpeg_vbi_fmt_ivtv {
  *			adjacent lines
  * @reserved:		drivers and applications must zero this array
  */
-struct v4l2_plane_pix_format {
+struct __attribute__((packed)) v4l2_plane_pix_format {
 	__u32		sizeimage;
 	__u32		bytesperline;
 	__u16		reserved[6];
-} __attribute__ ((packed));
+};
 
 /**
  * struct v4l2_pix_format_mplane - multiplanar format definition
@@ -2453,7 +2453,7 @@ struct v4l2_plane_pix_format {
  * @xfer_func:		enum v4l2_xfer_func, colorspace transfer function
  * @reserved:		drivers and applications must zero this array
  */
-struct v4l2_pix_format_mplane {
+struct __attribute__((packed)) v4l2_pix_format_mplane {
 	__u32				width;
 	__u32				height;
 	__u32				pixelformat;
@@ -2470,7 +2470,7 @@ struct v4l2_pix_format_mplane {
 	__u8				quantization;
 	__u8				xfer_func;
 	__u8				reserved[7];
-} __attribute__ ((packed));
+};
 
 /**
  * struct v4l2_sdr_format - SDR format definition
@@ -2478,11 +2478,11 @@ struct v4l2_pix_format_mplane {
  * @buffersize:		maximum size in bytes required for data
  * @reserved:		drivers and applications must zero this array
  */
-struct v4l2_sdr_format {
+struct __attribute__((packed)) v4l2_sdr_format {
 	__u32				pixelformat;
 	__u32				buffersize;
 	__u8				reserved[24];
-} __attribute__ ((packed));
+};
 
 /**
  * struct v4l2_meta_format - metadata format definition
@@ -2495,13 +2495,13 @@ struct v4l2_sdr_format {
  * @bytesperline:	offset between the beginnings of two adjacent lines in
  *			bytes (valid for line based formats only)
  */
-struct v4l2_meta_format {
+struct __attribute__((packed)) v4l2_meta_format {
 	__u32				dataformat;
 	__u32				buffersize;
 	__u32				width;
 	__u32				height;
 	__u32				bytesperline;
-} __attribute__ ((packed));
+};
 
 /**
  * struct v4l2_format - stream data format
@@ -2554,10 +2554,10 @@ struct v4l2_streamparm {
 #define V4L2_EVENT_PRIVATE_START		0x08000000
 
 /* Payload for V4L2_EVENT_VSYNC */
-struct v4l2_event_vsync {
+struct __attribute__((packed)) v4l2_event_vsync {
 	/* Can be V4L2_FIELD_ANY, _NONE, _TOP or _BOTTOM */
 	__u8 field;
-} __attribute__ ((packed));
+};
 
 /* Payload for V4L2_EVENT_CTRL */
 #define V4L2_EVENT_CTRL_CH_VALUE		(1 << 0)
@@ -2653,31 +2653,31 @@ struct v4l2_event_subscription {
 #define V4L2_CHIP_MATCH_I2C_ADDR    2  /* Match against I2C 7-bit address */
 #define V4L2_CHIP_MATCH_AC97        3  /* Match against ancillary AC97 chip */
 
-struct v4l2_dbg_match {
+struct __attribute__((packed)) v4l2_dbg_match {
 	__u32 type; /* Match type */
 	union {     /* Match this chip, meaning determined by type */
 		__u32 addr;
 		char name[32];
 	};
-} __attribute__ ((packed));
+};
 
-struct v4l2_dbg_register {
+struct __attribute__((packed)) v4l2_dbg_register {
 	struct v4l2_dbg_match match;
 	__u32 size;	/* register size in bytes */
 	__u64 reg;
 	__u64 val;
-} __attribute__ ((packed));
+};
 
 #define V4L2_CHIP_FL_READABLE (1 << 0)
 #define V4L2_CHIP_FL_WRITABLE (1 << 1)
 
 /* VIDIOC_DBG_G_CHIP_INFO */
-struct v4l2_dbg_chip_info {
+struct __attribute__((packed)) v4l2_dbg_chip_info {
 	struct v4l2_dbg_match match;
 	char name[32];
 	__u32 flags;
 	__u32 reserved[32];
-} __attribute__ ((packed));
+};
 
 /**
  * struct v4l2_create_buffers - VIDIOC_CREATE_BUFS argument

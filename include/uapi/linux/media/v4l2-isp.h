@@ -60,11 +60,11 @@ enum v4l2_isp_params_version {
  * The @flags field is a bitmask of per-block flags V4L2_PARAMS_ISP_FL_* and
  * driver-specific flags specified by the driver header.
  */
-struct v4l2_isp_params_block_header {
+struct __attribute__((aligned(8))) v4l2_isp_params_block_header {
 	__u16 type;
 	__u16 flags;
 	__u32 size;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct v4l2_isp_params_buffer - V4L2 extensible parameters configuration

@@ -28,7 +28,7 @@ enum functionfs_flags {
 };
 
 /* Descriptor of an non-audio endpoint */
-struct usb_endpoint_descriptor_no_audio {
+struct __attribute__((packed)) usb_endpoint_descriptor_no_audio {
 	__u8  bLength;
 	__u8  bDescriptorType;
 
@@ -36,7 +36,7 @@ struct usb_endpoint_descriptor_no_audio {
 	__u8  bmAttributes;
 	__le16 wMaxPacketSize;
 	__u8  bInterval;
-} __attribute__((packed));
+};
 
 /**
  * struct usb_dfu_functional_descriptor - DFU Functional descriptor
@@ -47,14 +47,14 @@ struct usb_endpoint_descriptor_no_audio {
  * @wTransferSize:	Maximum number of bytes per control-write (le16)
  * @bcdDFUVersion:	DFU Spec version (BCD, le16)
  */
-struct usb_dfu_functional_descriptor {
+struct __attribute__((packed)) usb_dfu_functional_descriptor {
 	__u8  bLength;
 	__u8  bDescriptorType;
 	__u8  bmAttributes;
 	__le16 wDetachTimeOut;
 	__le16 wTransferSize;
 	__le16 bcdDFUVersion;
-} __attribute__ ((packed));
+};
 
 /* from DFU functional descriptor bmAttributes */
 #define DFU_FUNC_ATT_CAN_DOWNLOAD	_BITUL(0)
@@ -63,7 +63,7 @@ struct usb_dfu_functional_descriptor {
 #define DFU_FUNC_ATT_WILL_DETACH	_BITUL(3)
 
 
-struct usb_functionfs_descs_head_v2 {
+struct __attribute__((packed)) usb_functionfs_descs_head_v2 {
 	__le32 magic;
 	__le32 length;
 	__le32 flags;
@@ -71,18 +71,18 @@ struct usb_functionfs_descs_head_v2 {
 	 * __le32 fs_count, hs_count, fs_count; must be included manually in
 	 * the structure taking flags into consideration.
 	 */
-} __attribute__((packed));
+};
 
 /* Legacy format, deprecated as of 3.14. */
-struct usb_functionfs_descs_head {
+struct __attribute__((packed, deprecated)) usb_functionfs_descs_head {
 	__le32 magic;
 	__le32 length;
 	__le32 fs_count;
 	__le32 hs_count;
-} __attribute__((packed, deprecated));
+};
 
 /* MS OS Descriptor header */
-struct usb_os_desc_header {
+struct __attribute__((packed)) usb_os_desc_header {
 	__u8	interface;
 	__le32	dwLength;
 	__le16	bcdVersion;
@@ -94,7 +94,7 @@ struct usb_os_desc_header {
 		};
 		__le16	wCount;
 	};
-} __attribute__((packed));
+};
 
 struct usb_ext_compat_desc {
 	__u8	bFirstInterfaceNumber;
@@ -106,11 +106,11 @@ struct usb_ext_compat_desc {
 	__u8	Reserved2[6];
 };
 
-struct usb_ext_prop_desc {
+struct __attribute__((packed)) usb_ext_prop_desc {
 	__le32	dwSize;
 	__le32	dwPropertyDataType;
 	__le16	wPropertyNameLength;
-} __attribute__((packed));
+};
 
 /* Flags for usb_ffs_dmabuf_transfer_req->flags (none for now) */
 #define USB_FFS_DMABUF_TRANSFER_MASK	0x0
@@ -122,11 +122,11 @@ struct usb_ext_prop_desc {
  * @length:	number of bytes used in this DMABUF for the data transfer.
  *		Should generally be set to the DMABUF's size.
  */
-struct usb_ffs_dmabuf_transfer_req {
+struct __attribute__((packed)) usb_ffs_dmabuf_transfer_req {
 	int fd;
 	__u32 flags;
 	__u64 length;
-} __attribute__((packed));
+};
 
 #ifndef __KERNEL__
 
@@ -276,12 +276,12 @@ struct usb_ffs_dmabuf_transfer_req {
  * +-----+-----------------------+------+-------------------------------------+
  */
 
-struct usb_functionfs_strings_head {
+struct __attribute__((packed)) usb_functionfs_strings_head {
 	__le32 magic;
 	__le32 length;
 	__le32 str_count;
 	__le32 lang_count;
-} __attribute__((packed));
+};
 
 /*
  * Strings format:
@@ -332,17 +332,17 @@ enum usb_functionfs_event_type {
 /* NOTE:  this structure must stay the same size and layout on
  * both 32-bit and 64-bit kernels.
  */
-struct usb_functionfs_event {
-	union {
+struct __attribute__((packed)) usb_functionfs_event {
+	union __attribute__((packed)) {
 		/* SETUP: packet; DATA phase i/o precedes next event
 		 *(setup.bmRequestType & USB_DIR_IN) flags direction */
 		struct usb_ctrlrequest	setup;
-	} __attribute__((packed)) u;
+	} u;
 
 	/* enum usb_functionfs_event_type */
 	__u8				type;
 	__u8				_pad[3];
-} __attribute__((packed));
+};
 
 
 /* Endpoint ioctls */

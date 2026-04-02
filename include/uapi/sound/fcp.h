@@ -79,13 +79,13 @@
 /* Step 0 and step 2 responses are variable length and placed in
  * resp[] one after the other.
  */
-struct fcp_init {
+struct __attribute__((packed)) fcp_init {
 	__u16 step0_resp_size;
 	__u16 step2_resp_size;
 	__u32 init1_opcode;
 	__u32 init2_opcode;
 	__u8  resp[];
-} __attribute__((packed));
+};
 
 #define FCP_IOCTL_INIT _IOWR('S', 0x64, struct fcp_init)
 
@@ -94,27 +94,27 @@ struct fcp_init {
 /* The request data is placed in data[] and the response data will
  * overwrite it.
  */
-struct fcp_cmd {
+struct __attribute__((packed)) fcp_cmd {
 	__u32 opcode;
 	__u16 req_size;
 	__u16 resp_size;
 	__u8  data[];
-} __attribute__((packed));
+};
 #define FCP_IOCTL_CMD _IOWR('S', 0x65, struct fcp_cmd)
 
 /* Set the meter map */
-struct fcp_meter_map {
+struct __attribute__((packed)) fcp_meter_map {
 	__u16 map_size;
 	__u16 meter_slots;
 	__s16 map[];
-} __attribute__((packed));
+};
 #define FCP_IOCTL_SET_METER_MAP _IOW('S', 0x66, struct fcp_meter_map)
 
 /* Set the meter labels */
-struct fcp_meter_labels {
+struct __attribute__((packed)) fcp_meter_labels {
 	__u16 labels_size;
 	char  labels[];
-} __attribute__((packed));
+};
 #define FCP_IOCTL_SET_METER_LABELS _IOW('S', 0x67, struct fcp_meter_labels)
 
 #endif /* __UAPI_SOUND_FCP_H */

@@ -236,13 +236,13 @@ struct snd_enc_wma {
  * For best quality users should specify VBR mode and set quality levels.
  */
 
-struct snd_enc_vorbis {
+struct __attribute__((packed, aligned(4))) snd_enc_vorbis {
 	__s32 quality;
 	__u32 managed;
 	__u32 max_bit_rate;
 	__u32 min_bit_rate;
 	__u32 downmix;
-} __attribute__((packed, aligned(4)));
+};
 
 
 /**
@@ -254,11 +254,11 @@ struct snd_enc_vorbis {
  * These options were extracted from the OpenMAX IL spec
  */
 
-struct snd_enc_real {
+struct __attribute__((packed, aligned(4))) snd_enc_real {
 	__u32 quant_bits;
 	__u32 start_region;
 	__u32 num_regions;
-} __attribute__((packed, aligned(4)));
+};
 
 /**
  * struct snd_enc_flac - FLAC encoder parameters
@@ -279,33 +279,33 @@ struct snd_enc_real {
  * not supported in this API.
  */
 
-struct snd_enc_flac {
+struct __attribute__((packed, aligned(4))) snd_enc_flac {
 	__u32 num;
 	__u32 gain;
-} __attribute__((packed, aligned(4)));
+};
 
-struct snd_enc_generic {
+struct __attribute__((packed, aligned(4))) snd_enc_generic {
 	__u32 bw;	/* encoder bandwidth */
 	__s32 reserved[15];	/* Can be used for SND_AUDIOCODEC_BESPOKE */
-} __attribute__((packed, aligned(4)));
+};
 
-struct snd_dec_flac {
+struct __attribute__((packed, aligned(4))) snd_dec_flac {
 	__u16 sample_size;
 	__u16 min_blk_size;
 	__u16 max_blk_size;
 	__u16 min_frame_size;
 	__u16 max_frame_size;
 	__u16 reserved;
-} __attribute__((packed, aligned(4)));
+};
 
-struct snd_dec_wma {
+struct __attribute__((packed, aligned(4))) snd_dec_wma {
 	__u32 encoder_option;
 	__u32 adv_encoder_option;
 	__u32 adv_encoder_option2;
 	__u32 reserved;
-} __attribute__((packed, aligned(4)));
+};
 
-struct snd_dec_alac {
+struct __attribute__((packed, aligned(4))) snd_dec_alac {
 	__u32 frame_length;
 	__u8 compatible_version;
 	__u8 pb;
@@ -313,9 +313,9 @@ struct snd_dec_alac {
 	__u8 kb;
 	__u32 max_run;
 	__u32 max_frame_bytes;
-} __attribute__((packed, aligned(4)));
+};
 
-struct snd_dec_ape {
+struct __attribute__((packed, aligned(4))) snd_dec_ape {
 	__u16 compatible_version;
 	__u16 compression_level;
 	__u32 format_flags;
@@ -323,7 +323,7 @@ struct snd_dec_ape {
 	__u32 final_frame_blocks;
 	__u32 total_frames;
 	__u32 seek_table_present;
-} __attribute__((packed, aligned(4)));
+};
 
 /**
  * struct snd_dec_opus - Opus decoder parameters (raw opus packets)
@@ -348,7 +348,7 @@ struct snd_dec_ape {
  * These options were extracted from RFC7845 Section 5.
  */
 
-struct snd_dec_opus {
+struct __attribute__((packed, aligned(4))) snd_dec_opus {
 	__u8 version;
 	__u8 num_channels;
 	__u16 pre_skip;
@@ -360,9 +360,9 @@ struct snd_dec_opus {
 		__u8 coupled_count;
 		__u8 channel_map[8];
 	} chan_map;
-} __attribute__((packed, aligned(4)));
+};
 
-union snd_codec_options {
+union __attribute__((packed, aligned(4))) snd_codec_options {
 	struct snd_enc_wma wma;
 	struct snd_enc_vorbis vorbis;
 	struct snd_enc_real real;
@@ -376,12 +376,12 @@ union snd_codec_options {
 	struct {
 		__u32 out_sample_rate;
 	} src_d;
-} __attribute__((packed, aligned(4)));
+};
 
-struct snd_codec_desc_src {
+struct __attribute__((packed, aligned(4))) snd_codec_desc_src {
 	__u32 out_sample_rate_min;
 	__u32 out_sample_rate_max;
-} __attribute__((packed, aligned(4)));
+};
 
 /** struct snd_codec_desc - description of codec capabilities
  * @max_ch: Maximum number of audio channels
@@ -409,7 +409,7 @@ struct snd_codec_desc_src {
  *
  */
 
-struct snd_codec_desc {
+struct __attribute__((packed, aligned(4))) snd_codec_desc {
 	__u32 max_ch;
 	__u32 sample_rates[MAX_NUM_SAMPLE_RATES];
 	__u32 num_sample_rates;
@@ -421,12 +421,12 @@ struct snd_codec_desc {
 	__u32 formats;
 	__u32 min_buffer;
 	__u32 pcm_formats;
-	union {
+	union __attribute__((packed, aligned(4))) {
 		__u32 u_space[6];
 		struct snd_codec_desc_src src;
-	} __attribute__((packed, aligned(4)));
+	};
 	__u32 reserved[8];
-} __attribute__((packed, aligned(4)));
+};
 
 /** struct snd_codec
  * @id: Identifies the supported audio encoder/decoder.
@@ -455,7 +455,7 @@ struct snd_codec_desc {
  * @reserved: reserved for future use
  */
 
-struct snd_codec {
+struct __attribute__((packed, aligned(4))) snd_codec {
 	__u32 id;
 	__u32 ch_in;
 	__u32 ch_out;
@@ -470,6 +470,6 @@ struct snd_codec {
 	union snd_codec_options options;
 	__u32 pcm_format;
 	__u32 reserved[2];
-} __attribute__((packed, aligned(4)));
+};
 
 #endif

@@ -70,10 +70,10 @@ enum hv_vss_op {
 /*
  * Header for all VSS messages.
  */
-struct hv_vss_hdr {
+struct __attribute__((packed)) hv_vss_hdr {
 	__u8 operation;
 	__u8 reserved[7];
-} __attribute__((packed));
+};
 
 
 /*
@@ -82,13 +82,13 @@ struct hv_vss_hdr {
  */
 #define VSS_HBU_NO_AUTO_RECOVERY	0x00000005
 
-struct hv_vss_check_feature {
+struct __attribute__((packed)) hv_vss_check_feature {
 	__u32 flags;
-} __attribute__((packed));
+};
 
-struct hv_vss_check_dm_info {
+struct __attribute__((packed)) hv_vss_check_dm_info {
 	__u32 flags;
-} __attribute__((packed));
+};
 
 /*
  * struct hv_vss_msg encodes the fields that the Linux VSS
@@ -101,7 +101,7 @@ struct hv_vss_check_dm_info {
  * because the Linux VSS driver responds that it doesn't support
  * auto-recovery, it should not receive such messages.
  */
-struct hv_vss_msg {
+struct __attribute__((packed)) hv_vss_msg {
 	union {
 		struct hv_vss_hdr vss_hdr;
 		int error;
@@ -110,7 +110,7 @@ struct hv_vss_msg {
 		struct hv_vss_check_feature vss_cf;
 		struct hv_vss_check_dm_info dm_info;
 	};
-} __attribute__((packed));
+};
 
 /*
  * Implementation of a host to guest copy facility.
@@ -128,35 +128,35 @@ enum hv_fcopy_op {
 	CANCEL_FCOPY,
 };
 
-struct hv_fcopy_hdr {
+struct __attribute__((packed)) hv_fcopy_hdr {
 	__u32 operation;
 	__u8 service_id0[16]; /* currently unused */
 	__u8 service_id1[16]; /* currently unused */
-} __attribute__((packed));
+};
 
 #define OVER_WRITE	0x1
 #define CREATE_PATH	0x2
 
-struct hv_start_fcopy {
+struct __attribute__((packed)) hv_start_fcopy {
 	struct hv_fcopy_hdr hdr;
 	__u16 file_name[W_MAX_PATH];
 	__u16 path_name[W_MAX_PATH];
 	__u32 copy_flags;
 	__u64 file_size;
-} __attribute__((packed));
+};
 
 /*
  * The file is chunked into fragments.
  */
 #define DATA_FRAGMENT	(6 * 1024)
 
-struct hv_do_fcopy {
+struct __attribute__((packed)) hv_do_fcopy {
 	struct hv_fcopy_hdr hdr;
 	__u32   pad;
 	__u64	offset;
 	__u32	size;
 	__u8	data[DATA_FRAGMENT];
-} __attribute__((packed));
+};
 
 /*
  * An implementation of HyperV key value pair (KVP) functionality for Linux.
@@ -336,7 +336,7 @@ enum hv_kvp_exchg_pool {
 #define MAX_GATEWAY_SIZE	512
 
 
-struct hv_kvp_ipaddr_value {
+struct __attribute__((packed)) hv_kvp_ipaddr_value {
 	__u16	adapter_id[MAX_ADAPTER_ID_SIZE];
 	__u8	addr_family;
 	__u8	dhcp_enabled;
@@ -344,16 +344,16 @@ struct hv_kvp_ipaddr_value {
 	__u16	sub_net[MAX_IP_ADDR_SIZE];
 	__u16	gate_way[MAX_GATEWAY_SIZE];
 	__u16	dns_addr[MAX_IP_ADDR_SIZE];
-} __attribute__((packed));
+};
 
 
-struct hv_kvp_hdr {
+struct __attribute__((packed)) hv_kvp_hdr {
 	__u8 operation;
 	__u8 pool;
 	__u16 pad;
-} __attribute__((packed));
+};
 
-struct hv_kvp_exchg_msg_value {
+struct __attribute__((packed)) hv_kvp_exchg_msg_value {
 	__u32 value_type;
 	__u32 key_size;
 	__u32 value_size;
@@ -363,12 +363,12 @@ struct hv_kvp_exchg_msg_value {
 		__u32 value_u32;
 		__u64 value_u64;
 	};
-} __attribute__((packed));
+};
 
-struct hv_kvp_msg_enumerate {
+struct __attribute__((packed)) hv_kvp_msg_enumerate {
 	__u32 index;
 	struct hv_kvp_exchg_msg_value data;
-} __attribute__((packed));
+};
 
 struct hv_kvp_msg_get {
 	struct hv_kvp_exchg_msg_value data;
@@ -387,7 +387,7 @@ struct hv_kvp_register {
 	__u8 version[HV_KVP_EXCHANGE_MAX_KEY_SIZE];
 };
 
-struct hv_kvp_msg {
+struct __attribute__((packed)) hv_kvp_msg {
 	union {
 		struct hv_kvp_hdr	kvp_hdr;
 		int error;
@@ -400,12 +400,12 @@ struct hv_kvp_msg {
 		struct hv_kvp_ipaddr_value      kvp_ip_val;
 		struct hv_kvp_register		kvp_register;
 	} body;
-} __attribute__((packed));
+};
 
-struct hv_kvp_ip_msg {
+struct __attribute__((packed)) hv_kvp_ip_msg {
 	__u8 operation;
 	__u8 pool;
 	struct hv_kvp_ipaddr_value      kvp_ip_val;
-} __attribute__((packed));
+};
 
 #endif /* _UAPI_HYPERV_H */

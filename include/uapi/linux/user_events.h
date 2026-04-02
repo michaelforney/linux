@@ -35,7 +35,7 @@ enum user_reg_flag {
  * This structure is passed to the DIAG_IOCSREG ioctl, callers at a minimum
  * must set the size and name_args before invocation.
  */
-struct user_reg {
+struct __attribute__((__packed__)) user_reg {
 
 	/* Input: Size of the user_reg structure being used */
 	__u32	size;
@@ -57,13 +57,13 @@ struct user_reg {
 
 	/* Output: Index of the event to use when writing data */
 	__u32	write_index;
-} __attribute__((__packed__));
+};
 
 /*
  * Describes an event unregister, callers must set the size, address and bit.
  * This structure is passed to the DIAG_IOCSUNREG ioctl to disable bit updates.
  */
-struct user_unreg {
+struct __attribute__((__packed__)) user_unreg {
 	/* Input: Size of the user_unreg structure being used */
 	__u32	size;
 
@@ -78,7 +78,7 @@ struct user_unreg {
 
 	/* Input: Address to unregister */
 	__u64	disable_addr;
-} __attribute__((__packed__));
+};
 
 #define DIAG_IOC_MAGIC '*'
 

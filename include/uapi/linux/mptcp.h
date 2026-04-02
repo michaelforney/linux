@@ -87,12 +87,12 @@ struct mptcp_info {
 #define MPTCP_RST_EBADPERF	5
 #define MPTCP_RST_EMIDDLEBOX	6
 
-struct mptcp_subflow_data {
+struct __attribute__((aligned(8))) mptcp_subflow_data {
 	__u32		size_subflow_data;		/* size of this structure in userspace */
 	__u32		num_subflows;			/* must be 0, set by kernel */
 	__u32		size_kernel;			/* must be 0, set by kernel */
 	__u32		size_user;			/* size of one element in data[] */
-} __attribute__((aligned(8)));
+};
 
 struct mptcp_subflow_addrs {
 	union {

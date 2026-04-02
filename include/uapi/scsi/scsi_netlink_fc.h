@@ -42,7 +42,7 @@
  * Note: When specifying vendor_id, be sure to read the Vendor Type and ID
  *   formatting requirements specified in scsi_netlink.h
  */
-struct fc_nl_event {
+struct __attribute__((aligned(sizeof(__u64)))) fc_nl_event {
 	struct scsi_nl_hdr snlh;		/* must be 1st element ! */
 	__u64 seconds;
 	__u64 vendor_id;
@@ -54,7 +54,7 @@ struct fc_nl_event {
 		__u32 event_data;
 		__DECLARE_FLEX_ARRAY(__u8, event_data_flex);
 	};
-} __attribute__((aligned(sizeof(__u64))));
+};
 
 
 #endif /* SCSI_NETLINK_FC_H */

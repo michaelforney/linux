@@ -14,11 +14,11 @@ enum nfqnl_msg_types {
 	NFQNL_MSG_MAX
 };
 
-struct nfqnl_msg_packet_hdr {
+struct __attribute__ ((packed)) nfqnl_msg_packet_hdr {
 	__be32		packet_id;	/* unique ID of packet in queue */
 	__be16		hw_protocol;	/* hw protocol (network order) */
 	__u8	hook;		/* netfilter hook */
-} __attribute__ ((packed));
+};
 
 struct nfqnl_msg_packet_hw {
 	__be16		hw_addrlen;
@@ -94,10 +94,10 @@ enum nfqnl_config_mode {
 	NFQNL_COPY_PACKET,
 };
 
-struct nfqnl_msg_config_params {
+struct __attribute__ ((packed)) nfqnl_msg_config_params {
 	__be32		copy_range;
 	__u8	copy_mode;	/* enum nfqnl_config_mode */
-} __attribute__ ((packed));
+};
 
 
 enum nfqnl_attr_config {

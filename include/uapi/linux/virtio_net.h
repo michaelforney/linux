@@ -111,7 +111,7 @@
 #define VIRTIO_NET_RSS_HASH_TYPE_TCP_EX        (1 << 7)
 #define VIRTIO_NET_RSS_HASH_TYPE_UDP_EX        (1 << 8)
 
-struct virtio_net_config {
+struct __attribute__((packed)) virtio_net_config {
 	/* The config defining mac address (if VIRTIO_NET_F_MAC) */
 	__u8 mac[ETH_ALEN];
 	/* See VIRTIO_NET_F_STATUS and VIRTIO_NET_S_* above */
@@ -140,7 +140,7 @@ struct virtio_net_config {
 	__le16 rss_max_indirection_table_length;
 	/* bitmask of supported VIRTIO_NET_RSS_HASH_ types */
 	__le32 supported_hash_types;
-} __attribute__((packed));
+};
 
 /*
  * This header comes first in the scatter-gather list.  If you don't
@@ -246,10 +246,10 @@ struct virtio_net_hdr_mrg_rxbuf {
  * and an ack/status response in the last entry.  Data for the
  * command goes in between.
  */
-struct virtio_net_ctrl_hdr {
+struct __attribute__((packed)) virtio_net_ctrl_hdr {
 	__u8 class;
 	__u8 cmd;
-} __attribute__((packed));
+};
 
 typedef __u8 virtio_net_ctrl_ack;
 
@@ -290,10 +290,10 @@ typedef __u8 virtio_net_ctrl_ack;
  * 6 bytes MAC address. This functionality is present if the
  * VIRTIO_NET_F_CTRL_MAC_ADDR feature is available.
  */
-struct virtio_net_ctrl_mac {
+struct __attribute__((packed)) virtio_net_ctrl_mac {
 	__virtio32 entries;
 	__u8 macs[][ETH_ALEN];
-} __attribute__((packed));
+};
 
 #define VIRTIO_NET_CTRL_MAC    1
  #define VIRTIO_NET_CTRL_MAC_TABLE_SET        0

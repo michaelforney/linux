@@ -87,17 +87,17 @@
 /* These can go once we've made sure we've caught all uses without
    byteswapping */
 
-typedef struct {
+typedef __attribute__((packed)) struct {
 	__u32 v32;
-} __attribute__((packed)) jint32_t;
+} jint32_t;
 
-typedef struct {
+typedef __attribute__((packed)) struct {
 	__u32 m;
-} __attribute__((packed)) jmode_t;
+} jmode_t;
 
-typedef struct {
+typedef __attribute__((packed)) struct {
 	__u16 v16;
-} __attribute__((packed)) jint16_t;
+} jint16_t;
 
 struct jffs2_unknown_node
 {
@@ -158,7 +158,7 @@ struct jffs2_raw_inode
 	__u8 data[];
 };
 
-struct jffs2_raw_xattr {
+struct __attribute__((packed)) jffs2_raw_xattr {
 	jint16_t magic;
 	jint16_t nodetype;	/* = JFFS2_NODETYPE_XATTR */
 	jint32_t totlen;
@@ -171,9 +171,9 @@ struct jffs2_raw_xattr {
 	jint32_t data_crc;
 	jint32_t node_crc;
 	__u8 data[];
-} __attribute__((packed));
+};
 
-struct jffs2_raw_xref
+struct __attribute__((packed)) jffs2_raw_xref
 {
 	jint16_t magic;
 	jint16_t nodetype;	/* = JFFS2_NODETYPE_XREF */
@@ -183,7 +183,7 @@ struct jffs2_raw_xref
 	jint32_t xid;		/* XATTR identifier number */
 	jint32_t xseqno;	/* xref sequential number */
 	jint32_t node_crc;
-} __attribute__((packed));
+};
 
 struct jffs2_raw_summary
 {

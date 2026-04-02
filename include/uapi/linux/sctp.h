@@ -392,7 +392,7 @@ enum sctp_sac_state {
  *   an interface details event is sent.  The information has the
  *   following structure:
  */
-struct sctp_paddr_change {
+struct __attribute__((packed, aligned(4))) sctp_paddr_change {
 	__u16 spc_type;
 	__u16 spc_flags;
 	__u32 spc_length;
@@ -400,7 +400,7 @@ struct sctp_paddr_change {
 	int spc_state;
 	int spc_error;
 	sctp_assoc_t spc_assoc_id;
-} __attribute__((packed, aligned(4)));
+};
 
 /*
  *    spc_state:  32 bits (signed integer)
@@ -746,10 +746,10 @@ struct sctp_assocparams {
  *  locally bound addresses. The following structure is used to make a
  *   set primary request:
  */
-struct sctp_setpeerprim {
+struct __attribute__((packed, aligned(4))) sctp_setpeerprim {
 	sctp_assoc_t            sspp_assoc_id;
 	struct sockaddr_storage sspp_addr;
-} __attribute__((packed, aligned(4)));
+};
 
 /*
  * 7.1.10 Set Primary Address (SCTP_PRIMARY_ADDR)
@@ -759,10 +759,10 @@ struct sctp_setpeerprim {
  *  association peer's addresses. The following structure is used to
  *  make a set peer primary request:
  */
-struct sctp_prim {
+struct __attribute__((packed, aligned(4))) sctp_prim {
 	sctp_assoc_t            ssp_assoc_id;
 	struct sockaddr_storage ssp_addr;
-} __attribute__((packed, aligned(4)));
+};
 
 /* For backward compatibility use, define the old name too */
 #define sctp_setprim	sctp_prim
@@ -803,7 +803,7 @@ enum  sctp_spp_flags {
 	SPP_DSCP = 1<<9,
 };
 
-struct sctp_paddrparams {
+struct __attribute__((packed, aligned(4))) sctp_paddrparams {
 	sctp_assoc_t		spp_assoc_id;
 	struct sockaddr_storage	spp_address;
 	__u32			spp_hbinterval;
@@ -813,7 +813,7 @@ struct sctp_paddrparams {
 	__u32			spp_flags;
 	__u32			spp_ipv6_flowlabel;
 	__u8			spp_dscp;
-} __attribute__((packed, aligned(4)));
+};
 
 /*
  * 7.1.18.  Add a chunk that must be authenticated (SCTP_AUTH_CHUNK)
@@ -918,7 +918,7 @@ struct sctp_stream_value {
  *   read-only. The following structure is used to access this
  *   information:
  */
-struct sctp_paddrinfo {
+struct __attribute__((packed, aligned(4))) sctp_paddrinfo {
 	sctp_assoc_t		spinfo_assoc_id;
 	struct sockaddr_storage	spinfo_address;
 	__s32			spinfo_state;
@@ -926,7 +926,7 @@ struct sctp_paddrinfo {
 	__u32			spinfo_srtt;
 	__u32			spinfo_rto;
 	__u32			spinfo_mtu;
-} __attribute__((packed, aligned(4)));
+};
 
 /* Peer addresses's state. */
 /* UNKNOWN: Peer address passed by the upper layer in sendmsg or connect[x]

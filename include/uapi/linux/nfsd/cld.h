@@ -45,53 +45,53 @@ enum cld_command {
 };
 
 /* representation of long-form NFSv4 client ID */
-struct cld_name {
+struct __attribute__((packed)) cld_name {
 	__u16		cn_len;				/* length of cm_id */
 	unsigned char	cn_id[NFS4_OPAQUE_LIMIT];	/* client-provided */
-} __attribute__((packed));
+};
 
 /* sha256 hash of the kerberos principal */
-struct cld_princhash {
+struct __attribute__((packed)) cld_princhash {
 	__u8		cp_len;				/* length of cp_data */
 	unsigned char	cp_data[SHA256_DIGEST_SIZE];	/* hash of principal */
-} __attribute__((packed));
+};
 
-struct cld_clntinfo {
+struct __attribute__((packed)) cld_clntinfo {
 	struct cld_name		cc_name;
 	struct cld_princhash	cc_princhash;
-} __attribute__((packed));
+};
 
 /* message struct for communication with userspace */
-struct cld_msg {
+struct __attribute__((packed)) cld_msg {
 	__u8		cm_vers;		/* upcall version */
 	__u8		cm_cmd;			/* upcall command */
 	__s16		cm_status;		/* return code */
 	__u32		cm_xid;			/* transaction id */
-	union {
+	union __attribute__((packed)) {
 		__s64		cm_gracetime;	/* grace period start time */
 		struct cld_name	cm_name;
 		__u8		cm_version;	/* for getting max version */
-	} __attribute__((packed)) cm_u;
-} __attribute__((packed));
+	} cm_u;
+};
 
 /* version 2 message can include hash of kerberos principal */
-struct cld_msg_v2 {
+struct __attribute__((packed)) cld_msg_v2 {
 	__u8		cm_vers;		/* upcall version */
 	__u8		cm_cmd;			/* upcall command */
 	__s16		cm_status;		/* return code */
 	__u32		cm_xid;			/* transaction id */
-	union {
+	union __attribute__((packed)) {
 		struct cld_name	cm_name;
 		__u8		cm_version;	/* for getting max version */
 		struct cld_clntinfo cm_clntinfo; /* name & princ hash */
-	} __attribute__((packed)) cm_u;
-} __attribute__((packed));
+	} cm_u;
+};
 
-struct cld_msg_hdr {
+struct __attribute__((packed)) cld_msg_hdr {
 	__u8		cm_vers;		/* upcall version */
 	__u8		cm_cmd;			/* upcall command */
 	__s16		cm_status;		/* return code */
 	__u32		cm_xid;			/* transaction id */
-} __attribute__((packed));
+};
 
 #endif /* !_NFSD_CLD_H */

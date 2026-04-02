@@ -34,11 +34,11 @@
 /* The mount point is specified in a config variable */
 #define VIRTIO_9P_MOUNT_TAG 0
 
-struct virtio_9p_config {
+struct __attribute__((packed)) virtio_9p_config {
 	/* length of the tag name */
 	__virtio16 tag_len;
 	/* non-NULL terminated tag name */
 	__u8 tag[];
-} __attribute__((packed));
+};
 
 #endif /* _LINUX_VIRTIO_9P_H */

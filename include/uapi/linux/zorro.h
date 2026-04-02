@@ -63,15 +63,15 @@ enum GVP_flags {
 };
 
 
-struct Node {
+struct __packed Node {
 	__be32 ln_Succ;		/* Pointer to next (successor) */
 	__be32 ln_Pred;		/* Pointer to previous (predecessor) */
 	__u8   ln_Type;
 	__s8   ln_Pri;		/* Priority, for sorting */
 	__be32 ln_Name;		/* ID string, null terminated */
-} __packed;
+};
 
-struct ExpansionRom {
+struct __packed ExpansionRom {
 	/* -First 16 bytes of the expansion ROM */
 	__u8   er_Type;		/* Board type, size and flags */
 	__u8   er_Product;	/* Product number, assigned by manufacturer */
@@ -84,7 +84,7 @@ struct ExpansionRom {
 	__u8   er_Reserved0d;
 	__u8   er_Reserved0e;
 	__u8   er_Reserved0f;
-} __packed;
+};
 
 /* er_Type board type bits */
 #define ERT_TYPEMASK	0xc0
@@ -95,7 +95,7 @@ struct ExpansionRom {
 #define ERTB_MEMLIST	5		/* Link RAM into free memory list */
 #define ERTF_MEMLIST	(1<<5)
 
-struct ConfigDev {
+struct __packed ConfigDev {
 	struct Node	cd_Node;
 	__u8		cd_Flags;	/* (read/write) */
 	__u8		cd_Pad;		/* reserved */
@@ -107,7 +107,7 @@ struct ConfigDev {
 	__be32		cd_Driver;	/* pointer to node of driver */
 	__be32		cd_NextCD;	/* linked list of drivers to config */
 	__be32		cd_Unused[4];	/* for whatever the driver wants */
-} __packed;
+};
 
 #define ZORRO_NUM_AUTO		16
 

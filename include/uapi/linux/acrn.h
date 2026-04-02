@@ -145,7 +145,7 @@ struct acrn_pci_request {
  * of &struct acrn_io_request.
  *
  */
-struct acrn_io_request {
+struct __attribute__((aligned(256))) acrn_io_request {
 	__u32	type;
 	__u32	completion_polling;
 	__u32	reserved0[14];
@@ -158,7 +158,7 @@ struct acrn_io_request {
 	__u32	reserved1;
 	__u32	kernel_handled;
 	__u32	processed;
-} __attribute__((aligned(256)));
+};
 
 struct acrn_io_request_buffer {
 	union {
@@ -247,11 +247,11 @@ struct acrn_gp_regs {
  * @base:	Base field.
  * @reserved:	Reserved and must be 0.
  */
-struct acrn_descriptor_ptr {
+struct __attribute__((__packed__)) acrn_descriptor_ptr {
 	__le16	limit;
 	__le64	base;
 	__le16	reserved[3];
-} __attribute__ ((__packed__));
+};
 
 /**
  * struct acrn_regs - Registers structure of a User VM
@@ -494,13 +494,13 @@ struct acrn_msi_entry {
 	__u64	msi_data;
 };
 
-struct acrn_acpi_generic_address {
+struct __attribute__((__packed__)) acrn_acpi_generic_address {
 	__u8	space_id;
 	__u8	bit_width;
 	__u8	bit_offset;
 	__u8	access_size;
 	__u64	address;
-} __attribute__ ((__packed__));
+};
 
 /**
  * struct acrn_cstate_data - A C state package defined in ACPI

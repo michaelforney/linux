@@ -175,7 +175,7 @@ enum iax_completion_status {
 #define DSA_COMP_STATUS_WRITE		0x80
 #define DSA_COMP_STATUS(status)		((status) & DSA_COMP_STATUS_MASK)
 
-struct dsa_hw_desc {
+struct __attribute__((packed)) dsa_hw_desc {
 	uint32_t	pasid:20;
 	uint32_t	rsvd:11;
 	uint32_t	priv:1;
@@ -276,9 +276,9 @@ struct dsa_hw_desc {
 
 		uint8_t		op_specific[24];
 	};
-} __attribute__((packed));
+};
 
-struct iax_hw_desc {
+struct __attribute__((packed)) iax_hw_desc {
 	uint32_t        pasid:20;
 	uint32_t        rsvd:11;
 	uint32_t        priv:1;
@@ -298,17 +298,17 @@ struct iax_hw_desc {
 	uint32_t        src2_size;
 	uint32_t	filter_flags;
 	uint32_t	num_inputs;
-} __attribute__((packed));
+};
 
-struct dsa_raw_desc {
+struct __attribute__((packed)) dsa_raw_desc {
 	uint64_t	field[8];
-} __attribute__((packed));
+};
 
 /*
  * The status field will be modified by hardware, therefore it should be
  * volatile and prevent the compiler from optimize the read.
  */
-struct dsa_completion_record {
+struct __attribute__((packed)) dsa_completion_record {
 	volatile uint8_t	status;
 	union {
 		uint8_t		result;
@@ -366,13 +366,13 @@ struct dsa_completion_record {
 
 		uint8_t		op_specific[16];
 	};
-} __attribute__((packed));
+};
 
-struct dsa_raw_completion_record {
+struct __attribute__((packed)) dsa_raw_completion_record {
 	uint64_t	field[4];
-} __attribute__((packed));
+};
 
-struct iax_completion_record {
+struct __attribute__((packed)) iax_completion_record {
 	volatile uint8_t        status;
 	uint8_t                 error_code;
 	uint8_t			fault_info;
@@ -390,10 +390,10 @@ struct iax_completion_record {
 	uint32_t                max;
 	uint32_t                sum;
 	uint64_t                rsvd4[2];
-} __attribute__((packed));
+};
 
-struct iax_raw_completion_record {
+struct __attribute__((packed)) iax_raw_completion_record {
 	uint64_t	field[8];
-} __attribute__((packed));
+};
 
 #endif

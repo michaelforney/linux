@@ -110,11 +110,11 @@
  * USB 3.1 extends the port status request and may return 4 additional bytes.
  * See USB 3.1 spec section 10.16.2.6 Table 10-12 and 10-15
  */
-struct usb_port_status {
+struct __attribute__((packed)) usb_port_status {
 	__le16 wPortStatus;
 	__le16 wPortChange;
 	__le32 dwExtPortStatus;
-} __attribute__ ((packed));
+};
 
 /*
  * wPortStatus bit field
@@ -219,10 +219,10 @@ struct usb_port_status {
 #define HUB_CHAR_TTTT		0x0060 /* TT Think Time mask */
 #define HUB_CHAR_PORTIND	0x0080 /* per-port indicators (LEDs) */
 
-struct usb_hub_status {
+struct __attribute__((packed)) usb_hub_status {
 	__le16 wHubStatus;
 	__le16 wHubChange;
-} __attribute__ ((packed));
+};
 
 /*
  * Hub Status & Hub Change bit masks
@@ -257,7 +257,7 @@ struct usb_hub_status {
 #define USB_HUB_PR_HS_MULTI_TT	2 /* Hi-speed hub with multiple TT */
 #define USB_HUB_PR_SS		3 /* Super speed hub */
 
-struct usb_hub_descriptor {
+struct __attribute__((packed)) usb_hub_descriptor {
 	__u8  bDescLength;
 	__u8  bDescriptorType;
 	__u8  bNbrPorts;
@@ -267,19 +267,19 @@ struct usb_hub_descriptor {
 
 	/* 2.0 and 3.0 hubs differ here */
 	union {
-		struct {
+		struct __attribute__((packed)) {
 			/* add 1 bit for hub status change; round to bytes */
 			__u8  DeviceRemovable[(USB_MAXCHILDREN + 1 + 7) / 8];
 			__u8  PortPwrCtrlMask[(USB_MAXCHILDREN + 1 + 7) / 8];
-		}  __attribute__ ((packed)) hs;
+		} hs;
 
-		struct {
+		struct __attribute__((packed)) {
 			__u8 bHubHdrDecLat;
 			__le16 wHubDelay;
 			__le16 DeviceRemovable;
-		}  __attribute__ ((packed)) ss;
+		} ss;
 	} u;
-} __attribute__ ((packed));
+};
 
 /* port indicator status selectors, tables 11-7 and 11-25 */
 #define HUB_LED_AUTO	0
@@ -287,14 +287,14 @@ struct usb_hub_descriptor {
 #define HUB_LED_GREEN	2
 #define HUB_LED_OFF	3
 
-enum hub_led_mode {
+enum __attribute__((packed)) hub_led_mode {
 	INDICATOR_AUTO = 0,
 	INDICATOR_CYCLE,
 	/* software blinks for attention:  software, hardware, reserved */
 	INDICATOR_GREEN_BLINK, INDICATOR_GREEN_BLINK_OFF,
 	INDICATOR_AMBER_BLINK, INDICATOR_AMBER_BLINK_OFF,
 	INDICATOR_ALT_BLINK, INDICATOR_ALT_BLINK_OFF
-} __attribute__ ((packed));
+};
 
 /* Transaction Translator Think Times, in bits */
 #define HUB_TTTT_8_BITS		0x00

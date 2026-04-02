@@ -342,10 +342,10 @@ struct mdp_superblock_1 {
 					|MD_FEATURE_RAID0_LAYOUT	\
 					)
 
-struct r5l_payload_header {
+struct __attribute__((__packed__)) r5l_payload_header {
 	__le16 type;
 	__le16 flags;
-} __attribute__ ((__packed__));
+};
 
 enum r5l_payload_type {
 	R5LOG_PAYLOAD_DATA = 0,
@@ -353,14 +353,14 @@ enum r5l_payload_type {
 	R5LOG_PAYLOAD_FLUSH = 2,
 };
 
-struct r5l_payload_data_parity {
+struct __attribute__((__packed__)) r5l_payload_data_parity {
 	struct r5l_payload_header header;
 	__le32 size;		/* sector. data/parity size. each 4k
 				 * has a checksum */
 	__le64 location;	/* sector. For data, it's raid sector. For
 				 * parity, it's stripe sector */
 	__le32 checksum[];
-} __attribute__ ((__packed__));
+};
 
 enum r5l_payload_data_parity_flag {
 	R5LOG_PAYLOAD_FLAG_DISCARD = 1, /* payload is discard */
@@ -375,17 +375,17 @@ enum r5l_payload_data_parity_flag {
 	R5LOG_PAYLOAD_FLAG_RESHAPING = 3,
 };
 
-struct r5l_payload_flush {
+struct __attribute__((__packed__)) r5l_payload_flush {
 	struct r5l_payload_header header;
 	__le32 size; /* flush_stripes size, bytes */
 	__le64 flush_stripes[];
-} __attribute__ ((__packed__));
+};
 
 enum r5l_payload_flush_flag {
 	R5LOG_PAYLOAD_FLAG_FLUSH_STRIPE = 1, /* data represents whole stripe */
 };
 
-struct r5l_meta_block {
+struct __attribute__((__packed__)) r5l_meta_block {
 	__le32 magic;
 	__le32 checksum;
 	__u8 version;
@@ -396,19 +396,19 @@ struct r5l_meta_block {
 	__le64 seq;
 	__le64 position; /* sector, start from rdev->data_offset, current position */
 	struct r5l_payload_header payloads[];
-} __attribute__ ((__packed__));
+};
 
 #define R5LOG_VERSION 0x1
 #define R5LOG_MAGIC 0x6433c509
 
-struct ppl_header_entry {
+struct __attribute__((__packed__)) ppl_header_entry {
 	__le64 data_sector;	/* raid sector of the new data */
 	__le32 pp_size;		/* length of partial parity */
 	__le32 data_size;	/* length of data */
 	__le32 parity_disk;	/* member disk containing parity */
 	__le32 checksum;	/* checksum of partial parity data for this
 				 * entry (~crc32c) */
-} __attribute__ ((__packed__));
+};
 
 #define PPL_HEADER_SIZE 4096
 #define PPL_HDR_RESERVED 512
@@ -417,7 +417,7 @@ struct ppl_header_entry {
 #define PPL_HDR_MAX_ENTRIES \
 	(PPL_HDR_ENTRY_SPACE / sizeof(struct ppl_header_entry))
 
-struct ppl_header {
+struct __attribute__((__packed__)) ppl_header {
 	__u8 reserved[PPL_HDR_RESERVED];/* reserved space, fill with 0xff */
 	__le32 signature;		/* signature (family number of volume) */
 	__le32 padding;			/* zero pad */
@@ -425,6 +425,6 @@ struct ppl_header {
 	__le32 entries_count;		/* number of entries in entry array */
 	__le32 checksum;		/* checksum of the header (~crc32c) */
 	struct ppl_header_entry entries[PPL_HDR_MAX_ENTRIES];
-} __attribute__ ((__packed__));
+};
 
 #endif

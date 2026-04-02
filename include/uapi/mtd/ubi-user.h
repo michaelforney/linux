@@ -345,7 +345,7 @@ enum {
  * alignment it is possible to update this volume using plane UBI volume image
  * BLOBs, without caring about how to properly align them.
  */
-struct ubi_mkvol_req {
+struct __packed ubi_mkvol_req {
 	__s32 vol_id;
 	__s32 alignment;
 	__s64 bytes;
@@ -354,7 +354,7 @@ struct ubi_mkvol_req {
 	__s16 name_len;
 	__s8 padding2[4];
 	char name[UBI_MAX_VOLUME_NAME + 1];
-} __packed;
+};
 
 /**
  * struct ubi_rsvol_req - a data structure used in volume re-size requests.
@@ -367,10 +367,10 @@ struct ubi_mkvol_req {
  * volume, it must be wiped out first (by means of volume update operation with
  * zero number of bytes).
  */
-struct ubi_rsvol_req {
+struct __packed ubi_rsvol_req {
 	__s64 bytes;
 	__s32 vol_id;
-} __packed;
+};
 
 /**
  * struct ubi_rnvol_req - volumes re-name request.
@@ -403,7 +403,7 @@ struct ubi_rsvol_req {
  * existing volume is removed, unless it is re-named as well at the same
  * re-name request.
  */
-struct ubi_rnvol_req {
+struct __packed ubi_rnvol_req {
 	__s32 count;
 	__s8 padding1[12];
 	struct {
@@ -412,7 +412,7 @@ struct ubi_rnvol_req {
 		__s8  padding2[2];
 		char    name[UBI_MAX_VOLUME_NAME + 1];
 	} ents[UBI_MAX_RNVOL];
-} __packed;
+};
 
 /**
  * struct ubi_ecinfo_req - a data structure used for requesting and receiving
@@ -437,13 +437,13 @@ struct ubi_rnvol_req {
  * read. Typically @read_length will be limited due to memory or the number of
  * PEBs on the UBI device.
  */
-struct ubi_ecinfo_req {
+struct __packed ubi_ecinfo_req {
 	__s32 start;
 	__s32 length;
 	__s32 read_length;
 	__s8  padding[16];
 	__s32 erase_counters[];
-}  __packed;
+};
 
 /**
  * struct ubi_leb_change_req - a data structure used in atomic LEB change
@@ -462,12 +462,12 @@ struct ubi_ecinfo_req {
  * field. But for better compatibility with older kernels it is recommended to
  * set @dtype to 3 (unknown).
  */
-struct ubi_leb_change_req {
+struct __packed ubi_leb_change_req {
 	__s32 lnum;
 	__s32 bytes;
 	__s8  dtype; /* obsolete, do not use! */
 	__s8  padding[7];
-} __packed;
+};
 
 /**
  * struct ubi_map_req - a data structure used in map LEB requests.
@@ -475,11 +475,11 @@ struct ubi_leb_change_req {
  * @lnum: logical eraseblock number to unmap
  * @padding: reserved for future, not used, has to be zeroed
  */
-struct ubi_map_req {
+struct __packed ubi_map_req {
 	__s32 lnum;
 	__s8  dtype; /* obsolete, do not use! */
 	__s8  padding[3];
-} __packed;
+};
 
 
 /**
@@ -489,18 +489,18 @@ struct ubi_map_req {
  * @padding: reserved for future, not used, has to be zeroed
  * @value: value to set
  */
-struct ubi_set_vol_prop_req {
+struct __packed ubi_set_vol_prop_req {
 	__u8  property;
 	__u8  padding[7];
 	__u64 value;
-}  __packed;
+};
 
 /**
  * struct ubi_blkcreate_req - a data structure used in block creation requests.
  * @padding: reserved for future, not used, has to be zeroed
  */
-struct ubi_blkcreate_req {
+struct __packed ubi_blkcreate_req {
 	__s8  padding[128];
-}  __packed;
+};
 
 #endif /* __UBI_USER_H__ */

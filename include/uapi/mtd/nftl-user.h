@@ -25,32 +25,32 @@
 
 /* Block Control Information */
 
-struct nftl_bci {
+struct __attribute__((packed)) nftl_bci {
 	unsigned char ECCSig[6];
 	__u8 Status;
 	__u8 Status1;
-}__attribute__((packed));
+};
 
 /* Unit Control Information */
 
-struct nftl_uci0 {
+struct __attribute__((packed)) nftl_uci0 {
 	__u16 VirtUnitNum;
 	__u16 ReplUnitNum;
 	__u16 SpareVirtUnitNum;
 	__u16 SpareReplUnitNum;
-} __attribute__((packed));
+};
 
-struct nftl_uci1 {
+struct __attribute__((packed)) nftl_uci1 {
 	__u32 WearInfo;
 	__u16 EraseMark;
 	__u16 EraseMark1;
-} __attribute__((packed));
+};
 
-struct nftl_uci2 {
+struct __attribute__((packed)) nftl_uci2 {
         __u16 FoldMark;
         __u16 FoldMark1;
 	__u32 unused;
-} __attribute__((packed));
+};
 
 union nftl_uci {
 	struct nftl_uci0 a;
@@ -65,13 +65,13 @@ struct nftl_oob {
 
 /* NFTL Media Header */
 
-struct NFTLMediaHeader {
+struct __attribute__((packed)) NFTLMediaHeader {
 	char DataOrgID[6];
 	__u16 NumEraseUnits;
 	__u16 FirstPhysicalEUN;
 	__u32 FormattedSize;
 	unsigned char UnitSizeFactor;
-} __attribute__((packed));
+};
 
 #define MAX_ERASE_ZONES (8192 - 512)
 

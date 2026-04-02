@@ -8,7 +8,7 @@
  * These are set up by the setup-routine at boot-time:
  */
 
-struct screen_info {
+struct __attribute__((packed)) screen_info {
 	__u8  orig_x;		/* 0x00 */
 	__u8  orig_y;		/* 0x01 */
 	__u16 ext_mem_k;	/* 0x02 */
@@ -46,7 +46,7 @@ struct screen_info {
 	__u32 capabilities;     /* 0x36 */
 	__u32 ext_lfb_base;	/* 0x3a */
 	__u8  _reserved[2];	/* 0x3e */
-} __attribute__((packed));
+};
 
 #define VIDEO_TYPE_MDA		0x10	/* Monochrome Text Display	*/
 #define VIDEO_TYPE_CGA		0x11	/* CGA Display 			*/

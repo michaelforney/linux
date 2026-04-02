@@ -10,7 +10,7 @@
 
 #include <linux/types.h>
 
-struct pisp_image_format_config {
+struct __attribute__((packed)) pisp_image_format_config {
 	/* size in pixels */
 	__u16 width;
 	__u16 height;
@@ -19,7 +19,7 @@ struct pisp_image_format_config {
 	__s32 stride;
 	/* some planar image formats will need a second stride */
 	__s32 stride2;
-} __attribute__((packed));
+};
 
 enum pisp_bayer_order {
 	/*
@@ -143,37 +143,37 @@ enum pisp_image_format {
 
 #define PISP_WALLPAPER_WIDTH 128 /* in bytes */
 
-struct pisp_bla_config {
+struct __attribute__((packed)) pisp_bla_config {
 	__u16 black_level_r;
 	__u16 black_level_gr;
 	__u16 black_level_gb;
 	__u16 black_level_b;
 	__u16 output_black_level;
 	__u8 pad[2];
-} __attribute__((packed));
+};
 
-struct pisp_wbg_config {
+struct __attribute__((packed)) pisp_wbg_config {
 	__u16 gain_r;
 	__u16 gain_g;
 	__u16 gain_b;
 	__u8 pad[2];
-} __attribute__((packed));
+};
 
-struct pisp_compress_config {
+struct __attribute__((packed)) pisp_compress_config {
 	/* value subtracted from incoming data */
 	__u16 offset;
 	__u8 pad;
 	/* 1 => Companding; 2 => Delta (recommended); 3 => Combined (for HDR) */
 	__u8 mode;
-} __attribute__((packed));
+};
 
-struct pisp_decompress_config {
+struct __attribute__((packed)) pisp_decompress_config {
 	/* value added to reconstructed data */
 	__u16 offset;
 	__u8 pad;
 	/* 1 => Companding; 2 => Delta (recommended); 3 => Combined (for HDR) */
 	__u8 mode;
-} __attribute__((packed));
+};
 
 enum pisp_axi_flags {
 	/*
@@ -187,7 +187,7 @@ enum pisp_axi_flags {
 	PISP_AXI_FLAG_PANIC = 32,
 };
 
-struct pisp_axi_config {
+struct __attribute__((packed)) pisp_axi_config {
 	/*
 	 * burst length minus one, which must be in the range 0:15; OR'd with
 	 * flags
@@ -197,6 +197,6 @@ struct pisp_axi_config {
 	__u8 cache_prot;
 	/* QoS field(s) (4x4 bits for FE writer; 4 bits for other masters) */
 	__u16 qos;
-} __attribute__((packed));
+};
 
 #endif /* _UAPI_PISP_COMMON_H_ */

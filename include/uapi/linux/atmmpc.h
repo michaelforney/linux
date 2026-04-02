@@ -49,7 +49,7 @@ struct mpc_parameters {
         __u16 mpc_p6;   /* Hold Down Time                */
 } ;
 
-struct k_message {
+struct __ATM_API_ALIGN k_message {
         __u16 type;
         __be32 ip_mask;
         __u8  MPS_ctrl[ATM_ESA_LEN];
@@ -59,7 +59,7 @@ struct k_message {
                 struct mpc_parameters params;
         } content;
         struct atm_qos qos;       
-} __ATM_API_ALIGN;
+};
 
 struct llc_snap_hdr {
 	/* RFC 1483 LLC/SNAP encapsulation for routed IP PDUs */

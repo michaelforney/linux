@@ -18,11 +18,11 @@
     __HANDLE_ITEM(tx_cells);		/* cells sent */ \
     __HANDLE_ITEM(rx_cells);		/* cells received */
 
-struct sonet_stats {
+struct __attribute__((packed)) sonet_stats {
 #define __HANDLE_ITEM(i) int i
 	__SONET_ITEMS
 #undef __HANDLE_ITEM
-} __attribute__ ((packed));
+};
 
 
 #define SONET_GETSTAT	_IOR('a',ATMIOC_PHYTYP,struct sonet_stats)

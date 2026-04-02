@@ -78,9 +78,9 @@
  * ISP depending on configuration - after the white balance or digital gain
  * blocks, or immediately after the input crossbar.
  */
-struct mali_c55_ae_1024bin_hist {
+struct __attribute__((packed)) mali_c55_ae_1024bin_hist {
 	__u16 bins[1024];
-} __attribute__((packed));
+};
 
 /**
  * struct mali_c55_ae_5bin_hist - Auto Exposure 5-bin histogram statistics
@@ -98,12 +98,12 @@ struct mali_c55_ae_1024bin_hist {
  *
  *	hist2 = 0xffff - (hist0 + hist1 + hist3 + hist4)
  */
-struct mali_c55_ae_5bin_hist {
+struct __attribute__((packed)) mali_c55_ae_5bin_hist {
 	__u16 hist0;
 	__u16 hist1;
 	__u16 hist3;
 	__u16 hist4;
-} __attribute__((packed));
+};
 
 /**
  * struct mali_c55_awb_average_ratios - Auto White Balance colour ratios
@@ -118,11 +118,11 @@ struct mali_c55_ae_5bin_hist {
  * R/G, B/G or G/R, B/R) are configurable through the parameters buffer. The
  * value of the 4 high bits is undefined.
  */
-struct mali_c55_awb_average_ratios {
+struct __attribute__((packed)) mali_c55_awb_average_ratios {
 	__u16 avg_rg_gr;
 	__u16 avg_bg_br;
 	__u32 num_pixels;
-} __attribute__((packed));
+};
 
 /**
  * struct mali_c55_af_statistics - Auto Focus edge and intensity statistics
@@ -158,10 +158,10 @@ struct mali_c55_awb_average_ratios {
  *	e is the exponent value in range 0..127
  *	m is the mantissa value in range 0..511
  */
-struct mali_c55_af_statistics {
+struct __attribute__((packed)) mali_c55_af_statistics {
 	__u16 intensity_stats;
 	__u16 edge_stats;
-} __attribute__((packed));
+};
 
 /**
  * struct mali_c55_stats_buffer - 3A statistics for the mali-c55 ISP
@@ -183,7 +183,7 @@ struct mali_c55_af_statistics {
  * left corner of the image.
  */
 
-struct mali_c55_stats_buffer {
+struct __attribute__((packed)) mali_c55_stats_buffer {
 	struct mali_c55_ae_1024bin_hist ae_1024bin_hist;
 	struct mali_c55_ae_1024bin_hist iridix_1024bin_hist;
 	struct mali_c55_ae_5bin_hist ae_5bin_hists[MALI_C55_MAX_ZONES];
@@ -192,7 +192,7 @@ struct mali_c55_stats_buffer {
 	__u32 reserved2[14];
 	struct mali_c55_af_statistics af_statistics[MALI_C55_MAX_ZONES];
 	__u32 reserved3[15];
-} __attribute__((packed));
+};
 
 /**
  * enum mali_c55_param_block_type - Enumeration of Mali-C55 parameter blocks

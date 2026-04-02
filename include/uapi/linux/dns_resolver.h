@@ -70,23 +70,23 @@ enum dns_lookup_status {
 /*
  * Header at the beginning of binary format payload.
  */
-struct dns_payload_header {
+struct __packed dns_payload_header {
 	__u8		zero;		/* Zero byte: marks this as not being text */
 	__u8		content;	/* enum dns_payload_content_type */
 	__u8		version;	/* Encoding version */
-} __packed;
+};
 
 /*
  * Header at the beginning of a V1 server list.  This is followed directly by
  * the server records.  Each server records begins with a struct of type
  * dns_server_list_v1_server.
  */
-struct dns_server_list_v1_header {
+struct __packed dns_server_list_v1_header {
 	struct dns_payload_header hdr;
 	__u8		source;		/* enum dns_record_source */
 	__u8		status;		/* enum dns_lookup_status */
 	__u8		nr_servers;	/* Number of server records following this */
-} __packed;
+};
 
 /*
  * Header at the beginning of each V1 server record.  This is followed by the
@@ -94,7 +94,7 @@ struct dns_server_list_v1_header {
  * records for that server.  Each address record begins with a struct of type
  * struct dns_server_list_v1_address.
  */
-struct dns_server_list_v1_server {
+struct __packed dns_server_list_v1_server {
 	__u16		name_len;	/* Length of name (LE) */
 	__u16		priority;	/* Priority (as SRV record) (LE) */
 	__u16		weight;		/* Weight (as SRV record) (LE) */
@@ -103,14 +103,14 @@ struct dns_server_list_v1_server {
 	__u8		status;		/* enum dns_lookup_status */
 	__u8		protocol;	/* enum dns_payload_protocol_type */
 	__u8		nr_addrs;
-} __packed;
+};
 
 /*
  * Header at the beginning of each V1 address record.  This is followed by the
  * bytes of the address, 4 for IPV4 and 16 for IPV6.
  */
-struct dns_server_list_v1_address {
+struct __packed dns_server_list_v1_address {
 	__u8		address_type;	/* enum dns_payload_address_type */
-} __packed;
+};
 
 #endif /* _UAPI_LINUX_DNS_RESOLVER_H */

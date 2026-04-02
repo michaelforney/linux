@@ -133,17 +133,17 @@ struct hs_primary_descriptor {
 
 /* We use this to help us look up the parent inode numbers. */
 
-struct iso_path_table{
+struct __attribute__((packed)) iso_path_table{
 	__u8  name_len[2];	/* 721 */
 	__u8  extent[4];	/* 731 */
 	__u8  parent[2];	/* 721 */
 	char name[];
-} __attribute__((packed));
+};
 
 /* high sierra is identical to iso, except that the date is only 6 bytes, and
    there is an extra reserved byte after the flags */
 
-struct iso_directory_record {
+struct __attribute__((packed)) iso_directory_record {
 	__u8 length			[ISODCL (1, 1)]; /* 711 */
 	__u8 ext_attr_length		[ISODCL (2, 2)]; /* 711 */
 	__u8 extent			[ISODCL (3, 10)]; /* 733 */
@@ -155,7 +155,7 @@ struct iso_directory_record {
 	__u8 volume_sequence_number	[ISODCL (29, 32)]; /* 723 */
 	__u8 name_len			[ISODCL (33, 33)]; /* 711 */
 	char name			[];
-} __attribute__((packed));
+};
 
 #define ISOFS_BLOCK_BITS 11
 #define ISOFS_BLOCK_SIZE 2048

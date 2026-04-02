@@ -187,7 +187,7 @@
  * Block Header.
  * This header precedes all object and object arrays below.
  */
-struct snd_soc_tplg_hdr {
+struct __attribute__((packed)) snd_soc_tplg_hdr {
 	__le32 magic;		/* magic number */
 	__le32 abi;		/* ABI version */
 	__le32 version;		/* optional vendor specific version details */
@@ -197,27 +197,27 @@ struct snd_soc_tplg_hdr {
 	__le32 payload_size;	/* data bytes, excluding this header */
 	__le32 index;		/* identifier for block */
 	__le32 count;		/* number of elements in block */
-} __attribute__((packed));
+};
 
 /* vendor tuple for uuid */
-struct snd_soc_tplg_vendor_uuid_elem {
+struct __attribute__((packed)) snd_soc_tplg_vendor_uuid_elem {
 	__le32 token;
 	char uuid[16];
-} __attribute__((packed));
+};
 
 /* vendor tuple for a bool/byte/short/word value */
-struct snd_soc_tplg_vendor_value_elem {
+struct __attribute__((packed)) snd_soc_tplg_vendor_value_elem {
 	__le32 token;
 	__le32 value;
-} __attribute__((packed));
+};
 
 /* vendor tuple for string */
-struct snd_soc_tplg_vendor_string_elem {
+struct __attribute__((packed)) snd_soc_tplg_vendor_string_elem {
 	__le32 token;
 	char string[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
-} __attribute__((packed));
+};
 
-struct snd_soc_tplg_vendor_array {
+struct __attribute__((packed)) snd_soc_tplg_vendor_array {
 	__le32 size;	/* size in bytes of the array, including all elements */
 	__le32 type;	/* SND_SOC_TPLG_TUPLE_TYPE_ */
 	__le32 num_elems;	/* number of elements in array */
@@ -226,76 +226,76 @@ struct snd_soc_tplg_vendor_array {
 		__DECLARE_FLEX_ARRAY(struct snd_soc_tplg_vendor_value_elem, value);
 		__DECLARE_FLEX_ARRAY(struct snd_soc_tplg_vendor_string_elem, string);
 	};
-} __attribute__((packed));
+};
 
 /*
  * Private data.
  * All topology objects may have private data that can be used by the driver or
  * firmware. Core will ignore this data.
  */
-struct snd_soc_tplg_private {
+struct __attribute__((packed)) snd_soc_tplg_private {
 	__le32 size;	/* in bytes of private data */
 	union {
 		__DECLARE_FLEX_ARRAY(char, data);
 		__DECLARE_FLEX_ARRAY(struct snd_soc_tplg_vendor_array, array);
 	};
-} __attribute__((packed));
+};
 
 /*
  * Kcontrol TLV data.
  */
-struct snd_soc_tplg_tlv_dbscale {
+struct __attribute__((packed)) snd_soc_tplg_tlv_dbscale {
 	__le32 min;
 	__le32 step;
 	__le32 mute;
-} __attribute__((packed));
+};
 
-struct snd_soc_tplg_ctl_tlv {
+struct __attribute__((packed)) snd_soc_tplg_ctl_tlv {
 	__le32 size;	/* in bytes of this structure */
 	__le32 type;	/* SNDRV_CTL_TLVT_*, type of TLV */
 	union {
 		__le32 data[SND_SOC_TPLG_TLV_SIZE];
 		struct snd_soc_tplg_tlv_dbscale scale;
 	};
-} __attribute__((packed));
+};
 
 /*
  * Kcontrol channel data
  */
-struct snd_soc_tplg_channel {
+struct __attribute__((packed)) snd_soc_tplg_channel {
 	__le32 size;	/* in bytes of this structure */
 	__le32 reg;
 	__le32 shift;
 	__le32 id;	/* ID maps to Left, Right, LFE etc */
-} __attribute__((packed));
+};
 
 /*
  * Genericl Operations IDs, for binding Kcontrol or Bytes ext ops
  * Kcontrol ops need get/put/info.
  * Bytes ext ops need get/put.
  */
-struct snd_soc_tplg_io_ops {
+struct __attribute__((packed)) snd_soc_tplg_io_ops {
 	__le32 get;
 	__le32 put;
 	__le32 info;
-} __attribute__((packed));
+};
 
 /*
  * kcontrol header
  */
-struct snd_soc_tplg_ctl_hdr {
+struct __attribute__((packed)) snd_soc_tplg_ctl_hdr {
 	__le32 size;	/* in bytes of this structure */
 	__le32 type;
 	char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
 	__le32 access;
 	struct snd_soc_tplg_io_ops ops;
 	struct snd_soc_tplg_ctl_tlv tlv;
-} __attribute__((packed));
+};
 
 /*
  * Stream Capabilities
  */
-struct snd_soc_tplg_stream_caps {
+struct __attribute__((packed)) snd_soc_tplg_stream_caps {
 	__le32 size;		/* in bytes of this structure */
 	char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
 	__le64 formats;	/* supported formats SNDRV_PCM_FMTBIT_* */
@@ -311,12 +311,12 @@ struct snd_soc_tplg_stream_caps {
 	__le32 buffer_size_min;	/* min buffer size bytes */
 	__le32 buffer_size_max;	/* max buffer size bytes */
 	__le32 sig_bits;        /* number of bits of content */
-} __attribute__((packed));
+};
 
 /*
  * FE or BE Stream configuration supported by SW/FW
  */
-struct snd_soc_tplg_stream {
+struct __attribute__((packed)) snd_soc_tplg_stream {
 	__le32 size;		/* in bytes of this structure */
 	char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN]; /* Name of the stream */
 	__le64 format;		/* SNDRV_PCM_FMTBIT_* */
@@ -324,14 +324,14 @@ struct snd_soc_tplg_stream {
 	__le32 period_bytes;	/* size of period in bytes */
 	__le32 buffer_bytes;	/* size of buffer in bytes */
 	__le32 channels;	/* channels */
-} __attribute__((packed));
+};
 
 
 /*
  * Describes a physical link's runtime supported hardware config,
  * i.e. hardware audio formats.
  */
-struct snd_soc_tplg_hw_config {
+struct __attribute__((packed)) snd_soc_tplg_hw_config {
 	__le32 size;            /* in bytes of this structure */
 	__le32 id;		/* unique ID - - used to match */
 	__le32 fmt;		/* SND_SOC_DAI_FORMAT_ format value */
@@ -353,7 +353,7 @@ struct snd_soc_tplg_hw_config {
 	__le32 tx_chanmap[SND_SOC_TPLG_MAX_CHAN]; /* array of slot number */
 	__le32 rx_channels;	/* number of Rx channels */
 	__le32 rx_chanmap[SND_SOC_TPLG_MAX_CHAN]; /* array of slot number */
-} __attribute__((packed));
+};
 
 /*
  * Manifest. List totals for each payload type. Not used in parsing, but will
@@ -367,7 +367,7 @@ struct snd_soc_tplg_hw_config {
  * | struct snd_soc_tplg_manifest      |  1 |
  * +-----------------------------------+----+
  */
-struct snd_soc_tplg_manifest {
+struct __attribute__((packed)) snd_soc_tplg_manifest {
 	__le32 size;		/* in bytes of this structure */
 	__le32 control_elems;	/* number of control elements */
 	__le32 widget_elems;	/* number of widget elements */
@@ -377,7 +377,7 @@ struct snd_soc_tplg_manifest {
 	__le32 dai_elems;	/* number of physical DAI elements */
 	__le32 reserved[20];	/* reserved for new ABI element types */
 	struct snd_soc_tplg_private priv;
-} __attribute__((packed));
+};
 
 /*
  * Mixer kcontrol.
@@ -389,7 +389,7 @@ struct snd_soc_tplg_manifest {
  * | struct snd_soc_tplg_mixer_control |  N |
  * +-----------------------------------+----+
  */
-struct snd_soc_tplg_mixer_control {
+struct __attribute__((packed)) snd_soc_tplg_mixer_control {
 	struct snd_soc_tplg_ctl_hdr hdr;
 	__le32 size;	/* in bytes of this structure */
 	__le32 min;
@@ -399,7 +399,7 @@ struct snd_soc_tplg_mixer_control {
 	__le32 num_channels;
 	struct snd_soc_tplg_channel channel[SND_SOC_TPLG_MAX_CHAN];
 	struct snd_soc_tplg_private priv;
-} __attribute__((packed));
+};
 
 /*
  * Enumerated kcontrol
@@ -411,7 +411,7 @@ struct snd_soc_tplg_mixer_control {
  * | struct snd_soc_tplg_enum_control  |  N |
  * +-----------------------------------+----+
  */
-struct snd_soc_tplg_enum_control {
+struct __attribute__((packed)) snd_soc_tplg_enum_control {
 	struct snd_soc_tplg_ctl_hdr hdr;
 	__le32 size;	/* in bytes of this structure */
 	__le32 num_channels;
@@ -422,7 +422,7 @@ struct snd_soc_tplg_enum_control {
 	char texts[SND_SOC_TPLG_NUM_TEXTS][SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
 	__le32 values[SND_SOC_TPLG_NUM_TEXTS * SNDRV_CTL_ELEM_ID_NAME_MAXLEN / 4];
 	struct snd_soc_tplg_private priv;
-} __attribute__((packed));
+};
 
 /*
  * Bytes kcontrol
@@ -434,7 +434,7 @@ struct snd_soc_tplg_enum_control {
  * | struct snd_soc_tplg_bytes_control |  N |
  * +-----------------------------------+----+
  */
-struct snd_soc_tplg_bytes_control {
+struct __attribute__((packed)) snd_soc_tplg_bytes_control {
 	struct snd_soc_tplg_ctl_hdr hdr;
 	__le32 size;	/* in bytes of this structure */
 	__le32 max;
@@ -443,7 +443,7 @@ struct snd_soc_tplg_bytes_control {
 	__le32 num_regs;
 	struct snd_soc_tplg_io_ops ext_ops;
 	struct snd_soc_tplg_private priv;
-} __attribute__((packed));
+};
 
 /*
  * DAPM Graph Element
@@ -455,11 +455,11 @@ struct snd_soc_tplg_bytes_control {
  * | struct snd_soc_tplg_dapm_graph_elem |  N |
  * +-------------------------------------+----+
  */
-struct snd_soc_tplg_dapm_graph_elem {
+struct __attribute__((packed)) snd_soc_tplg_dapm_graph_elem {
 	char sink[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
 	char control[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
 	char source[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
-} __attribute__((packed));
+};
 
 /*
  * DAPM Widget.
@@ -477,7 +477,7 @@ struct snd_soc_tplg_dapm_graph_elem {
  * Optional enum or mixer control can be appended to the end of each widget
  * in the block.
  */
-struct snd_soc_tplg_dapm_widget {
+struct __attribute__((packed)) snd_soc_tplg_dapm_widget {
 	__le32 size;		/* in bytes of this structure */
 	__le32 id;		/* SND_SOC_DAPM_CTL */
 	char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
@@ -497,7 +497,7 @@ struct snd_soc_tplg_dapm_widget {
 	 * kcontrols that relate to this widget
 	 * follow here after widget private data
 	 */
-} __attribute__((packed));
+};
 
 
 /*
@@ -510,7 +510,7 @@ struct snd_soc_tplg_dapm_widget {
  * | struct snd_soc_tplg_pcm           |  N  |
  * +-----------------------------------+-----+
  */
-struct snd_soc_tplg_pcm {
+struct __attribute__((packed)) snd_soc_tplg_pcm {
 	__le32 size;		/* in bytes of this structure */
 	char pcm_name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
 	char dai_name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN];
@@ -525,7 +525,7 @@ struct snd_soc_tplg_pcm {
 	__le32 flag_mask;       /* bitmask of flags to configure */
 	__le32 flags;           /* SND_SOC_TPLG_LNK_FLGBIT_* flag value */
 	struct snd_soc_tplg_private priv;
-} __attribute__((packed));
+};
 
 
 /*
@@ -538,7 +538,7 @@ struct snd_soc_tplg_pcm {
  * | struct snd_soc_tplg_link_config   |  N  |
  * +-----------------------------------+-----+
  */
-struct snd_soc_tplg_link_config {
+struct __attribute__((packed)) snd_soc_tplg_link_config {
 	__le32 size;            /* in bytes of this structure */
 	__le32 id;              /* unique ID - used to match */
 	char name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN]; /* name - used to match */
@@ -551,7 +551,7 @@ struct snd_soc_tplg_link_config {
 	__le32 flag_mask;       /* bitmask of flags to configure */
 	__le32 flags;           /* SND_SOC_TPLG_LNK_FLGBIT_* flag value */
 	struct snd_soc_tplg_private priv;
-} __attribute__((packed));
+};
 
 /*
  * Describes SW/FW specific features of physical DAI.
@@ -564,7 +564,7 @@ struct snd_soc_tplg_link_config {
  * | struct snd_soc_tplg_dai           |  N  |
  * +-----------------------------------+-----+
  */
-struct snd_soc_tplg_dai {
+struct __attribute__((packed)) snd_soc_tplg_dai {
 	__le32 size;            /* in bytes of this structure */
 	char dai_name[SNDRV_CTL_ELEM_ID_NAME_MAXLEN]; /* name - used to match */
 	__le32 dai_id;          /* unique ID - used to match */
@@ -574,6 +574,6 @@ struct snd_soc_tplg_dai {
 	__le32 flag_mask;       /* bitmask of flags to configure */
 	__le32 flags;           /* SND_SOC_TPLG_DAI_FLGBIT_* */
 	struct snd_soc_tplg_private priv;
-} __attribute__((packed));
+};
 
 #endif

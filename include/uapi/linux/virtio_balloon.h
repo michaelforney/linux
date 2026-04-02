@@ -123,9 +123,9 @@ struct virtio_balloon_config {
  * structure boundaries at field size, avoiding compiler padding
  * without the packed attribute.
  */
-struct virtio_balloon_stat {
+struct __attribute__((packed)) virtio_balloon_stat {
 	__virtio16 tag;
 	__virtio64 val;
-} __attribute__((packed));
+};
 
 #endif /* _LINUX_VIRTIO_BALLOON_H */

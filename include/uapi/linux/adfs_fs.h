@@ -8,7 +8,7 @@
 /*
  * Disc Record at disc address 0xc00
  */
-struct adfs_discrecord {
+struct __attribute__((packed, aligned(4))) adfs_discrecord {
     __u8  log2secsize;
     __u8  secspertrack;
     __u8  heads;
@@ -35,7 +35,7 @@ struct adfs_discrecord {
     __le32 format_version;
     __le32 root_size;
     __u8  unused52[60 - 52];
-} __attribute__((packed, aligned(4)));
+};
 
 #define ADFS_DISCRECORD		(0xc00)
 #define ADFS_DR_OFFSET		(0x1c0)

@@ -1485,7 +1485,7 @@ enum {
 	BPF_STREAM_STDERR = 2,
 };
 
-union bpf_attr {
+union __attribute__((aligned(8))) bpf_attr {
 	struct { /* anonymous struct used by BPF_MAP_CREATE command */
 		__u32	map_type;	/* one of enum bpf_map_type */
 		__u32	key_size;	/* size of key in bytes */
@@ -1894,7 +1894,7 @@ union bpf_attr {
 		__u32		prog_fd;
 	} prog_stream_read;
 
-} __attribute__((aligned(8)));
+};
 
 /* The description below is an attempt at providing documentation to eBPF
  * developers about the multiple available eBPF helper functions. It can be
@@ -6284,10 +6284,10 @@ enum {
 };
 
 #define __bpf_md_ptr(type, name)	\
-union {					\
+union __attribute__((aligned(8))) {	\
 	type name;			\
 	__u64 :64;			\
-} __attribute__((aligned(8)))
+}
 
 /* The enum used in skb->tstamp_type. It specifies the clock type
  * of the time stored in the skb->tstamp.
@@ -6628,7 +6628,7 @@ struct sk_reuseport_md {
 
 #define BPF_TAG_SIZE	8
 
-struct bpf_prog_info {
+struct __attribute__((aligned(8))) bpf_prog_info {
 	__u32 type;
 	__u32 id;
 	__u8  tag[BPF_TAG_SIZE];
@@ -6668,9 +6668,9 @@ struct bpf_prog_info {
 	__u32 verified_insns;
 	__u32 attach_btf_obj_id;
 	__u32 attach_btf_id;
-} __attribute__((aligned(8)));
+};
 
-struct bpf_map_info {
+struct __attribute__((aligned(8))) bpf_map_info {
 	__u32 type;
 	__u32 id;
 	__u32 key_size;
@@ -6689,18 +6689,18 @@ struct bpf_map_info {
 	__u64 map_extra;
 	__aligned_u64 hash;
 	__u32 hash_size;
-} __attribute__((aligned(8)));
+};
 
-struct bpf_btf_info {
+struct __attribute__((aligned(8))) bpf_btf_info {
 	__aligned_u64 btf;
 	__u32 btf_size;
 	__u32 id;
 	__aligned_u64 name;
 	__u32 name_len;
 	__u32 kernel_btf;
-} __attribute__((aligned(8)));
+};
 
-struct bpf_link_info {
+struct __attribute__((aligned(8))) bpf_link_info {
 	__u32 type;
 	__u32 id;
 	__u32 prog_id;
@@ -6825,14 +6825,14 @@ struct bpf_link_info {
 			__u32 attach_type;
 		} sockmap;
 	};
-} __attribute__((aligned(8)));
+};
 
-struct bpf_token_info {
+struct __attribute__((aligned(8))) bpf_token_info {
 	__u64 allowed_cmds;
 	__u64 allowed_maps;
 	__u64 allowed_progs;
 	__u64 allowed_attachs;
-} __attribute__((aligned(8)));
+};
 
 /* User bpf_sock_addr struct to access socket fields and sockaddr struct passed
  * by user and intended to be used by socket (e.g. to bind to, depends on
@@ -7293,13 +7293,13 @@ struct bpf_fib_lookup {
 	__be16	sport;
 	__be16	dport;
 
-	union {	/* used for MTU check */
+	union __attribute__((packed, aligned(2))) {	/* used for MTU check */
 		/* input to lookup */
 		__u16	tot_len; /* L3 length from network hdr (iph->tot_len) */
 
 		/* output: MTU value */
 		__u16	mtu_result;
-	} __attribute__((packed, aligned(2)));
+	};
 	/* input: L3 device index for lookup
 	 * output: device index from FIB lookup
 	 */
@@ -7439,41 +7439,41 @@ struct bpf_spin_lock {
 	__u32	val;
 };
 
-struct bpf_timer {
+struct __attribute__((aligned(8))) bpf_timer {
 	__u64 __opaque[2];
-} __attribute__((aligned(8)));
+};
 
-struct bpf_task_work {
+struct __attribute__((aligned(8))) bpf_task_work {
 	__u64 __opaque;
-} __attribute__((aligned(8)));
+};
 
-struct bpf_wq {
+struct __attribute__((aligned(8))) bpf_wq {
 	__u64 __opaque[2];
-} __attribute__((aligned(8)));
+};
 
-struct bpf_dynptr {
+struct __attribute__((aligned(8))) bpf_dynptr {
 	__u64 __opaque[2];
-} __attribute__((aligned(8)));
+};
 
-struct bpf_list_head {
+struct __attribute__((aligned(8))) bpf_list_head {
 	__u64 __opaque[2];
-} __attribute__((aligned(8)));
+};
 
-struct bpf_list_node {
+struct __attribute__((aligned(8))) bpf_list_node {
 	__u64 __opaque[3];
-} __attribute__((aligned(8)));
+};
 
-struct bpf_rb_root {
+struct __attribute__((aligned(8))) bpf_rb_root {
 	__u64 __opaque[2];
-} __attribute__((aligned(8)));
+};
 
-struct bpf_rb_node {
+struct __attribute__((aligned(8))) bpf_rb_node {
 	__u64 __opaque[4];
-} __attribute__((aligned(8)));
+};
 
-struct bpf_refcount {
+struct __attribute__((aligned(4))) bpf_refcount {
 	__u32 __opaque[1];
-} __attribute__((aligned(4)));
+};
 
 struct bpf_sysctl {
 	__u32	write;		/* Sysctl is being read (= 0) or written (= 1).
@@ -7636,12 +7636,12 @@ enum {
 };
 
 /* BPF numbers iterator state */
-struct bpf_iter_num {
+struct __attribute__((aligned(8))) bpf_iter_num {
 	/* opaque iterator state; having __u64 here allows to preserve correct
 	 * alignment requirements in vmlinux.h, generated from BTF
 	 */
 	__u64 __opaque[1];
-} __attribute__((aligned(8)));
+};
 
 /*
  * Flags to control BPF kfunc behaviour.

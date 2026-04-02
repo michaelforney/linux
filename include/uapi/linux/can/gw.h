@@ -107,27 +107,27 @@ enum {
 
 #define MAX_MODFUNCTIONS (CGW_MOD_FUNCS * CGW_FRAME_MODS)
 
-struct cgw_frame_mod {
+struct __attribute__((packed)) cgw_frame_mod {
 	struct can_frame cf;
 	__u8 modtype;
-} __attribute__((packed));
+};
 
-struct cgw_fdframe_mod {
+struct __attribute__((packed)) cgw_fdframe_mod {
 	struct canfd_frame cf;
 	__u8 modtype;
-} __attribute__((packed));
+};
 
 #define CGW_MODATTR_LEN sizeof(struct cgw_frame_mod)
 #define CGW_FDMODATTR_LEN sizeof(struct cgw_fdframe_mod)
 
-struct cgw_csum_xor {
+struct __attribute__((packed)) cgw_csum_xor {
 	__s8 from_idx;
 	__s8 to_idx;
 	__s8 result_idx;
 	__u8 init_xor_val;
-} __attribute__((packed));
+};
 
-struct cgw_csum_crc8 {
+struct __attribute__((packed)) cgw_csum_crc8 {
 	__s8 from_idx;
 	__s8 to_idx;
 	__s8 result_idx;
@@ -136,7 +136,7 @@ struct cgw_csum_crc8 {
 	__u8 crctab[256];
 	__u8 profile;
 	__u8 profile_data[20];
-} __attribute__((packed));
+};
 
 /* length of checksum operation parameters. idx = index in CAN frame data[] */
 #define CGW_CS_XOR_LEN  sizeof(struct cgw_csum_xor)

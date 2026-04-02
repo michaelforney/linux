@@ -463,22 +463,22 @@ static inline __u8 btrfs_dir_flags_to_ftype(__u8 flags)
  * in cpu native order.  Otherwise they are identical and their sizes
  * should be the same (ie both packed)
  */
-struct btrfs_disk_key {
+struct __attribute__((__packed__)) btrfs_disk_key {
 	__le64 objectid;
 	__u8 type;
 	__le64 offset;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_key {
+struct __attribute__((__packed__)) btrfs_key {
 	__u64 objectid;
 	__u8 type;
 	__u64 offset;
-} __attribute__ ((__packed__));
+};
 
 /*
  * Every tree block (leaf or node) starts with this header.
  */
-struct btrfs_header {
+struct __attribute__((__packed__)) btrfs_header {
 	/* These first four must match the super block */
 	__u8 csum[BTRFS_CSUM_SIZE];
 	/* FS specific uuid */
@@ -493,7 +493,7 @@ struct btrfs_header {
 	__le64 owner;
 	__le32 nritems;
 	__u8 level;
-} __attribute__ ((__packed__));
+};
 
 /*
  * This is a very generous portion of the super block, giving us room to
@@ -506,7 +506,7 @@ struct btrfs_header {
  * an array of the roots from previous transactions in the super.
  */
 #define BTRFS_NUM_BACKUP_ROOTS 4
-struct btrfs_root_backup {
+struct __attribute__((__packed__)) btrfs_root_backup {
 	__le64 tree_root;
 	__le64 tree_root_gen;
 
@@ -539,17 +539,17 @@ struct btrfs_root_backup {
 	__u8 csum_root_level;
 	/* future and to align */
 	__u8 unused_8[10];
-} __attribute__ ((__packed__));
+};
 
 /*
  * A leaf is full of items. offset and size tell us where to find the item in
  * the leaf (relative to the start of the data area)
  */
-struct btrfs_item {
+struct __attribute__((__packed__)) btrfs_item {
 	struct btrfs_disk_key key;
 	__le32 offset;
 	__le32 size;
-} __attribute__ ((__packed__));
+};
 
 /*
  * Leaves have an item area and a data area:
@@ -558,27 +558,27 @@ struct btrfs_item {
  * The data is separate from the items to get the keys closer together during
  * searches.
  */
-struct btrfs_leaf {
+struct __attribute__((__packed__)) btrfs_leaf {
 	struct btrfs_header header;
 	struct btrfs_item items[];
-} __attribute__ ((__packed__));
+};
 
 /*
  * All non-leaf blocks are nodes, they hold only keys and pointers to other
  * blocks.
  */
-struct btrfs_key_ptr {
+struct __attribute__((__packed__)) btrfs_key_ptr {
 	struct btrfs_disk_key key;
 	__le64 blockptr;
 	__le64 generation;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_node {
+struct __attribute__((__packed__)) btrfs_node {
 	struct btrfs_header header;
 	struct btrfs_key_ptr ptrs[];
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_dev_item {
+struct __attribute__((__packed__)) btrfs_dev_item {
 	/* the internal btrfs device id */
 	__le64 devid;
 
@@ -623,15 +623,15 @@ struct btrfs_dev_item {
 
 	/* uuid of FS who owns this device */
 	__u8 fsid[BTRFS_UUID_SIZE];
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_stripe {
+struct __attribute__((__packed__)) btrfs_stripe {
 	__le64 devid;
 	__le64 offset;
 	__u8 dev_uuid[BTRFS_UUID_SIZE];
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_chunk {
+struct __attribute__((__packed__)) btrfs_chunk {
 	/* size of this chunk in bytes */
 	__le64 length;
 
@@ -659,12 +659,12 @@ struct btrfs_chunk {
 	__le16 sub_stripes;
 	struct btrfs_stripe stripe;
 	/* additional stripes go here */
-} __attribute__ ((__packed__));
+};
 
 /*
  * The super block basically lists the main trees of the FS.
  */
-struct btrfs_super_block {
+struct __attribute__((__packed__)) btrfs_super_block {
 	/* The first 4 fields must match struct btrfs_header */
 	__u8 csum[BTRFS_CSUM_SIZE];
 	/* FS specific UUID, visible to user */
@@ -722,35 +722,35 @@ struct btrfs_super_block {
 
 	/* Padded to 4096 bytes */
 	__u8 padding[565];
-} __attribute__ ((__packed__));
+};
 
 #define BTRFS_FREE_SPACE_EXTENT	1
 #define BTRFS_FREE_SPACE_BITMAP	2
 
-struct btrfs_free_space_entry {
+struct __attribute__((__packed__)) btrfs_free_space_entry {
 	__le64 offset;
 	__le64 bytes;
 	__u8 type;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_free_space_header {
+struct __attribute__((__packed__)) btrfs_free_space_header {
 	struct btrfs_disk_key location;
 	__le64 generation;
 	__le64 num_entries;
 	__le64 num_bitmaps;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_raid_stride {
+struct __attribute__((__packed__)) btrfs_raid_stride {
 	/* The id of device this raid extent lives on. */
 	__le64 devid;
 	/* The physical location on disk. */
 	__le64 physical;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_stripe_extent {
+struct __attribute__((__packed__)) btrfs_stripe_extent {
 	/* An array of raid strides this stripe is composed of. */
 	__DECLARE_FLEX_ARRAY(struct btrfs_raid_stride, strides);
-} __attribute__ ((__packed__));
+};
 
 #define BTRFS_HEADER_FLAG_WRITTEN	(1ULL << 0)
 #define BTRFS_HEADER_FLAG_RELOC		(1ULL << 1)
@@ -779,15 +779,15 @@ struct btrfs_stripe_extent {
  * owner of the block and the number of references
  */
 
-struct btrfs_extent_item {
+struct __attribute__((__packed__)) btrfs_extent_item {
 	__le64 refs;
 	__le64 generation;
 	__le64 flags;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_extent_item_v0 {
+struct __attribute__((__packed__)) btrfs_extent_item_v0 {
 	__le32 refs;
-} __attribute__ ((__packed__));
+};
 
 
 #define BTRFS_EXTENT_FLAG_DATA		(1ULL << 0)
@@ -812,63 +812,63 @@ struct btrfs_extent_item_v0 {
  */
 #define BTRFS_EXTENT_FLAG_SUPER		(1ULL << 48)
 
-struct btrfs_tree_block_info {
+struct __attribute__((__packed__)) btrfs_tree_block_info {
 	struct btrfs_disk_key key;
 	__u8 level;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_extent_data_ref {
+struct __attribute__((__packed__)) btrfs_extent_data_ref {
 	__le64 root;
 	__le64 objectid;
 	__le64 offset;
 	__le32 count;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_shared_data_ref {
+struct __attribute__((__packed__)) btrfs_shared_data_ref {
 	__le32 count;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_extent_owner_ref {
+struct __attribute__((__packed__)) btrfs_extent_owner_ref {
 	__le64 root_id;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_extent_inline_ref {
+struct __attribute__((__packed__)) btrfs_extent_inline_ref {
 	__u8 type;
 	__le64 offset;
-} __attribute__ ((__packed__));
+};
 
 /* dev extents record free space on individual devices.  The owner
  * field points back to the chunk allocation mapping tree that allocated
  * the extent.  The chunk tree uuid field is a way to double check the owner
  */
-struct btrfs_dev_extent {
+struct __attribute__((__packed__)) btrfs_dev_extent {
 	__le64 chunk_tree;
 	__le64 chunk_objectid;
 	__le64 chunk_offset;
 	__le64 length;
 	__u8 chunk_tree_uuid[BTRFS_UUID_SIZE];
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_inode_ref {
+struct __attribute__((__packed__)) btrfs_inode_ref {
 	__le64 index;
 	__le16 name_len;
 	/* name goes here */
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_inode_extref {
+struct __attribute__((__packed__)) btrfs_inode_extref {
 	__le64 parent_objectid;
 	__le64 index;
 	__le16 name_len;
 	__u8   name[];
 	/* name goes here */
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_timespec {
+struct __attribute__((__packed__)) btrfs_timespec {
 	__le64 sec;
 	__le32 nsec;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_inode_item {
+struct __attribute__((__packed__)) btrfs_inode_item {
 	/* nfs style generation number */
 	__le64 generation;
 	/* transid that last touched this inode */
@@ -895,19 +895,19 @@ struct btrfs_inode_item {
 	struct btrfs_timespec ctime;
 	struct btrfs_timespec mtime;
 	struct btrfs_timespec otime;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_dir_log_item {
+struct __attribute__((__packed__)) btrfs_dir_log_item {
 	__le64 end;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_dir_item {
+struct __attribute__((__packed__)) btrfs_dir_item {
 	struct btrfs_disk_key location;
 	__le64 transid;
 	__le16 data_len;
 	__le16 name_len;
 	__u8 type;
-} __attribute__ ((__packed__));
+};
 
 #define BTRFS_ROOT_SUBVOL_RDONLY	(1ULL << 0)
 
@@ -917,7 +917,7 @@ struct btrfs_dir_item {
  */
 #define BTRFS_ROOT_SUBVOL_DEAD		(1ULL << 48)
 
-struct btrfs_root_item {
+struct __attribute__((__packed__)) btrfs_root_item {
 	struct btrfs_inode_item inode;
 	__le64 generation;
 	__le64 root_dirid;
@@ -960,7 +960,7 @@ struct btrfs_root_item {
 	struct btrfs_timespec stime;
 	struct btrfs_timespec rtime;
 	__le64 reserved[8]; /* for future */
-} __attribute__ ((__packed__));
+};
 
 /*
  * Btrfs root item used to be smaller than current size.  The old format ends
@@ -974,13 +974,13 @@ static inline __u32 btrfs_legacy_root_item_size(void)
 /*
  * this is used for both forward and backward root refs
  */
-struct btrfs_root_ref {
+struct __attribute__((__packed__)) btrfs_root_ref {
 	__le64 dirid;
 	__le64 sequence;
 	__le16 name_len;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_disk_balance_args {
+struct __attribute__((__packed__)) btrfs_disk_balance_args {
 	/*
 	 * profiles to operate on, single is denoted by
 	 * BTRFS_AVAIL_ALLOC_BIT_SINGLE
@@ -1041,13 +1041,13 @@ struct btrfs_disk_balance_args {
 	__le32 stripes_max;
 
 	__le64 unused[6];
-} __attribute__ ((__packed__));
+};
 
 /*
  * store balance parameters to disk so that balance can be properly
  * resumed after crash or unmount
  */
-struct btrfs_balance_item {
+struct __attribute__((__packed__)) btrfs_balance_item {
 	/* BTRFS_BALANCE_* */
 	__le64 flags;
 
@@ -1056,7 +1056,7 @@ struct btrfs_balance_item {
 	struct btrfs_disk_balance_args sys;
 
 	__le64 unused[4];
-} __attribute__ ((__packed__));
+};
 
 enum {
 	BTRFS_FILE_EXTENT_INLINE   = 0,
@@ -1065,7 +1065,7 @@ enum {
 	BTRFS_NR_FILE_EXTENT_TYPES = 3,
 };
 
-struct btrfs_file_extent_item {
+struct __attribute__((__packed__)) btrfs_file_extent_item {
 	/*
 	 * transaction id that created this extent
 	 */
@@ -1115,24 +1115,24 @@ struct btrfs_file_extent_item {
 	 */
 	__le64 num_bytes;
 
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_csum_item {
+struct __attribute__((__packed__)) btrfs_csum_item {
 	__u8 csum;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_dev_stats_item {
+struct __attribute__((__packed__)) btrfs_dev_stats_item {
 	/*
 	 * grow this item struct at the end for future enhancements and keep
 	 * the existing values unchanged
 	 */
 	__le64 values[BTRFS_DEV_STAT_VALUES_MAX];
-} __attribute__ ((__packed__));
+};
 
 #define BTRFS_DEV_REPLACE_ITEM_CONT_READING_FROM_SRCDEV_MODE_ALWAYS	0
 #define BTRFS_DEV_REPLACE_ITEM_CONT_READING_FROM_SRCDEV_MODE_AVOID	1
 
-struct btrfs_dev_replace_item {
+struct __attribute__((__packed__)) btrfs_dev_replace_item {
 	/*
 	 * grow this item struct at the end for future enhancements and keep
 	 * the existing values unchanged
@@ -1147,7 +1147,7 @@ struct btrfs_dev_replace_item {
 	__le64 time_stopped;
 	__le64 num_write_errors;
 	__le64 num_uncorrectable_read_errors;
-} __attribute__ ((__packed__));
+};
 
 /* different types of block groups (and chunks) */
 #define BTRFS_BLOCK_GROUP_DATA		(1ULL << 0)
@@ -1213,16 +1213,16 @@ static inline __u64 extended_to_chunk(__u64 flags)
 	return flags & ~BTRFS_AVAIL_ALLOC_BIT_SINGLE;
 }
 
-struct btrfs_block_group_item {
+struct __attribute__((__packed__)) btrfs_block_group_item {
 	__le64 used;
 	__le64 chunk_objectid;
 	__le64 flags;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_free_space_info {
+struct __attribute__((__packed__)) btrfs_free_space_info {
 	__le32 extent_count;
 	__le32 flags;
-} __attribute__ ((__packed__));
+};
 
 #define BTRFS_FREE_SPACE_USING_BITMAPS (1ULL << 0)
 
@@ -1263,7 +1263,7 @@ static inline __u16 btrfs_qgroup_level(__u64 qgroupid)
 
 #define BTRFS_QGROUP_STATUS_VERSION        1
 
-struct btrfs_qgroup_status_item {
+struct __attribute__((__packed__)) btrfs_qgroup_status_item {
 	__le64 version;
 	/*
 	 * the generation is updated during every commit. As older
@@ -1290,17 +1290,17 @@ struct btrfs_qgroup_status_item {
 	 * Set only if flags contain BTRFS_QGROUP_STATUS_FLAG_SIMPLE_MODE.
 	 */
 	__le64 enable_gen;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_qgroup_info_item {
+struct __attribute__((__packed__)) btrfs_qgroup_info_item {
 	__le64 generation;
 	__le64 rfer;
 	__le64 rfer_cmpr;
 	__le64 excl;
 	__le64 excl_cmpr;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_qgroup_limit_item {
+struct __attribute__((__packed__)) btrfs_qgroup_limit_item {
 	/*
 	 * only updated when any of the other values change
 	 */
@@ -1309,9 +1309,9 @@ struct btrfs_qgroup_limit_item {
 	__le64 max_excl;
 	__le64 rsv_rfer;
 	__le64 rsv_excl;
-} __attribute__ ((__packed__));
+};
 
-struct btrfs_verity_descriptor_item {
+struct __attribute__((__packed__)) btrfs_verity_descriptor_item {
 	/* Size of the verity descriptor in bytes */
 	__le64 size;
 	/*
@@ -1321,6 +1321,6 @@ struct btrfs_verity_descriptor_item {
 	 */
 	__le64 reserved[2];
 	__u8 encryption;
-} __attribute__ ((__packed__));
+};
 
 #endif /* _BTRFS_CTREE_H_ */

@@ -1195,10 +1195,10 @@ enum rkisp1_ext_params_block_type {
  * @config: Black Level Subtraction configuration, see
  *	    :c:type:`rkisp1_cif_isp_bls_config`
  */
-struct rkisp1_ext_params_bls_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_bls_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_bls_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_dpcc_config - RkISP1 extensible params DPCC config
@@ -1211,10 +1211,10 @@ struct rkisp1_ext_params_bls_config {
  * @config: Defective Pixel Cluster Correction configuration, see
  *	    :c:type:`rkisp1_cif_isp_dpcc_config`
  */
-struct rkisp1_ext_params_dpcc_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_dpcc_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_dpcc_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_sdg_config - RkISP1 extensible params SDG config
@@ -1227,10 +1227,10 @@ struct rkisp1_ext_params_dpcc_config {
  * @config: Sensor Degamma configuration, see
  *	    :c:type:`rkisp1_cif_isp_sdg_config`
  */
-struct rkisp1_ext_params_sdg_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_sdg_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_sdg_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_lsc_config - RkISP1 extensible params LSC config
@@ -1243,10 +1243,10 @@ struct rkisp1_ext_params_sdg_config {
  * @config: Lens Shading Correction configuration, see
  *	    :c:type:`rkisp1_cif_isp_lsc_config`
  */
-struct rkisp1_ext_params_lsc_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_lsc_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_lsc_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_awb_gain_config - RkISP1 extensible params AWB
@@ -1260,10 +1260,10 @@ struct rkisp1_ext_params_lsc_config {
  * @config: Auto-White Balance Gains configuration, see
  *	    :c:type:`rkisp1_cif_isp_awb_gain_config`
  */
-struct rkisp1_ext_params_awb_gain_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_awb_gain_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_awb_gain_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_flt_config - RkISP1 extensible params FLT config
@@ -1275,10 +1275,10 @@ struct rkisp1_ext_params_awb_gain_config {
  *	    :c:type:`rkisp1_ext_params_block_header`
  * @config: Filter configuration, see :c:type:`rkisp1_cif_isp_flt_config`
  */
-struct rkisp1_ext_params_flt_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_flt_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_flt_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_bdm_config - RkISP1 extensible params BDM config
@@ -1290,10 +1290,10 @@ struct rkisp1_ext_params_flt_config {
  *	    :c:type:`rkisp1_ext_params_block_header`
  * @config: Demosaicing configuration, see :c:type:`rkisp1_cif_isp_bdm_config`
  */
-struct rkisp1_ext_params_bdm_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_bdm_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_bdm_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_ctk_config - RkISP1 extensible params CTK config
@@ -1305,10 +1305,10 @@ struct rkisp1_ext_params_bdm_config {
  *	    :c:type:`rkisp1_ext_params_block_header`
  * @config: Cross-Talk configuration, see :c:type:`rkisp1_cif_isp_ctk_config`
  */
-struct rkisp1_ext_params_ctk_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_ctk_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_ctk_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_goc_config - RkISP1 extensible params GOC config
@@ -1320,10 +1320,10 @@ struct rkisp1_ext_params_ctk_config {
  *	    :c:type:`rkisp1_ext_params_block_header`
  * @config: Gamma-Out configuration, see :c:type:`rkisp1_cif_isp_goc_config`
  */
-struct rkisp1_ext_params_goc_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_goc_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_goc_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_dpf_config - RkISP1 extensible params DPF config
@@ -1336,10 +1336,10 @@ struct rkisp1_ext_params_goc_config {
  * @config: De-noise Pre-Filter configuration, see
  *	    :c:type:`rkisp1_cif_isp_dpf_config`
  */
-struct rkisp1_ext_params_dpf_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_dpf_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_dpf_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_dpf_strength_config - RkISP1 extensible params DPF
@@ -1353,10 +1353,10 @@ struct rkisp1_ext_params_dpf_config {
  * @config: De-noise Pre-Filter strength configuration, see
  *	    :c:type:`rkisp1_cif_isp_dpf_strength_config`
  */
-struct rkisp1_ext_params_dpf_strength_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_dpf_strength_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_dpf_strength_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_cproc_config - RkISP1 extensible params CPROC config
@@ -1369,10 +1369,10 @@ struct rkisp1_ext_params_dpf_strength_config {
  * @config: Color processing configuration, see
  *	    :c:type:`rkisp1_cif_isp_cproc_config`
  */
-struct rkisp1_ext_params_cproc_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_cproc_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_cproc_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_ie_config - RkISP1 extensible params IE config
@@ -1384,10 +1384,10 @@ struct rkisp1_ext_params_cproc_config {
  *	    :c:type:`rkisp1_ext_params_block_header`
  * @config: Image Effect configuration, see :c:type:`rkisp1_cif_isp_ie_config`
  */
-struct rkisp1_ext_params_ie_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_ie_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_ie_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_awb_meas_config - RkISP1 extensible params AWB
@@ -1401,10 +1401,10 @@ struct rkisp1_ext_params_ie_config {
  * @config: Auto-White Balance measure configuration, see
  *	    :c:type:`rkisp1_cif_isp_awb_meas_config`
  */
-struct rkisp1_ext_params_awb_meas_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_awb_meas_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_awb_meas_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_hst_config - RkISP1 extensible params Histogram config
@@ -1417,10 +1417,10 @@ struct rkisp1_ext_params_awb_meas_config {
  * @config: Histogram statistics configuration, see
  *	    :c:type:`rkisp1_cif_isp_hst_config`
  */
-struct rkisp1_ext_params_hst_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_hst_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_hst_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_aec_config - RkISP1 extensible params AEC config
@@ -1433,10 +1433,10 @@ struct rkisp1_ext_params_hst_config {
  * @config: Auto-Exposure statistics configuration, see
  *	    :c:type:`rkisp1_cif_isp_aec_config`
  */
-struct rkisp1_ext_params_aec_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_aec_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_aec_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_afc_config - RkISP1 extensible params AFC config
@@ -1449,10 +1449,10 @@ struct rkisp1_ext_params_aec_config {
  * @config: Auto-Focus statistics configuration, see
  *	    :c:type:`rkisp1_cif_isp_afc_config`
  */
-struct rkisp1_ext_params_afc_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_afc_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_afc_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_compand_bls_config - RkISP1 extensible params
@@ -1466,10 +1466,10 @@ struct rkisp1_ext_params_afc_config {
  * @config: Companding BLS configuration, see
  *	    :c:type:`rkisp1_cif_isp_compand_bls_config`
  */
-struct rkisp1_ext_params_compand_bls_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_compand_bls_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_compand_bls_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_compand_curve_config - RkISP1 extensible params
@@ -1485,10 +1485,10 @@ struct rkisp1_ext_params_compand_bls_config {
  * @config: Companding curve configuration, see
  *	    :c:type:`rkisp1_cif_isp_compand_curve_config`
  */
-struct rkisp1_ext_params_compand_curve_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_compand_curve_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_compand_curve_config config;
-} __attribute__((aligned(8)));
+};
 
 /**
  * struct rkisp1_ext_params_wdr_config - RkISP1 extensible params
@@ -1502,10 +1502,10 @@ struct rkisp1_ext_params_compand_curve_config {
  * @config: WDR configuration, see
  *	    :c:type:`rkisp1_cif_isp_wdr_config`
  */
-struct rkisp1_ext_params_wdr_config {
+struct __attribute__((aligned(8))) rkisp1_ext_params_wdr_config {
 	struct rkisp1_ext_params_block_header header;
 	struct rkisp1_cif_isp_wdr_config config;
-} __attribute__((aligned(8)));
+};
 
 /*
  * The rkisp1_ext_params_compand_curve_config structure is counted twice as it

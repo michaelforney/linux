@@ -82,7 +82,7 @@ enum {
  * This is the packet used for communication between client and
  * server. All data are in network byte order.
  */
-struct nbd_request {
+struct __attribute__((packed)) nbd_request {
 	__be32 magic;	/* NBD_REQUEST_MAGIC	*/
 	__be32 type;	/* See NBD_CMD_*	*/
 	union {
@@ -91,7 +91,7 @@ struct nbd_request {
 	};
 	__be64 from;
 	__be32 len;
-} __attribute__((packed));
+};
 
 /*
  * This is the reply packet that nbd-server sends back to the client after

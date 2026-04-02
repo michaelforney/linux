@@ -60,13 +60,13 @@ struct ipv6_rt_hdr {
 };
 
 
-struct ipv6_opt_hdr {
+struct __attribute__((packed)) ipv6_opt_hdr {
 	__u8 		nexthdr;
 	__u8 		hdrlen;
 	/* 
 	 * TLV encoded option data follows.
 	 */
-} __attribute__((packed));	/* required for some archs */
+};	/* required for some archs */
 
 #define ipv6_destopt_hdr ipv6_opt_hdr
 #define ipv6_hopopt_hdr  ipv6_opt_hdr
@@ -102,11 +102,11 @@ struct rt2_hdr {
  *	home address option in destination options header
  */
 
-struct ipv6_destopt_hao {
+struct __attribute__((packed)) ipv6_destopt_hao {
 	__u8			type;
 	__u8			length;
 	struct in6_addr		addr;
-} __attribute__((packed));
+};
 
 /*
  *	IPv6 fixed header

@@ -393,7 +393,7 @@ struct tcp_diag_md5sig {
 						 *  calculation"
 						 */
 
-struct tcp_ao_add { /* setsockopt(TCP_AO_ADD_KEY) */
+struct __attribute__((aligned(8))) tcp_ao_add { /* setsockopt(TCP_AO_ADD_KEY) */
 	struct __kernel_sockaddr_storage addr;	/* peer's address for the key */
 	char	alg_name[64];		/* crypto hash algorithm to use */
 	__s32	ifindex;		/* L3 dev index for VRF */
@@ -408,9 +408,9 @@ struct tcp_ao_add { /* setsockopt(TCP_AO_ADD_KEY) */
 	__u8	keyflags;		/* see TCP_AO_KEYF_ */
 	__u8	keylen;			/* length of ::key */
 	__u8	key[TCP_AO_MAXKEYLEN];
-} __attribute__((aligned(8)));
+};
 
-struct tcp_ao_del { /* setsockopt(TCP_AO_DEL_KEY) */
+struct __attribute__((aligned(8))) tcp_ao_del { /* setsockopt(TCP_AO_DEL_KEY) */
 	struct __kernel_sockaddr_storage addr;	/* peer's address for the key */
 	__s32	ifindex;		/* L3 dev index for VRF */
 	__u32   set_current	:1,	/* corresponding ::current_key */
@@ -424,9 +424,9 @@ struct tcp_ao_del { /* setsockopt(TCP_AO_DEL_KEY) */
 	__u8	current_key;		/* KeyID to set as Current_key */
 	__u8	rnext;			/* KeyID to set as Rnext_key */
 	__u8	keyflags;		/* see TCP_AO_KEYF_ */
-} __attribute__((aligned(8)));
+};
 
-struct tcp_ao_info_opt { /* setsockopt(TCP_AO_INFO), getsockopt(TCP_AO_INFO) */
+struct __attribute__((aligned(8))) tcp_ao_info_opt { /* setsockopt(TCP_AO_INFO), getsockopt(TCP_AO_INFO) */
 	/* Here 'in' is for setsockopt(), 'out' is for getsockopt() */
 	__u32   set_current	:1,	/* in/out: corresponding ::current_key */
 		set_rnext	:1,	/* in/out: corresponding ::rnext */
@@ -442,9 +442,9 @@ struct tcp_ao_info_opt { /* setsockopt(TCP_AO_INFO), getsockopt(TCP_AO_INFO) */
 	__u64	pkt_key_not_found;	/* in/out: could not find a key to verify */
 	__u64	pkt_ao_required;	/* in/out: segments missing TCP-AO sign */
 	__u64	pkt_dropped_icmp;	/* in/out: ICMPs that were ignored */
-} __attribute__((aligned(8)));
+};
 
-struct tcp_ao_getsockopt { /* getsockopt(TCP_AO_GET_KEYS) */
+struct __attribute__((aligned(8))) tcp_ao_getsockopt { /* getsockopt(TCP_AO_GET_KEYS) */
 	struct __kernel_sockaddr_storage addr;	/* in/out: dump keys for peer
 						 * with this address/prefix
 						 */
@@ -475,14 +475,14 @@ struct tcp_ao_getsockopt { /* getsockopt(TCP_AO_GET_KEYS) */
 	__s32	ifindex;		/* in/out: L3 dev index for VRF */
 	__u64	pkt_good;		/* out: verified segments */
 	__u64	pkt_bad;		/* out: segments that failed verification */
-} __attribute__((aligned(8)));
+};
 
-struct tcp_ao_repair { /* {s,g}etsockopt(TCP_AO_REPAIR) */
+struct __attribute__((aligned(8))) tcp_ao_repair { /* {s,g}etsockopt(TCP_AO_REPAIR) */
 	__be32			snt_isn;
 	__be32			rcv_isn;
 	__u32			snd_sne;
 	__u32			rcv_sne;
-} __attribute__((aligned(8)));
+};
 
 /* setsockopt(fd, IPPROTO_TCP, TCP_ZEROCOPY_RECEIVE, ...) */
 

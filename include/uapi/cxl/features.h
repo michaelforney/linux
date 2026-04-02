@@ -33,11 +33,11 @@ static_assert(sizeof(__uapi_uuid_t) == sizeof(uuid_t));
  * Get Supported Features (0x500h) CXL r3.2 8.2.9.6.1 command.
  * Input block for Get support Feature
  */
-struct cxl_mbox_get_sup_feats_in {
+struct __attribute__((__packed__)) cxl_mbox_get_sup_feats_in {
 	__le32 count;
 	__le16 start_idx;
 	__u8 reserved[2];
-} __attribute__ ((__packed__));
+};
 
 /* CXL spec r3.2 Table 8-87 command effects */
 #define CXL_CMD_CONFIG_CHANGE_COLD_RESET	BIT(0)
@@ -68,7 +68,7 @@ struct cxl_mbox_get_sup_feats_in {
  * CXL spec r3.2 Table 8-109
  * Get Supported Features Supported Feature Entry
  */
-struct cxl_feat_entry {
+struct __attribute__((__packed__)) cxl_feat_entry {
 	__uapi_uuid_t uuid;
 	__le16 id;
 	__le16 get_feat_size;
@@ -78,7 +78,7 @@ struct cxl_feat_entry {
 	__u8 set_feat_ver;
 	__le16 effects;
 	__u8 reserved[18];
-} __attribute__ ((__packed__));
+};
 
 /* @flags field for 'struct cxl_feat_entry' */
 #define CXL_FEATURE_F_CHANGEABLE		BIT(0)
@@ -96,14 +96,14 @@ struct cxl_feat_entry {
  * CXL spec r3.2 Table 8-108
  * Get supported Features Output Payload
  */
-struct cxl_mbox_get_sup_feats_out {
+struct __attribute__((__packed__)) cxl_mbox_get_sup_feats_out {
 	__struct_group(cxl_mbox_get_sup_feats_out_hdr, hdr, /* no attrs */,
 		__le16 num_entries;
 		__le16 supported_feats;
 		__u8 reserved[4];
 	);
 	struct cxl_feat_entry ents[] __counted_by_le(num_entries);
-} __attribute__ ((__packed__));
+};
 
 /*
  * Get Feature CXL spec r3.2 Spec 8.2.9.6.2
@@ -118,12 +118,12 @@ struct cxl_mbox_get_sup_feats_out {
  *
  * CXL spec r3.2 section 8.2.9.6.2 Table 8-99
  */
-struct cxl_mbox_get_feat_in {
+struct __attribute__((__packed__)) cxl_mbox_get_feat_in {
 	__uapi_uuid_t uuid;
 	__le16 offset;
 	__le16 count;
 	__u8 selection;
-} __attribute__ ((__packed__));
+};
 
 /*
  * enum cxl_get_feat_selection - selection field of Get Feature input
@@ -150,7 +150,7 @@ enum cxl_get_feat_selection {
  *
  * CXL spec r3.2 section 8.2.9.6.3 Table 8-101
  */
-struct cxl_mbox_set_feat_in {
+struct __packed cxl_mbox_set_feat_in {
 	__struct_group(cxl_mbox_set_feat_hdr, hdr, /* no attrs */,
 		__uapi_uuid_t uuid;
 		__le32 flags;
@@ -159,7 +159,7 @@ struct cxl_mbox_set_feat_in {
 		__u8 rsvd[9];
 	);
 	__u8 feat_data[];
-}  __packed;
+};
 
 /*
  * enum cxl_set_feat_flag_data_transfer - Set Feature flags field

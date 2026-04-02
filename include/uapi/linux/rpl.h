@@ -16,7 +16,7 @@
 /*
  * RPL SR Header
  */
-struct ipv6_rpl_sr_hdr {
+struct __attribute__((packed)) ipv6_rpl_sr_hdr {
 	__u8	nexthdr;
 	__u8	hdrlen;
 	__u8	type;
@@ -40,7 +40,7 @@ struct ipv6_rpl_sr_hdr {
 		__DECLARE_FLEX_ARRAY(struct in6_addr, addr);
 		__DECLARE_FLEX_ARRAY(__u8, data);
 	} segments;
-} __attribute__((packed));
+};
 
 #define rpl_segaddr	segments.addr
 #define rpl_segdata	segments.data
